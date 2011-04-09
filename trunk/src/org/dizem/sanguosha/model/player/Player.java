@@ -2,6 +2,8 @@ package org.dizem.sanguosha.model.player;
 
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.Character;
+import org.dizem.sanguosha.model.card.equipment.*;
+import org.dizem.sanguosha.model.exception.SGSException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class Player {
 	private Role role;
 	private Character character;
 	private List<AbstractCard> handCards;
-	private List<AbstractCard> equipmentCards;
+	private List<EquipmentCard> equipmentCards;
 	private List<AbstractCard> effectCards;
 	private static List<Player> instance;
 
@@ -26,7 +28,7 @@ public class Player {
 		this.name = name;
 		effectCards = new ArrayList<AbstractCard>();
 		handCards = new ArrayList<AbstractCard>();
-		effectCards = new ArrayList<AbstractCard>();
+		equipmentCards = new ArrayList<EquipmentCard>();
 	}
 
 	public synchronized static List<Player> getPlayerList() {
@@ -42,16 +44,40 @@ public class Player {
 		return instance.get(0);
 	}
 
+
+	/**
+	 * 是否有空位装备当前装备牌
+	 *
+	 * @param card 装备牌
+	 * @return 能否装备
+	 */
+	public boolean canAddEquipmentCard(EquipmentCard card) {
+		System.out.println(card.getCardType());
+		for(EquipmentCard equipmentCard : equipmentCards) {
+			if(equipmentCard.getCardType() == card.getCardType()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void addEquipmentCard(EquipmentCard card) {
+
+		if (!canAddEquipmentCard(card)) {
+			throw new SGSException("Player has already had this type of equipmentCard");
+
+		} else {
+			equipmentCards.add(card);
+		}
+	}
+
+
 	public String getName() {
 		return name;
 	}
 
 	public List<AbstractCard> getHandCards() {
 		return handCards;
-	}
-
-	public List<AbstractCard> getEquipmentCards() {
-		return equipmentCards;
 	}
 
 	public List<AbstractCard> getEffectCards() {
@@ -66,5 +92,13 @@ public class Player {
 		return character.getLife();
 	}
 
+	public void removeEffectCard(AbstractCard card) {
+		effectCards.remove(card);
+	}
 
+	public void removeEquipmentCard(AbstractCard card) {
+		equipmentCards.remove(card);
+	}
+
+	
 }

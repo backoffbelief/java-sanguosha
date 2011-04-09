@@ -4,17 +4,17 @@ import craky.componentc.JCButton;
 import craky.util.UIUtil;
 import org.dizem.common.ImageUtils;
 import org.dizem.common.PanelViewer;
+import org.dizem.common.TwoWayMap;
 import org.dizem.sanguosha.model.card.*;
 import org.dizem.sanguosha.model.card.Skill;
+import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: DIZEM
@@ -34,8 +34,8 @@ public class DashboardPane extends JLayeredPane
 	private ActionListener listener = this;
 
 	private JButton[] btnSkills;
-	private JButton btnOfferCard;
-	private JButton btnThrowCard;
+	private JButton btnOfferHandCard;
+	private JButton btnThrowHandCard;
 
 
 	private static final Image[] imgHpBig = {
@@ -70,8 +70,15 @@ public class DashboardPane extends JLayeredPane
 	private Player player;
 	private Image imgAvatar;
 	private Image imgKingdom;
-	private java.util.List<JLabel> lblCardList = new ArrayList<JLabel>();
+
+
+	private TwoWayMap<AbstractCard, JLabel> handCardLabelMap = new TwoWayMap<AbstractCard, JLabel>();
+	private TwoWayMap<EquipmentCard, JLabel> equipmentLabelMap = new TwoWayMap<EquipmentCard, JLabel>();
+	private java.util.List<JLabel> handCardLabelList = new ArrayList<JLabel>();
 	private Set<JLabel> cardSelectedSet = new HashSet<JLabel>();
+
+
+	private int labelDisplayLevel = 100;
 
 	public DashboardPane() {
 		super();
@@ -98,7 +105,7 @@ public class DashboardPane extends JLayeredPane
 			e.printStackTrace();
 		}
 		for (AbstractCard card : player.getHandCards()) {
-			addCardLabel(createCardLabel(card));
+			addHandCardLabel(createCardLabel(card));
 		}
 		character.decreaseLife();
 		character.decreaseLife();
@@ -107,21 +114,21 @@ public class DashboardPane extends JLayeredPane
 
 
 	private void initButtons() {
-		btnOfferCard = new JCButton("出牌");
-		btnOfferCard.setSize(60, 30);
-		btnOfferCard.setLocation(avatarX, 0);
-		btnOfferCard.setEnabled(false);
-		btnOfferCard.setFocusable(false);
-		btnOfferCard.addActionListener(listener);
-		add(btnOfferCard);
+		btnOfferHandCard = new JCButton("出牌");
+		btnOfferHandCard.setSize(60, 30);
+		btnOfferHandCard.setLocation(avatarX, 0);
+		btnOfferHandCard.setEnabled(false);
+		btnOfferHandCard.setFocusable(false);
+		btnOfferHandCard.addActionListener(listener);
+		add(btnOfferHandCard);
 
-		btnThrowCard = new JCButton("弃牌");
-		btnThrowCard.setSize(60, 30);
-		btnThrowCard.setLocation(avatarX + 60, 0);
-//		btnThrowCard.setEnabled(false);
-		btnThrowCard.setFocusable(false);
-		btnThrowCard.addActionListener(listener);
-		add(btnThrowCard);
+		btnThrowHandCard = new JCButton("弃牌");
+		btnThrowHandCard.setSize(60, 30);
+		btnThrowHandCard.setLocation(avatarX + 60, 0);
+//		btnThrowHandCard.setEnabled(false);
+		btnThrowHandCard.setFocusable(false);
+		btnThrowHandCard.addActionListener(listener);
+		add(btnThrowHandCard);
 
 		btnSkills = new JButton[character.getSkills().length];
 		for (int i = 0; i < btnSkills.length; ++i) {
@@ -137,8 +144,6 @@ public class DashboardPane extends JLayeredPane
 		if (btnSkills.length == 1) {
 			btnSkills[0].setSize(120, 30);
 		}
-		//lblDashboardCard.setSize(480, 170);
-		//lblDashboardCard.setLocation(cardX, posY);
 	}
 
 	@Override
@@ -180,7 +185,9 @@ public class DashboardPane extends JLayeredPane
 	}
 
 	private JLabel createCardLabel(final AbstractCard card) {
+
 		final JLabel label = new JLabel(ImageUtils.getIcon("/card/" + card.getFilename())) {
+
 			int suit = card.getSuit() - 1;
 			String rank = card.getRank();
 			Color color = card.isRed() ? Color.RED : Color.BLACK;
@@ -194,6 +201,14 @@ public class DashboardPane extends JLayeredPane
 				g.setFont(font);
 				g.drawString(rank, 8, 28);
 			}
+
+			@Override
+			public String toString() {
+				return "JLabel{" +
+						"suit=" + suit+
+						", rank='" + rank + '\'' +
+						'}';
+			}
 		};
 
 		label.setName("F");
@@ -201,15 +216,21 @@ public class DashboardPane extends JLayeredPane
 		label.setToolTipText(card.getHtmlDescription());
 		label.addMouseMotionListener(this);
 		label.addMouseListener(this);
+
+		handCardLabelMap.put(card, label);
+
 		UIUtil.actionLabel(label, new AbstractAction() {
+
 			public void actionPerformed(ActionEvent e) {
+
 				if (label.getName().equals("T")) {
 					label.setName("F");
 					label.setLocation(label.getX(), posY + 38 + 30);
 					DashboardPane.this.repaint(label.getX(), label.getY() - 30, 90, 160);
 					cardSelectedSet.remove(label);
+
 					if (cardSelectedSet.size() == 0) {
-						btnOfferCard.setEnabled(false);
+						btnOfferHandCard.setEnabled(false);
 					}
 
 				} else {
@@ -217,8 +238,9 @@ public class DashboardPane extends JLayeredPane
 					label.setLocation(label.getX(), posY + 38 - 30);
 					DashboardPane.this.repaint(label.getX(), label.getY(), 90, 160);
 					cardSelectedSet.add(label);
+
 					if (cardSelectedSet.size() > 0) {
-						btnOfferCard.setEnabled(true);
+						btnOfferHandCard.setEnabled(true);
 					}
 				}
 			}
@@ -226,15 +248,52 @@ public class DashboardPane extends JLayeredPane
 		return label;
 	}
 
-	private void updateCardGap() {
+	private JLabel createEquipmentLabel(final EquipmentCard card) {
+		JLabel label = new JLabel() {
+
+			int suit = card.getSuit() - 1;
+			String rank = card.getRank();
+			String name = card.getName();
+			Color color = card.isRed() ? Color.RED : Color.BLACK;
+			Font font = new Font("宋体", Font.PLAIN, 15);
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(imgSuit[suit], 8, 8, null);
+				g.setColor(color);
+				g.setFont(font);
+				g.drawString(rank, 17, 15);
+				g.setColor(Color.WHITE);
+				g.drawString(name, 25, 15);
+			}
+
+			@Override
+			public String toString() {
+				return "JLabel{" +
+						"rank='" + rank + '\'' +
+						", suit=" + suit +
+						", name='" + name + '\'' +
+						'}';
+			}
+		};
+
+		equipmentLabelMap.put(card, label);
+
+		label.setSize(100, 20);
+		label.setLocation(10, 42 + posY + card.getCardType() * 30);
+		return label;
+	}
+
+	private void updateHandCardGap() {
 		int gap;
-		if (480 > lblCardList.size() * 90) {
+		if (480 > handCardLabelList.size() * 90) {
 			gap = 90;
 		} else {
-			gap = 390 / (lblCardList.size() - 1);
+			gap = 390 / (handCardLabelList.size() - 1);
 		}
-		for (int i = 0; i < lblCardList.size(); ++i) {
-			lblCardList.get(i).setLocation(cardX + i * gap, posY + 38);
+		for (int i = 0; i < handCardLabelList.size(); ++i) {
+			handCardLabelList.get(i).setLocation(cardX + i * gap, posY + 38);
 		}
 	}
 
@@ -255,19 +314,29 @@ public class DashboardPane extends JLayeredPane
 		g.drawString(name, avatarX + (122 - nameWidth) / 2 + 8, 53);
 	}
 
-	private void removeCardLabel(JLabel card) {
-		remove(card);
-		lblCardList.remove(card);
-		updateCardGap();
+	private void addHandCardLabel(JLabel handCardLabel) {
+		add(handCardLabel, new Integer(labelDisplayLevel++));
+		handCardLabelList.add(handCardLabel);
+		updateHandCardGap();
 	}
 
-	int level = 100;
-
-	private void addCardLabel(JLabel card) {
-		add(card, new Integer(level++));
-		lblCardList.add(card);
-		updateCardGap();
+	private void removeHandCardLabel(JLabel handCardLabel) {
+		remove(handCardLabel);
+		handCardLabelList.remove(handCardLabel);
+		cardSelectedSet.remove(handCardLabel);
+		handCardLabelMap.removeByValue(handCardLabel);
+		updateHandCardGap();
 	}
+
+	private void addEquipmentCardLabel(JLabel equipmentCardLabel) {
+		add(equipmentCardLabel, new Integer(labelDisplayLevel++));
+	}
+
+	private void removeEquipmentCardLabel(JLabel equipmentCardLabel) {
+		remove(equipmentCardLabel);
+		equipmentLabelMap.removeByValue(equipmentCardLabel);
+	}
+
 
 	public static void main(String[] args) {
 		PanelViewer.display(new DashboardPane(), "Test");
@@ -275,12 +344,24 @@ public class DashboardPane extends JLayeredPane
 
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == btnOfferCard) {
-			for (JLabel card : cardSelectedSet) {
-				removeCardLabel(card);
+		if (e.getSource() == btnOfferHandCard) {
+			for (JLabel cardLabel : cardSelectedSet) {
+				AbstractCard card = handCardLabelMap.getKey(cardLabel);
+
+				if (card instanceof EquipmentCard) {
+					EquipmentCard equipmentCard = (EquipmentCard) card;
+					if (player.canAddEquipmentCard(equipmentCard)) {
+						player.addEquipmentCard(equipmentCard);
+						addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
+
+					} else {
+						continue;
+					}
+				}
+				removeHandCardLabel(cardLabel);
 			}
-		} else if (e.getSource() == btnThrowCard) {
-			addCardLabel(createCardLabel(Deck.getInstance().popCard()));
+		} else if (e.getSource() == btnThrowHandCard) {
+			addHandCardLabel(createCardLabel(Deck.getInstance().popCard()));
 		}
 	}
 
