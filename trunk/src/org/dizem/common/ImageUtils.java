@@ -20,8 +20,8 @@ public class ImageUtils {
 	/**
 	 * cache to store image
 	 */
-	private static Map cache = new HashMap();
-
+	private static Map<String, Image> imageCache = new HashMap<String, Image>();
+	private static Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>();
 
 	/**
 	 * Get image icon with specific name
@@ -30,8 +30,8 @@ public class ImageUtils {
 	 * @return image icon
 	 */
 	public static ImageIcon getIcon(String name) {
-		if (cache.containsKey(name)) {
-			return (ImageIcon) cache.get(name);
+		if (iconCache.containsKey(name)) {
+			return (ImageIcon) iconCache.get(name);
 
 		} else {
 			ImageIcon icon = SwingResourceManager.getIcon(Constants.IMAGE_DIR + Constants.FILE_SEP + name);
@@ -39,7 +39,7 @@ public class ImageUtils {
 			if (icon == null) {
 				throw new RuntimeException("Icon {name:" + name + "} does not exist");
 			} else {
-				cache.put(name, icon);
+				iconCache.put(name, icon);
 			}
 			return icon;
 		}
@@ -53,8 +53,8 @@ public class ImageUtils {
 	 * @return image
 	 */
 	public static Image getImage(String name) {
-		if (cache.containsKey(name)) {
-			return (Image) cache.get(name);
+		if (imageCache.containsKey(name)) {
+			return (Image) imageCache.get(name);
 
 		} else {
 			Image image = new ImageIcon(Constants.IMAGE_DIR + Constants.FILE_SEP + name).getImage();
@@ -62,7 +62,7 @@ public class ImageUtils {
 			if (image == null) {
 				throw new RuntimeException("Image {name:" + name + "} does not exist");
 			} else {
-				cache.put(name, image);
+				imageCache.put(name, image);
 			}
 			return image;
 		}

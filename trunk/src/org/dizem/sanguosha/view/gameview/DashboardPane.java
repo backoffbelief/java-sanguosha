@@ -23,8 +23,6 @@ import java.util.Set;
 public class DashboardPane extends JLayeredPane
 		implements ActionListener, MouseMotionListener, MouseListener {
 
-	private static Font CARD_RANK_FONT = new Font("宋体", Font.BOLD, 18);
-
 
 	private static final int posY = 30;
 	private static final int equipX = 0;
@@ -34,7 +32,6 @@ public class DashboardPane extends JLayeredPane
 	private static final Image imgDashboardEquip = ImageUtils.getImage("system/dashboard-equip.png");
 	private static final Image imgBack = ImageUtils.getImage("system/dashboard-hand.png");
 	private ActionListener listener = this;
-	//private JLabel lblDashboardCard = new JLabel(ImageUtils.getIcon("system/dashboard-hand.png"));
 
 	private JButton[] btnSkills;
 	private JButton btnOfferCard;
@@ -88,7 +85,6 @@ public class DashboardPane extends JLayeredPane
 				+ imgDashboardEquip.getWidth(null), imgDashboardAvatar.getHeight(null) + 30);
 		initButtons();
 
-		//add(lblDashboardCard);
 		try {
 			player.getHandCards().add(Deck.getInstance().popCard());
 			player.getHandCards().add(Deck.getInstance().popCard());
@@ -104,13 +100,8 @@ public class DashboardPane extends JLayeredPane
 		for (AbstractCard card : player.getHandCards()) {
 			addCardLabel(createCardLabel(card));
 		}
-		//	add(lblDashboardCard);
 		character.decreaseLife();
 		character.decreaseLife();
-//		lblCard.setSize(90, 130);
-//		lblCard.setIcon(ImageUtils.getIcon("/card/" + player.getHandCards().get(0).getFilename()));
-
-//		this.add(lblCard);
 
 	}
 
