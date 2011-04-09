@@ -32,6 +32,9 @@ public abstract class AbstractCard implements ICard {
 		this.filename = strImgFile;
 	}
 
+	public AbstractCard() {
+	}
+
 
 	public int getColor() {
 		return color;
