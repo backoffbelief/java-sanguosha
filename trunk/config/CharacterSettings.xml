@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CharacterSettings>
+	<Character gender="男" kingdom="蜀" life="4" name="刘备" filename="liubei.png">
+		<Skill>
+			<Name>仁德</Name>
+			<Description>
+				出牌阶段，可以任意地把手牌分发给其他玩家
+				（可以全给一个人，也可以分别分发给几个人若干张）。
+				其他玩家获得后加入手牌。每分发出两张手牌刘备加一点体力。
+				不足两张的，不加体力。
+				例如，刘备发给关羽张飞诸葛亮各一张牌，给孙尚香两张牌，
+				一共给出五张，因此刘备共可以补充两点体力。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>主公技</Name>
+			<Description>
+				刘备可以在需要出杀的时候，要求
+				（但不强制要求）其他蜀国玩家帮他出杀。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="蜀" life="4" name="关羽" filename="guanyu.png">
+		<Skill>
+			<Name>武圣</Name>
+			<Description>
+				需要出杀时，可以用任意红色花色（红桃、方块）
+				的手牌或已装备的装备牌代替杀使用。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="蜀" life="4" name="张飞" filename="zhangfei.png">
+		<Skill>
+			<Name>飞将</Name>
+			<Description>
+				出牌阶段，可以出任意数量的杀。
+				仍可以装备武器后增加攻击距离。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="蜀" life="3" name="诸葛亮" filename="zhugeliang.png">
+		<Skill>
+			<Name>观星</Name>
+			<Description>
+				摸牌阶段前，查看牌堆顶的三张牌，将其中任意数量的牌以任意顺序置于牌堆底，
+				其余则以任意顺序置于牌堆顶。摸牌阶段照常摸两张牌。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>空城</Name>
+			<Description>无手牌时，不受杀的影响（包括决斗中出的杀）。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="蜀" life="4" name="赵云" filename="zhaoyun.png">
+		<Skill>
+			<Name>龙胆</Name>
+			<Description>可以用杀代替闪使用，也可以用闪代替杀使用。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="蜀" life="4" name="马超" filename="machao.png">
+		<Skill>
+			<Name>马术</Name>
+			<Description>
+				始终视为骑着一匹-1马和一匹+1马，不管他是否装备马。
+				但他最多只能再装备一匹马（算上自己始终骑着的两匹马一共三匹）。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="女" kingdom="蜀" life="3" name="黄月英" filename="huangyueying.png">
+		<Skill>
+			<Name>集智</Name>
+			<Description>
+				当她使用一张锦囊牌后，立即从牌堆顶摸一张牌加入手牌。
+				若月英使用如万箭齐发等锦囊牌后对司马懿造成伤害，
+				则月英应先从牌堆摸一张牌，再让司马懿抽走一张。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>奇才</Name>
+			<Description>使用任何锦囊牌无距离限制，如顺手牵羊。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="吴" life="4" name="孙权" filename="sunquan.png">
+		<Skill>
+			<Name>制衡</Name>
+			<Description>
+				弃牌阶段，如果当前手牌数量小于当前体力值，
+				可补充手牌到当前体力值；也可以在弃牌阶段主动弃掉任意张手牌
+				（正常情况下不能主动弃牌），然后补充手牌到当前体力值
+				（此时补充的手牌不得立即使用）。一回合只能使用一次。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>主公技</Name>
+			<Description>可以要求（但不强制要求）吴国的角色在他们各自的回合给孙权一张手牌。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="吴" life="4" name="甘宁" filename="ganning.png">
+		<Skill>
+			<Name>奇袭</Name>
+			<Description>
+				出牌阶段，你可以将你的任意黑色牌当【过河拆桥】使用。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="吴" life="4" name="吕蒙" filename="lumeng.png">
+		<Skill>
+			<Name>克己</Name>
+			<Description>
+				若在出牌阶段没有打出杀（包括决斗中使用的杀），
+				则弃牌阶段无需弃牌，即此回合手牌无上限。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="吴" life="4" name="黄盖" filename="huanggai.png">
+		<Skill>
+			<Name>苦肉</Name>
+			<Description>
+				出牌阶段，可主动减一点体力，从牌堆摸两张牌。
+				在自己回合可以多次使用该技能。但若自己仅剩一点体力，
+				则不得使用此技能，即便自己手里有桃。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="吴" life="3" name="周瑜" filename="zhouyu.png">
+		<Skill>
+			<Name>英姿</Name>
+			<Description>摸牌阶段，你可以额外摸一张牌</Description>
+		</Skill>
+		<Skill>
+			<Name>反间</Name>
+			<Description>
+				出牌阶段，你可以令另一名角色选择一种花色，
+				抽取你的一张手牌并亮出，若此牌与所选花色不吻合，
+				则你对该角色造成1点伤害。然后不论结果，
+				该角色都获得此牌。每回合限用一次。
+			</Description>
+
+		</Skill>
+	</Character>
+	<Character gender="女" kingdom="吴" life="3" name="大乔" filename="daqiao.png">
+		<Skill>
+			<Name>国色</Name>
+			<Description>
+				出牌阶段，可将任意方块花色的牌横放在目标玩家面前，
+				当作乐不思蜀使用。这张牌发挥与乐不思蜀同样的效果，
+				也可被无懈可击取消。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>流离</Name>
+			<Description>
+				任何时候，受到杀的攻击时（不包括决斗时），可弃一张牌，
+				将这张杀的攻击对象转移给自己攻击范围内的一名玩家
+				（这名玩家不得是攻击者本身）
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="吴" life="3" name="陆逊" filename="luxun.png">
+		<Skill>
+			<Name>谦逊</Name>
+			<Description>不受顺手牵羊和乐不思蜀的影响。</Description>
+		</Skill>
+		<Skill>
+			<Name>连营</Name>
+			<Description>
+				任何时候，只要自己手里没牌了就能从牌堆里摸一张加入自己手牌中。
+				若陆逊打出手里最后一张杀扣减了司马懿一点体力，
+				此时应由陆逊先摸一张牌，而后让司马懿把这张牌拿走。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="女" kingdom="吴" life="3" name="孙尚香" filename="sunshangxiang.png">
+		<Skill>
+			<Name>联姻</Name>
+			<Description>
+				出牌阶段，可弃两张手牌，令自己与一名受伤的男性角色各加一点体力，
+				一回合限一次。【注】使用结姻的条件仅为"弃两张牌"和有"受伤的男性角色"，
+				与自己是否受伤无关。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>枭姬</Name>
+			<Description>任何时候，当自己失去一张已装备的牌时，摸两张牌。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="魏" life="4" name="曹操" filename="caocao.png">
+		<Skill>
+			<Name>奸雄</Name>
+			<Description>
+				可立即获得所有对自己造成体力伤害的牌。
+				包括杀、决斗、万箭齐发、南蛮入侵、闪电，
+				和部分角色用来代替这些牌的牌，
+				但不包括决斗中双方出的杀。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>主公技</Name>
+			<Description>
+				任何时候，曹操可以要求（但不强制要求）
+				魏国武将帮曹操出闪。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="魏" life="3" name="司马懿" filename="simayi.png">
+		<Skill>
+			<Name>反馈</Name>
+			<Description>
+				若有玩家对自己造成体力伤害，随机抽取对方一张手牌，加入自己的手牌。若此时对方无手牌，则此技能无效。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>鬼才</Name>
+			<Description>
+				在任意玩家（包括自己）的判定牌翻开后，可立即从手里打出一张牌，将这张牌作为新的判定牌，并以这张牌上的花色作为判定结果。将原来翻开那张判定牌弃掉。若司马懿对郭嘉使用鬼才，则郭嘉将司马懿打出的用来做判定牌的牌收入手牌。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="魏" life="4" name="夏侯敦" filename="xiahoudun.png">
+		<Skill>
+			<Name>刚烈</Name>
+			<Description>
+				当有玩家对夏侯敦造成体力伤害时（包括使用万箭齐发和南蛮入侵），这名玩家需要立即进行判定，若判定结果为黑色花色（黑桃、梅花），则这名玩家需减一点体力或者弃两张手牌（若没有手牌或手牌不足两张，则只能扣减一点体力）
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="魏" life="4" name="张辽" filename="zhangliao.png">
+		<Skill>
+			<Name>突袭</Name>
+			<Description>摸牌阶段，可选择不摸牌，而是从一到两名玩家手里各随机抽取一张手牌加入自己手牌（若只剩一名其他玩家时，则只能从一名玩家手里抽走一张，总共只能获得一张手牌）</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="魏" life="4" name="许褚" filename="xuchu.png">
+		<Skill>
+			<Name>裸衣</Name>
+			<Description>出牌阶段，如果自己没装备武器牌，用杀攻击成功后（不包括决斗），对方受到两点体力伤害。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="魏" life="3" name="郭嘉" filename="guojia.png">
+		<Skill>
+			<Name>天妒</Name>
+			<Description>可将所有自己的判定牌加入自己的手牌。包括司马懿用于改变判定结果的牌。</Description>
+		</Skill>
+		<Skill>
+			<Name>遗计</Name>
+			<Description>自己每受到一点体力伤害，就能从牌堆摸两张牌，将这两张牌交给包括自己在内的任意一名或两名玩家。</Description>
+		</Skill>
+	</Character>
+	<Character gender="女" kingdom="魏" life="3" name="甄姬" filename="zhenji.png">
+		<Skill>
+			<Name>洛神</Name>
+			<Description>
+				判定阶段可以主动进行判定，若判定结果为黑色花色（黑桃、梅花），则判定成功，并将判定牌加入手牌；若判定结果为红色花色（红桃、方块）则为判定失败，将此判定牌弃掉。可以反复进行判定，直至判定失败。一回合只能使用一次该技能。使用洛神技能与闪电、乐不思蜀、八卦阵无关。例如，轮到甄姬的回合，判定阶段，她使用洛神技能，先翻开一张牌，是梅花花色，则她将这张牌收入手牌；再翻出一张牌，是黑桃，继续收入手牌；又翻出一张牌，是红桃，判定失败，将这张牌弃掉后，判定阶段结束。若甄姬面前放有闪电或乐不思蜀，则仍需先进行闪电或乐不思蜀的判定，最后执行洛神技能。
+			</Description>
+		</Skill>
+		<Skill>
+			<Name>倾国</Name>
+			<Description>可以用任意手牌代替闪使用。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="群" life="3" name="华佗" filename="huatuo.png">
+		<Skill>
+			<Name>急救</Name>
+			<Description>任何时候，弃一张红色花色（红桃、方块）的牌，可抵消对包括自己在内的任意玩家的一点伤害。</Description>
+		</Skill>
+		<Skill>
+			<Name>青囊</Name>
+			<Description>出牌阶段，可弃一张手牌或已装备的牌为自己加一点体力，可多次使用该技能。</Description>
+		</Skill>
+	</Character>
+	<Character gender="男" kingdom="群" life="4" name="吕布" filename="lubu.png">
+		<Skill>
+			<Name>无双</Name>
+			<Description>使用杀攻击时，对方需使用两张闪才能闪避，如果对方使用八卦阵，需要判定两次；使用范围攻击的锦囊（如万箭齐发和南蛮入侵）时，所有人除出闪或杀外，需额外多弃一张任意手牌，否则减一点体力。
+			</Description>
+		</Skill>
+	</Character>
+	<Character gender="女" kingdom="群" life="3" name="貂蝉" filename="diaochan.png">
+		<Skill>
+			<Name>闭月</Name>
+			<Description>弃牌阶段结束后摸一张牌加入手牌。</Description>
+		</Skill>
+		<Skill>
+			<Name>离间</Name>
+			<Description>出牌阶段可弃一张牌，然后指定两名男性角色进行决斗（即执行决斗这张锦囊牌的效用），并由貂蝉决定出杀的先后（角色性别跟玩家性别无关）。一回合只能使用一次。</Description>
+		</Skill>
+	</Character>
+</CharacterSettings>
