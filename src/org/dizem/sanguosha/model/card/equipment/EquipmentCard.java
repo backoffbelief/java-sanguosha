@@ -5,6 +5,7 @@ import org.dizem.sanguosha.model.card.ICard;
 
 public class EquipmentCard extends AbstractCard {
 
+	
 	public static int TYPE_HORSE_CARD_MINUS = 3;
 
 	public static int TYPE_HORSE_CARD_PLUS = 2;
@@ -36,24 +37,22 @@ public class EquipmentCard extends AbstractCard {
 
 	public static EquipmentCard create(String pattern, String number, String name,
 									   String description, String filename, String tag) {
+
+
 		if (tag.equals("h1")) {
-			System.out.println(name + " h1");
 			return new EquipmentCard(pattern, number, name + "(+1)",
 					description, filename, TYPE_HORSE_CARD_PLUS);
 
 		} else if (tag.equals("h-1")) {
-			System.out.println(name + " h-1");
 			return new EquipmentCard(pattern, number, name + "(-1)",
 					description, filename, TYPE_HORSE_CARD_MINUS);
 
 		} else if (tag.startsWith("w")) {
-			System.out.println(name + " t");
 			return new EquipmentCard(pattern, number, name,
 					description, filename, TYPE_WEAPON_CARD,
 					Integer.parseInt(tag.substring(1, tag.length())));
 
 		} else {
-			System.out.println(name + " a");
 			return new EquipmentCard(pattern, number, name,
 					description, filename, TYPE_ARMOR_CARD);
 		}
@@ -61,6 +60,10 @@ public class EquipmentCard extends AbstractCard {
 
 	public int getCardType() {
 		return cardType;
+	}
+
+	public int getRange() {
+		return range;
 	}
 
 	public int getCategory() {

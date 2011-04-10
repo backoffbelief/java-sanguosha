@@ -1,17 +1,23 @@
 package org.dizem.sanguosha.view.gameview;
 
-import craky.componentc.JCButton;
+import craky.componentc.GridBorder;
 import craky.util.UIUtil;
+import org.apache.log4j.Logger;
 import org.dizem.common.ImageUtils;
 import org.dizem.common.PanelViewer;
 import org.dizem.common.TwoWayMap;
+import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.card.*;
 import org.dizem.sanguosha.model.card.Skill;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
+import org.dizem.sanguosha.view.component.SGSEquipmentLabel;
+import org.dizem.sanguosha.view.component.SGSGameButton;
+import org.dizem.sanguosha.view.component.SGSHandCardLabel;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -21,8 +27,9 @@ import java.util.*;
  * Time: 11-4-1 下午7:17
  */
 public class DashboardPane extends JLayeredPane
-		implements ActionListener, MouseMotionListener, MouseListener {
+		implements ActionListener {
 
+	private static Logger log = Logger.getLogger(DashboardPane.class);
 
 	private static final int posY = 30;
 	private static final int equipX = 0;
@@ -31,6 +38,7 @@ public class DashboardPane extends JLayeredPane
 	private static final Image imgDashboardAvatar = ImageUtils.getImage("system/dashboard-avatar.png");
 	private static final Image imgDashboardEquip = ImageUtils.getImage("system/dashboard-equip.png");
 	private static final Image imgBack = ImageUtils.getImage("system/dashboard-hand.png");
+
 	private ActionListener listener = this;
 
 	private JButton[] btnSkills;
@@ -46,12 +54,7 @@ public class DashboardPane extends JLayeredPane
 			ImageUtils.getImage("system/magatamas/small-4.png"),
 			ImageUtils.getImage("system/magatamas/small-5.png")
 	};
-	private static final Image[] imgSuit = {
-			ImageUtils.getImage("system/suit/1.png"),
-			ImageUtils.getImage("system/suit/2.png"),
-			ImageUtils.getImage("system/suit/3.png"),
-			ImageUtils.getImage("system/suit/4.png")
-	};
+
 	private static final Image[] imgRole = {
 			ImageUtils.getImage("system/roles/small-lord.png"),
 			ImageUtils.getImage("system/roles/small-loyalist.png"),
@@ -82,14 +85,15 @@ public class DashboardPane extends JLayeredPane
 
 	public DashboardPane() {
 		super();
-
 		character = CharacterDeck.getInstance().popCharacters(1)[0];
 		imgAvatar = ImageUtils.getImage("/generals/big/" + character.getFilename());
 		imgKingdom = ImageUtils.getImage("/kingdom/icon/" + character.getKingdomImgName());
+
 		player = new Player("dizem", Role.ROLE_NJ);
-		setLayout(null);
+		//setLayout(null);
 		setSize(480 + imgDashboardAvatar.getWidth(null)
 				+ imgDashboardEquip.getWidth(null), imgDashboardAvatar.getHeight(null) + 30);
+		setPreferredSize(getSize());
 		initButtons();
 
 		try {
@@ -101,8 +105,9 @@ public class DashboardPane extends JLayeredPane
 			player.getHandCards().add(Deck.getInstance().popCard());
 			player.getHandCards().add(Deck.getInstance().popCard());
 			player.getHandCards().add(Deck.getInstance().popCard());
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		for (AbstractCard card : player.getHandCards()) {
 			addHandCardLabel(createCardLabel(card));
@@ -112,37 +117,28 @@ public class DashboardPane extends JLayeredPane
 
 	}
 
-
 	private void initButtons() {
-		btnOfferHandCard = new JCButton("出牌");
-		btnOfferHandCard.setSize(60, 30);
+		btnOfferHandCard = new SGSGameButton("出牌");
 		btnOfferHandCard.setLocation(avatarX, 0);
-		btnOfferHandCard.setEnabled(false);
-		btnOfferHandCard.setFocusable(false);
 		btnOfferHandCard.addActionListener(listener);
 		add(btnOfferHandCard);
 
-		btnThrowHandCard = new JCButton("弃牌");
-		btnThrowHandCard.setSize(60, 30);
-		btnThrowHandCard.setLocation(avatarX + 60, 0);
+		btnThrowHandCard = new SGSGameButton("弃牌");
+		btnThrowHandCard.setLocation(avatarX + 62, 0);
 //		btnThrowHandCard.setEnabled(false);
-		btnThrowHandCard.setFocusable(false);
 		btnThrowHandCard.addActionListener(listener);
 		add(btnThrowHandCard);
 
 		btnSkills = new JButton[character.getSkills().length];
 		for (int i = 0; i < btnSkills.length; ++i) {
 			Skill skill = (Skill) character.getSkills()[i];
-			btnSkills[i] = new JCButton(skill.getName());
-			btnSkills[i].setToolTipText(skill.getHtmlDescription());
-			btnSkills[i].setSize(60, 30);
-			btnSkills[i].setLocation(avatarX + i * 60, 140 + posY);
-			btnSkills[i].setFocusable(false);
+			btnSkills[i] = new SGSGameButton(skill.getName(), skill.getHtmlDescription());
+			btnSkills[i].setLocation(avatarX + i * 62 + i, 140 + posY);
 			btnSkills[i].addActionListener(listener);
 			add(btnSkills[i]);
 		}
 		if (btnSkills.length == 1) {
-			btnSkills[0].setSize(120, 30);
+			btnSkills[0].setSize(124, 30);
 		}
 	}
 
@@ -155,7 +151,6 @@ public class DashboardPane extends JLayeredPane
 		drawLife(g);
 		drawName(g);
 	}
-
 
 	private void drawDashboard(Graphics g) {
 		g.drawImage(imgDashboardEquip, equipX, posY, null);
@@ -186,36 +181,7 @@ public class DashboardPane extends JLayeredPane
 
 	private JLabel createCardLabel(final AbstractCard card) {
 
-		final JLabel label = new JLabel(ImageUtils.getIcon("/card/" + card.getFilename())) {
-
-			int suit = card.getSuit() - 1;
-			String rank = card.getRank();
-			Color color = card.isRed() ? Color.RED : Color.BLACK;
-			final Font font = new Font("Consolas", Font.PLAIN, 12);
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(imgSuit[suit], 8, 9, null);
-				g.setColor(color);
-				g.setFont(font);
-				g.drawString(rank, 8, 28);
-			}
-
-			@Override
-			public String toString() {
-				return "JLabel{" +
-						"suit=" + suit+
-						", rank='" + rank + '\'' +
-						'}';
-			}
-		};
-
-		label.setName("F");
-		label.setSize(90, 130);
-		label.setToolTipText(card.getHtmlDescription());
-		label.addMouseMotionListener(this);
-		label.addMouseListener(this);
+		final JLabel label = new SGSHandCardLabel(card);
 
 		handCardLabelMap.put(card, label);
 
@@ -223,8 +189,8 @@ public class DashboardPane extends JLayeredPane
 
 			public void actionPerformed(ActionEvent e) {
 
-				if (label.getName().equals("T")) {
-					label.setName("F");
+				if (label.getName().equals(Constants.SELECTED_TAG)) {
+					label.setName(Constants.UNSELECTED_TAG);
 					label.setLocation(label.getX(), posY + 38 + 30);
 					DashboardPane.this.repaint(label.getX(), label.getY() - 30, 90, 160);
 					cardSelectedSet.remove(label);
@@ -234,7 +200,7 @@ public class DashboardPane extends JLayeredPane
 					}
 
 				} else {
-					label.setName("T");
+					label.setName(Constants.SELECTED_TAG);
 					label.setLocation(label.getX(), posY + 38 - 30);
 					DashboardPane.this.repaint(label.getX(), label.getY(), 90, 160);
 					cardSelectedSet.add(label);
@@ -249,39 +215,9 @@ public class DashboardPane extends JLayeredPane
 	}
 
 	private JLabel createEquipmentLabel(final EquipmentCard card) {
-		JLabel label = new JLabel() {
-
-			int suit = card.getSuit() - 1;
-			String rank = card.getRank();
-			String name = card.getName();
-			Color color = card.isRed() ? Color.RED : Color.BLACK;
-			Font font = new Font("宋体", Font.PLAIN, 15);
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(imgSuit[suit], 8, 8, null);
-				g.setColor(color);
-				g.setFont(font);
-				g.drawString(rank, 17, 15);
-				g.setColor(Color.WHITE);
-				g.drawString(name, 25, 15);
-			}
-
-			@Override
-			public String toString() {
-				return "JLabel{" +
-						"rank='" + rank + '\'' +
-						", suit=" + suit +
-						", name='" + name + '\'' +
-						'}';
-			}
-		};
-
+		final JLabel label = new SGSEquipmentLabel(card);
 		equipmentLabelMap.put(card, label);
-
-		label.setSize(100, 20);
-		label.setLocation(10, 42 + posY + card.getCardType() * 30);
+		label.setLocation(10, 42 + posY + card.getCardType() * 32);
 		return label;
 	}
 
@@ -323,7 +259,7 @@ public class DashboardPane extends JLayeredPane
 	private void removeHandCardLabel(JLabel handCardLabel) {
 		remove(handCardLabel);
 		handCardLabelList.remove(handCardLabel);
-		cardSelectedSet.remove(handCardLabel);
+		//cardSelectedSet.remove(handCardLabel);
 		handCardLabelMap.removeByValue(handCardLabel);
 		updateHandCardGap();
 	}
@@ -345,8 +281,11 @@ public class DashboardPane extends JLayeredPane
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnOfferHandCard) {
-			for (JLabel cardLabel : cardSelectedSet) {
-				AbstractCard card = handCardLabelMap.getKey(cardLabel);
+			//for (JLabel cardLabel : cardSelectedSet) {
+			Iterator itCardLabel = cardSelectedSet.iterator();
+			while (itCardLabel.hasNext()) {
+				JLabel label = (JLabel) itCardLabel.next();
+				AbstractCard card = handCardLabelMap.getKey(label);
 
 				if (card instanceof EquipmentCard) {
 					EquipmentCard equipmentCard = (EquipmentCard) card;
@@ -358,47 +297,13 @@ public class DashboardPane extends JLayeredPane
 						continue;
 					}
 				}
-				removeHandCardLabel(cardLabel);
+				removeHandCardLabel(label);
+				itCardLabel.remove();
 			}
 		} else if (e.getSource() == btnThrowHandCard) {
 			addHandCardLabel(createCardLabel(Deck.getInstance().popCard()));
 		}
 	}
 
-	public void mouseDragged(MouseEvent e) {
-	}
 
-	public void mouseMoved(MouseEvent e) {
-		JLabel label = (JLabel) e.getSource();
-		/*
-			f(0) = f(90) = 0, f(45) = 30
-			f(x) = a(x - 90) * x
-			f(x) = a * -45 * 45 = 30 => a = -2/135
-		  */
-		double scale = -2. / 135.;
-		double delta = scale * (e.getX() - 90) * e.getX();
-		if (label.getName().equals("F")) {
-			label.setLocation(label.getX(), (int) (posY + 38 - delta));
-			label.updateUI();
-		}
-	}
-
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	public void mousePressed(MouseEvent e) {
-	}
-
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void mouseExited(MouseEvent e) {
-		JLabel label = (JLabel) e.getSource();
-		if (label.getName().equals("F")) {
-			label.setLocation(label.getX(), posY + 38);
-		}
-	}
 }

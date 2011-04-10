@@ -1,5 +1,6 @@
 package org.dizem.sanguosha.model.card;
 
+import org.apache.log4j.Logger;
 import org.dizem.sanguosha.model.Constants;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class CharacterDeck {
+
+
+	private static Logger log = Logger.getLogger(Deck.class);
 
 	private static CharacterDeck instance;
 	/**
@@ -82,6 +86,7 @@ public class CharacterDeck {
 	 */
 	private void init() {
 		String CardXML = Constants.CHARACTER_SETTING_PATH;
+		int cnt = 0;
 
 		try {
 			DocumentBuilder bf = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -118,14 +123,18 @@ public class CharacterDeck {
 						}
 
 						ch.addSkill(new Skill(skillName, skillDesciption));
+						++cnt;
 					}
 
 					addCharacter(ch);
 				}
 
 			}
+
+			log.info("Read " + cnt + " characters from CharacterSetting.xml");
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 	}
 

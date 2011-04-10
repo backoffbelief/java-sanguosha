@@ -42,6 +42,8 @@ public interface Constants {
 	String DB_DRIVER = "smallsql.database.SSDriver";
 	String DB_URL = "jdbc:smallsql:data";
 
+	String SELECTED_TAG = "T";
+	String UNSELECTED_TAG = "F";
 
 	String GC_PERIOD = "GC_Period";
 	String EMPTY = "";

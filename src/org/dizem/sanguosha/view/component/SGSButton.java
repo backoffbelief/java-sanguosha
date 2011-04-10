@@ -17,8 +17,6 @@ public class SGSButton extends JCButton {
 
 	public final static Font font = new Font("微软雅黑", Font.BOLD, 15);
 
-
-
 	public SGSButton(String text) {
 		super(text);
 		setPreferredSize(size);

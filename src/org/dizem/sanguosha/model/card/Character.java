@@ -1,5 +1,7 @@
 package org.dizem.sanguosha.model.card;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 
 /**
@@ -7,6 +9,9 @@ import java.util.ArrayList;
  * Time: 11-3-30 下午2:58
  */
 public class Character {
+
+	private static Logger log = Logger.getLogger(Character.class);
+
 	/**
 	 * 角色名字
 	 */
@@ -87,7 +92,14 @@ public class Character {
 	}
 
 	public void decreaseLife() {
-		if (life > 0) life--;
+		if (life > 0) {
+			life--;
+			log.info("Decrease life");
+			
+		} else {
+			log.error("Can not decrease life");
+		}
+
 	}
 
 	public String getKingdomImgName() {

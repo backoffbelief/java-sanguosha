@@ -1,5 +1,6 @@
 package org.dizem.sanguosha.model.card;
 
+import org.apache.log4j.Logger;
 import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.card.skill.SkillCard;
@@ -18,6 +19,8 @@ import java.util.Random;
  * Time: 11-3-30 下午3:01
  */
 public class Deck {
+
+	private static Logger log = Logger.getLogger(Deck.class);
 
 	private static Deck instance;
 
@@ -102,6 +105,7 @@ public class Deck {
 	private void init() {
 		String CardXML = Constants.CARD_SETTING_PATH;
 		String description = null;
+		int cnt = 0;
 		try {
 			DocumentBuilder bf = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = bf.parse(CardXML);
@@ -160,12 +164,16 @@ public class Deck {
 										typeMap.getNamedItem("tag").getNodeValue()
 								));
 							}
+
+							++cnt;
 						}
 					}
 				}
 			}
+			log.info("Read " + cnt + " cards infomation from CardSetting.xml");
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 
 	}
