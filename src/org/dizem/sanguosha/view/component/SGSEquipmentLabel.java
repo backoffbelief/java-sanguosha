@@ -17,14 +17,13 @@ import java.awt.event.MouseMotionListener;
  * User: DIZEM
  * Time: 11-4-10 下午2:24
  */
-public class SGSEquipmentLabel extends JLabel
-		 {
+public class SGSEquipmentLabel extends JLabel {
 
 	private int suit;
 	private String rank;
 	private String name;
 	private Color color;
-
+	private boolean isSelectable;
 	private final Font equipmentTextFont = new Font("宋体", Font.PLAIN, 13);
 
 	public SGSEquipmentLabel(EquipmentCard card) {
@@ -33,27 +32,28 @@ public class SGSEquipmentLabel extends JLabel
 		rank = card.getRank();
 		name = card.getName();
 		color = card.isRed() ? Color.RED : Color.WHITE;
+		isSelectable = card.isSelectable();
+		System.out.println(card.getName() + " " + card.isSelectable());
 		setToolTipText(card.getHtmlDescription());
-		setSize(130, 20);
+		setSize(115, 22);
 		setName(Constants.UNSELECTED_TAG);
 		initEvent();
 	}
 
 	private void initEvent() {
 
-		
 		UIUtil.actionLabel(this, new AbstractAction() {
-			Border selectedBorder = new GridBorder(Color.WHITE, 1, 1, 1, 1);
+			Border selectedBorder = new GridBorder(Color.YELLOW, 2, 2, 2, 2);
 
 			public void actionPerformed(ActionEvent e) {
-				if (getName().equals(Constants.UNSELECTED_TAG)) {
-					setName(Constants.SELECTED_TAG);
-					setLocation(getX() + 25, getY());
-					setBorder(selectedBorder);
-				} else {
-					setName(Constants.UNSELECTED_TAG);
-					setLocation(getX() - 25, getY());
-					setBorder(null);
+				if (isSelectable) {
+					if (getName().equals(Constants.UNSELECTED_TAG)) {
+						setName(Constants.SELECTED_TAG);
+						setBorder(selectedBorder);
+					} else {
+						setName(Constants.UNSELECTED_TAG);
+						setBorder(null);
+					}
 				}
 			}
 		});

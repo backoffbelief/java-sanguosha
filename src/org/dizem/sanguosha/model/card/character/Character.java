@@ -1,6 +1,7 @@
-package org.dizem.sanguosha.model.card;
+package org.dizem.sanguosha.model.card.character;
 
 import org.apache.log4j.Logger;
+import org.dizem.sanguosha.model.card.Skill;
 
 import java.util.ArrayList;
 
@@ -25,17 +26,11 @@ public class Character {
 	 */
 	private int maxLife;
 	private int life;
-	/**
-	 * 角色国家
-	 */
+
 	private String kingdom;
-	/**
-	 * 角色技能
-	 */
+
 	private ArrayList<Skill> skills;
-	/**
-	 * 角色是否已被杀
-	 */
+
 	private boolean killed;
 
 	private String filename;

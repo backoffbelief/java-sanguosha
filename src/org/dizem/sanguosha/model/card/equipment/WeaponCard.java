@@ -19,4 +19,10 @@ public class WeaponCard extends EquipmentCard {
 		return range;
 	}
 
+	@Override
+	public boolean isSelectable() {
+		System.out.println(name);
+		return name.startsWith("丈八蛇矛") || name.startsWith("雌雄双股剑")
+				|| name.startsWith("寒冰剑");
+	}
 }

@@ -1,7 +1,6 @@
 package org.dizem.sanguosha.model.player;
 
 import org.dizem.sanguosha.model.card.AbstractCard;
-import org.dizem.sanguosha.model.card.Character;
 import org.dizem.sanguosha.model.card.equipment.*;
 import org.dizem.sanguosha.model.exception.SGSException;
 
@@ -17,7 +16,7 @@ public class Player {
 	private String name;
 	private int score;
 	private Role role;
-	private Character character;
+	private org.dizem.sanguosha.model.card.character.Character character;
 	private List<AbstractCard> handCards;
 	private List<EquipmentCard> equipmentCards;
 	private List<AbstractCard> effectCards;
@@ -96,8 +95,13 @@ public class Player {
 		effectCards.remove(card);
 	}
 
-	public void removeEquipmentCard(AbstractCard card) {
-		equipmentCards.remove(card);
+	public void removeEquipmentCard(int type) {
+		for(EquipmentCard card : equipmentCards) {
+			if(card.getCardType() == type) {
+				equipmentCards.remove(type);
+				break;
+			}
+		}
 	}
 
 	

@@ -80,8 +80,6 @@ public class TwoWayMap<K, V> implements Cloneable, Serializable {
 			K key = valueToKey.get(value);
 			keyToValue.remove(key);
 			valueToKey.remove(value);
-			//System.out.println("removeByValue: remain " + keyToValue.size() + " " + valueToKey.size());
-			//display();
 		}
 	}
 

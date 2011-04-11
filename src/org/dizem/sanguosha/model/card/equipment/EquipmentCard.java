@@ -18,6 +18,11 @@ public class EquipmentCard extends AbstractCard {
 
 	private int range;
 
+	public boolean isSelectable() {
+		return name.startsWith("丈八蛇矛") || name.startsWith("雌雄双股剑")
+				|| name.startsWith("寒冰剑");
+	}
+
 	public EquipmentCard(String pattern, String number, String name,
 						 String description, String filename) {
 		super(pattern, number, name, description, filename);
@@ -48,9 +53,10 @@ public class EquipmentCard extends AbstractCard {
 					description, filename, TYPE_HORSE_CARD_MINUS);
 
 		} else if (tag.startsWith("w")) {
-			return new EquipmentCard(pattern, number, name,
+			int range = Integer.parseInt(tag.substring(1, tag.length()));
+			return new EquipmentCard(pattern, number, name + "(+" + range + ")",
 					description, filename, TYPE_WEAPON_CARD,
-					Integer.parseInt(tag.substring(1, tag.length())));
+					range);
 
 		} else {
 			return new EquipmentCard(pattern, number, name,
