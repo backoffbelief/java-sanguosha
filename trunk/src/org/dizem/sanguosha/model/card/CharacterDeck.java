@@ -2,6 +2,7 @@ package org.dizem.sanguosha.model.card;
 
 import org.apache.log4j.Logger;
 import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.card.character.Character;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -148,7 +149,7 @@ public class CharacterDeck {
 	public static void main(String[] args) {
 		CharacterDeck deck = CharacterDeck.getInstance();
 		Character[] cs = deck.popLoadCharacter();
-		for (Character c : cs) {
+		for (org.dizem.sanguosha.model.card.character.Character c : cs) {
 			System.out.println(c);
 		}
 	}

@@ -1,6 +1,5 @@
 package org.dizem.sanguosha.view.gameview;
 
-import craky.componentc.GridBorder;
 import craky.util.UIUtil;
 import org.apache.log4j.Logger;
 import org.dizem.common.ImageUtils;
@@ -17,7 +16,6 @@ import org.dizem.sanguosha.view.component.SGSGameButton;
 import org.dizem.sanguosha.view.component.SGSHandCardLabel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -69,14 +67,14 @@ public class DashboardPane extends JLayeredPane
 	};
 
 
-	private org.dizem.sanguosha.model.card.Character character;
+	private org.dizem.sanguosha.model.card.character.Character character;
 	private Player player;
 	private Image imgAvatar;
 	private Image imgKingdom;
 
 
 	private TwoWayMap<AbstractCard, JLabel> handCardLabelMap = new TwoWayMap<AbstractCard, JLabel>();
-	private TwoWayMap<EquipmentCard, JLabel> equipmentLabelMap = new TwoWayMap<EquipmentCard, JLabel>();
+	private TwoWayMap<Integer, JLabel> equipmentLabelMap = new TwoWayMap<Integer, JLabel>();
 	private java.util.List<JLabel> handCardLabelList = new ArrayList<JLabel>();
 	private Set<JLabel> cardSelectedSet = new HashSet<JLabel>();
 
@@ -125,7 +123,7 @@ public class DashboardPane extends JLayeredPane
 
 		btnThrowHandCard = new SGSGameButton("弃牌");
 		btnThrowHandCard.setLocation(avatarX + 62, 0);
-//		btnThrowHandCard.setEnabled(false);
+		btnThrowHandCard.setEnabled(true);
 		btnThrowHandCard.addActionListener(listener);
 		add(btnThrowHandCard);
 
@@ -216,7 +214,7 @@ public class DashboardPane extends JLayeredPane
 
 	private JLabel createEquipmentLabel(final EquipmentCard card) {
 		final JLabel label = new SGSEquipmentLabel(card);
-		equipmentLabelMap.put(card, label);
+		equipmentLabelMap.put(card.getCardType(), label);
 		label.setLocation(10, 42 + posY + card.getCardType() * 32);
 		return label;
 	}
@@ -281,21 +279,21 @@ public class DashboardPane extends JLayeredPane
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnOfferHandCard) {
-			//for (JLabel cardLabel : cardSelectedSet) {
 			Iterator itCardLabel = cardSelectedSet.iterator();
+
 			while (itCardLabel.hasNext()) {
 				JLabel label = (JLabel) itCardLabel.next();
 				AbstractCard card = handCardLabelMap.getKey(label);
 
 				if (card instanceof EquipmentCard) {
 					EquipmentCard equipmentCard = (EquipmentCard) card;
-					if (player.canAddEquipmentCard(equipmentCard)) {
-						player.addEquipmentCard(equipmentCard);
-						addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
-
-					} else {
-						continue;
+					if (!player.canAddEquipmentCard(equipmentCard)) {
+						JLabel cardLabelToRemove = equipmentLabelMap.getValue(((EquipmentCard) card).getCardType());
+						removeEquipmentCardLabel(cardLabelToRemove);
+						player.removeEquipmentCard(equipmentCard.getCardType());
 					}
+					player.addEquipmentCard(equipmentCard);
+					addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
 				}
 				removeHandCardLabel(label);
 				itCardLabel.remove();
