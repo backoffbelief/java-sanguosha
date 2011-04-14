@@ -1,5 +1,6 @@
 package org.dizem.sanguosha.view;
 
+import craky.componentc.JCFrame;
 import craky.util.UIUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -19,7 +20,7 @@ import java.util.Random;
  * User: DIZEM
  * Time: 11-3-25 下午10:12
  */
-public class MainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JCFrame implements ActionListener {
 
 	private static Logger log = Logger.getLogger(MainFrame.class);
 
@@ -48,20 +49,20 @@ public class MainFrame extends JFrame implements ActionListener {
 	private void initFrame() {
 		setIconImage(ImageUtils.getImage("sgs.png"));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(new Dimension(700, 550));
+		setSize(new Dimension(700, 525));
 		setLocationRelativeTo(null);
 		setResizable(false);
 	}
 
 	private void initLayout() {
 		setLayout(null);
-		bgLabel = new JLabel();
-		UIUtil.actionLabel(bgLabel, new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				updateBgImage();
-				MainFrame.this.repaint();
-			}
-		});
+//		bgLabel = new JLabel();
+//		UIUtil.actionLabel(bgLabel, new AbstractAction() {
+//			public void actionPerformed(ActionEvent e) {
+//				updateBgImage();
+//				MainFrame.this.repaint();
+//			}
+//		});
 		loggerArea = new SGSTextArea();
 		loggerArea.setPreferredSize(loggerArea.getPreferredSize());
 		loggerArea.setLocation(20, 20);
@@ -76,7 +77,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		add(scrollPane);
 
 
-		int offsetX = 20;
+		int offsetX = 50;
 		int offsetY = 280;
 		btnStartServer = new SGSButton(Constants.STR_START_SERVER);
 		btnStartServer.setBounds(offsetX, offsetY, 100, 40);
@@ -98,8 +99,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		btnAbout.addActionListener(this);
 		add(btnAbout);
 		updateBgImage();
-		getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
-		((JPanel) getContentPane()).setOpaque(false);
+//		getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
+//		((JPanel) getContentPane()).setOpaque(false);
+
 	}
 
 	private void updateBgImage() {
@@ -108,9 +110,10 @@ public class MainFrame extends JFrame implements ActionListener {
 		bgImageId = rand.nextInt(4) + 1;
 		if (oldBgImageId == bgImageId)
 			bgImageId = bgImageId % 4 + 1;
-		ImageIcon img = ImageUtils.getIcon("system/background/bg" + bgImageId + ".jpg");
-		bgLabel.setIcon(img);
-		bgLabel.setBounds(0, 0, img.getIconWidth(), img.getIconHeight());
+		setBackgroundImage(ImageUtils.getImage("system/background/bg" + bgImageId + ".jpg"));
+		repaint();
+//		bgLabel.setIcon(img);
+//		bgLabel.setBounds(0, 0, img.getIconWidth(), img.getIconHeight());
 	}
 
 
