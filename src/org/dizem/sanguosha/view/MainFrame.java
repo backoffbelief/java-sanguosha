@@ -56,13 +56,7 @@ public class MainFrame extends JCFrame implements ActionListener {
 
 	private void initLayout() {
 		setLayout(null);
-//		bgLabel = new JLabel();
-//		UIUtil.actionLabel(bgLabel, new AbstractAction() {
-//			public void actionPerformed(ActionEvent e) {
-//				updateBgImage();
-//				MainFrame.this.repaint();
-//			}
-//		});
+
 		loggerArea = new SGSTextArea();
 		loggerArea.setPreferredSize(loggerArea.getPreferredSize());
 		loggerArea.setLocation(20, 20);
@@ -99,8 +93,6 @@ public class MainFrame extends JCFrame implements ActionListener {
 		btnAbout.addActionListener(this);
 		add(btnAbout);
 		updateBgImage();
-//		getLayeredPane().add(bgLabel, new Integer(Integer.MIN_VALUE));
-//		((JPanel) getContentPane()).setOpaque(false);
 
 	}
 
@@ -112,8 +104,6 @@ public class MainFrame extends JCFrame implements ActionListener {
 			bgImageId = bgImageId % 4 + 1;
 		setBackgroundImage(ImageUtils.getImage("system/background/bg" + bgImageId + ".jpg"));
 		repaint();
-//		bgLabel.setIcon(img);
-//		bgLabel.setBounds(0, 0, img.getIconWidth(), img.getIconHeight());
 	}
 
 
