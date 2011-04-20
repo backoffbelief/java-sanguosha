@@ -16,6 +16,8 @@ public class Player {
 	private String name;
 	private int score;
 	private Role role;
+	private Phase phase;
+
 	private org.dizem.sanguosha.model.card.character.Character character;
 	private List<AbstractCard> handCards;
 	private List<EquipmentCard> equipmentCards;
@@ -28,7 +30,9 @@ public class Player {
 		effectCards = new ArrayList<AbstractCard>();
 		handCards = new ArrayList<AbstractCard>();
 		equipmentCards = new ArrayList<EquipmentCard>();
+		this.phase = Phase.START;
 	}
+
 
 	public synchronized static List<Player> getPlayerList() {
 		if (instance == null)
@@ -52,8 +56,8 @@ public class Player {
 	 */
 	public boolean canAddEquipmentCard(EquipmentCard card) {
 		System.out.println(card.getCardType());
-		for(EquipmentCard equipmentCard : equipmentCards) {
-			if(equipmentCard.getCardType() == card.getCardType()) {
+		for (EquipmentCard equipmentCard : equipmentCards) {
+			if (equipmentCard.getCardType() == card.getCardType()) {
 				return false;
 			}
 		}
@@ -95,14 +99,41 @@ public class Player {
 		effectCards.remove(card);
 	}
 
+	public Phase getPhase() {
+		return phase;
+	}
+
+	public int getPhaseID() {
+		switch (phase) {
+			case START:
+				return 0;
+			case JUDGE:
+				return 1;
+			case DRAW:
+				return 2;
+			case PLAY:
+				return 3;
+			case DISCARD:
+				return 4;
+			case FINISH:
+				return 5;
+			default:
+				return 6;
+		}
+	}
+
+	public void setPhase(Phase phase) {
+		this.phase = phase;
+	}
+
 	public void removeEquipmentCard(int type) {
-		for(EquipmentCard card : equipmentCards) {
-			if(card.getCardType() == type) {
+		for (EquipmentCard card : equipmentCards) {
+			if (card.getCardType() == type) {
 				equipmentCards.remove(type);
 				break;
 			}
 		}
 	}
 
-	
+
 }
