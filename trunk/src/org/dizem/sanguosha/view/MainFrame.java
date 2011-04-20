@@ -93,7 +93,6 @@ public class MainFrame extends JCFrame implements ActionListener {
 		btnAbout.addActionListener(this);
 		add(btnAbout);
 		updateBgImage();
-
 	}
 
 	private void updateBgImage() {
@@ -104,6 +103,7 @@ public class MainFrame extends JCFrame implements ActionListener {
 			bgImageId = bgImageId % 4 + 1;
 		setBackgroundImage(ImageUtils.getImage("system/background/bg" + bgImageId + ".jpg"));
 		repaint();
+
 	}
 
 
