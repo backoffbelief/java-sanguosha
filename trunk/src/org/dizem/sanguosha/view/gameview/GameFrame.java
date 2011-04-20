@@ -13,6 +13,7 @@ import java.awt.*;
  */
 public class GameFrame extends JCFrame {
 	private static Logger log = Logger.getLogger(GameFrame.class);
+	private OtherPlayerPane pane = new OtherPlayerPane();
 	private DashboardPane dashboard = new DashboardPane();
 	public GameFrame() {
 		initFrame();
@@ -29,6 +30,8 @@ public class GameFrame extends JCFrame {
 	private void initLayout() {
 		setLayout(new BorderLayout());
 		dashboard.setLocation(0, 0);
+		pane.setLocation(50, 50);
+		add(pane);
 		add(dashboard, BorderLayout.SOUTH);
 	}
 

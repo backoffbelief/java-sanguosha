@@ -44,7 +44,7 @@ public class DashboardPane extends JLayeredPane
 	private JButton btnThrowHandCard;
 
 
-	private static final Image[] imgHpBig = {
+	private static final Image[] IMG_HP_BIG = {
 			ImageUtils.getImage("system/magatamas/small-0.png"),
 			ImageUtils.getImage("system/magatamas/small-1.png"),
 			ImageUtils.getImage("system/magatamas/small-2.png"),
@@ -53,18 +53,13 @@ public class DashboardPane extends JLayeredPane
 			ImageUtils.getImage("system/magatamas/small-5.png")
 	};
 
-	private static final Image[] imgRole = {
+	private static final Image[] IMG_ROLE = {
 			ImageUtils.getImage("system/roles/small-lord.png"),
 			ImageUtils.getImage("system/roles/small-loyalist.png"),
 			ImageUtils.getImage("system/roles/small-renegade.png"),
 			ImageUtils.getImage("system/roles/small-rebel.png")
 	};
-	private static final Image[] imgRoleDead = {
-			ImageUtils.getImage("system/roles/small-lord.png"),
-			ImageUtils.getImage("system/roles/small-loyalist.png"),
-			ImageUtils.getImage("system/roles/small-renegade.png"),
-			ImageUtils.getImage("system/roles/small-rebel.png")
-	};
+
 
 
 	private org.dizem.sanguosha.model.card.character.Character character;
@@ -162,16 +157,16 @@ public class DashboardPane extends JLayeredPane
 		int x = avatarX - 3, y = 37;
 		switch (player.getRole()) {
 			case ROLE_ZG:
-				g.drawImage(imgRole[0], x, y, null);
+				g.drawImage(IMG_ROLE[0], x, y, null);
 				break;
 			case ROLE_ZC:
-				g.drawImage(imgRole[1], x, y, null);
+				g.drawImage(IMG_ROLE[1], x, y, null);
 				break;
 			case ROLE_NJ:
-				g.drawImage(imgRole[2], x, y, null);
+				g.drawImage(IMG_ROLE[2], x, y, null);
 				break;
 			case ROLE_FZ:
-				g.drawImage(imgRole[3], x, y, null);
+				g.drawImage(IMG_ROLE[3], x, y, null);
 				break;
 		}
 
@@ -234,10 +229,10 @@ public class DashboardPane extends JLayeredPane
 	private void drawLife(Graphics g) {
 		int rate = (int) ((double) character.getLife() / character.getMaxLife() * 5 + 0.01);
 		for (int i = 0; i < character.getLife(); ++i) {
-			g.drawImage(imgHpBig[rate], avatarX + 2, 70 + i * 23, null);
+			g.drawImage(IMG_HP_BIG[rate], avatarX + 2, 70 + i * 23, null);
 		}
 		for (int i = character.getLife(); i < character.getMaxLife(); ++i) {
-			g.drawImage(imgHpBig[0], avatarX + 2, 70 + i * 23, null);
+			g.drawImage(IMG_HP_BIG[0], avatarX + 2, 70 + i * 23, null);
 		}
 	}
 
