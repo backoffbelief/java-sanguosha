@@ -2,6 +2,7 @@ package org.dizem.sanguosha.view.gameview;
 
 import craky.componentc.JCFrame;
 import org.apache.log4j.Logger;
+import org.dizem.common.ImageUtils;
 import org.dizem.common.LogUtils;
 
 import javax.swing.*;
@@ -13,11 +14,17 @@ import java.awt.*;
  */
 public class GameFrame extends JCFrame {
 	private static Logger log = Logger.getLogger(GameFrame.class);
-	private OtherPlayerPane pane = new OtherPlayerPane();
+	private static final Image IMG_BACK = ImageUtils.getImage("system/gamebackground.jpg");
+
+	private OtherPlayerPane otherPane = new OtherPlayerPane();
 	private DashboardPane dashboard = new DashboardPane();
+	private MessagePane msgPane = new MessagePane();
+
 	public GameFrame() {
 		initFrame();
 		initLayout();
+		setBackgroundImage(IMG_BACK);
+		
 		setVisible(true);
 	}
 
@@ -30,9 +37,26 @@ public class GameFrame extends JCFrame {
 	private void initLayout() {
 		setLayout(new BorderLayout());
 		dashboard.setLocation(0, 0);
-		pane.setLocation(50, 50);
-		add(pane);
+		otherPane.setLocation(50, 50);
+		add(createMainPane(), BorderLayout.CENTER);
 		add(dashboard, BorderLayout.SOUTH);
+	}
+	//public static final Image IMG_ICON = ImageUtils.getImage("system/sgs_icon.gif");
+
+	@Override
+	public void paint(Graphics g) {
+		super.paintComponents(g);
+	}
+
+	private JPanel createMainPane() {
+		JPanel pane = new JPanel();
+		pane.setLayout(null);
+		otherPane.setLocation(300, 5);
+		pane.add(otherPane);
+		msgPane.setLocation(500, 20);
+		pane.add(msgPane);
+		pane.setOpaque(false);
+		return pane;
 	}
 
 	public static void main(String[] args) {

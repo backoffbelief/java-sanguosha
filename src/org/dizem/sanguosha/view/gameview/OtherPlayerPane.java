@@ -17,8 +17,8 @@ import java.awt.*;
  */
 public class OtherPlayerPane extends JPanel {
 
-	public static final int DEFAULT_WIDTH = 143;
-	public static final int DEFAULT_HEIGHT = 195;
+	public static final int DEFAULT_WIDTH = 132;
+	public static final int DEFAULT_HEIGHT = 187;
 
 	private static Logger log = Logger.getLogger(OtherPlayerPane.class);
 	private Player player = new Player("Test", Role.ROLE_ZG);
