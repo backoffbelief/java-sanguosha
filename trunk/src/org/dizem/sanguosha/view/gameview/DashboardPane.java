@@ -83,10 +83,11 @@ public class DashboardPane extends JLayeredPane
 		imgKingdom = ImageUtils.getImage("/kingdom/icon/" + character.getKingdomImgName());
 
 		player = new Player("dizem", Role.ROLE_NJ);
-		//setLayout(null);
+
 		setSize(480 + imgDashboardAvatar.getWidth(null)
 				+ imgDashboardEquip.getWidth(null), imgDashboardAvatar.getHeight(null) + 30);
 		setPreferredSize(getSize());
+		setOpaque(false);
 		initButtons();
 
 		try {

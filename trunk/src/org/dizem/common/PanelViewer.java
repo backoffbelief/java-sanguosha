@@ -18,7 +18,6 @@ public class PanelViewer extends JFrame {
 		panel.setLocation(0, 0);
 		add(panel);
 		setVisible(true);
-
 		setLocationRelativeTo(null);
 	}
 
