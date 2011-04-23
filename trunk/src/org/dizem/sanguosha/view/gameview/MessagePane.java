@@ -6,6 +6,7 @@ import craky.componentc.JCTextArea;
 import craky.componentc.JCTextField;
 import craky.layout.LineLayout;
 import org.dizem.common.PanelViewer;
+import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.view.component.EmptyComponent;
 
 import javax.swing.*;
@@ -16,6 +17,8 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * User: dizem
@@ -54,6 +57,7 @@ public class MessagePane extends JPanel {
 	public static final Font LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 15);
 
 	public static final Font MSG_FONT = new Font("微软雅黑", Font.PLAIN, 12);
+
 	public MessagePane() {
 		super();
 		cbUsers.addItem("所有人");
@@ -92,10 +96,10 @@ public class MessagePane extends JPanel {
 		txtInput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (txtInput.getText().trim().length() != 0) {
-					txtMessage.append(txtInput.getText() + "\n");
+					appendLog(txtInput.getText());
 					txtInput.setText("");
 				} else {
-					txtMessage.append("系统提示：不能发送空消息\n");
+					appendMessage("不能发送空消息");
 				}
 			}
 		});
@@ -130,7 +134,18 @@ public class MessagePane extends JPanel {
 		return ec;
 	}
 
-	public static void main(String[] args) {
-		PanelViewer.display(new MessagePane());
+
+
+	public void appendLog(String info) {
+		txtLog.append(Constants.LOG_TIME_FORMAT.format(new Date()) + info + "\n");
+		txtLog.selectAll();
+		txtLog.setCaretPosition(txtLog.getSelectedText().length());
 	}
+
+	public void appendMessage(String info) {
+		txtMessage.append(Constants.LOG_TIME_FORMAT.format(new Date()) + info + "\n");
+		txtMessage.selectAll();
+		txtMessage.setCaretPosition(txtMessage.getSelectedText().length());
+	}
+
 }

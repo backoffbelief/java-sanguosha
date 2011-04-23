@@ -1,7 +1,6 @@
 package org.dizem.sanguosha.view.component;
 
 import org.dizem.common.ImageUtils;
-import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.card.AbstractCard;
 
 import javax.swing.*;
@@ -10,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import static org.dizem.sanguosha.model.Constants.*;
+
 /**
  * User: DIZEM
  * Time: 11-4-10 下午2:19
@@ -17,12 +18,6 @@ import java.awt.event.MouseMotionListener;
 public class SGSHandCardLabel extends JLabel
 		implements MouseMotionListener, MouseListener {
 
-	public static final Image[] imgSuit = {
-			ImageUtils.getImage("system/suit/1.png"),
-			ImageUtils.getImage("system/suit/2.png"),
-			ImageUtils.getImage("system/suit/3.png"),
-			ImageUtils.getImage("system/suit/4.png")
-	};
 
 	private static final Font font = new Font("Consolas", Font.PLAIN, 12);
 
@@ -36,7 +31,7 @@ public class SGSHandCardLabel extends JLabel
 		suit = card.getSuit() - 1;
 		rank = card.getRank();
 		color = card.isRed() ? Color.RED : Color.BLACK;
-		setName(Constants.UNSELECTED_TAG);
+		setName(UNSELECTED_TAG);
 		setSize(90, 130);
 		setToolTipText(card.getHtmlDescription());
 		addMouseMotionListener(this);
@@ -46,7 +41,7 @@ public class SGSHandCardLabel extends JLabel
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(imgSuit[suit], 8, 9, null);
+		g.drawImage(IMG_SUIT[suit], 8, 9, null);
 		g.setColor(color);
 		g.setFont(font);
 		g.drawString(rank, 8, 28);
@@ -72,7 +67,7 @@ public class SGSHandCardLabel extends JLabel
 		  */
 		double scale = -2. / 135.;
 		double delta = scale * (e.getX() - 90) * e.getX();
-		if (label.getName().equals(Constants.UNSELECTED_TAG)) {
+		if (label.getName().equals(UNSELECTED_TAG)) {
 			label.setLocation(label.getX(), (int) (30 + 38 - delta));
 			label.updateUI();
 		}
@@ -96,7 +91,7 @@ public class SGSHandCardLabel extends JLabel
 
 	public void mouseExited(MouseEvent e) {
 		JLabel label = (JLabel) e.getSource();
-		if (label.getName().equals("F")) {
+		if (label.getName().equals(UNSELECTED_TAG)) {
 			label.setLocation(label.getX(), 30 + 38);
 		}
 	}
