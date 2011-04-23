@@ -1,5 +1,8 @@
 package org.dizem.sanguosha.model;
 
+import org.dizem.common.ImageUtils;
+import org.dizem.sanguosha.model.player.Role;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,6 +11,21 @@ import java.awt.*;
  * Time: 11-3-2 下午4:40
  */
 public interface Constants {
+
+	Role[] ROLE_DISTRIBUTION = {
+			Role.ZG, Role.NJ, Role.FZ, Role.ZC, Role.FZ
+	};
+
+	int[] OTHER_PANE_POSITION_OFFSET = {
+			0, 0, 1, 3, 6,
+	};
+
+	int[][] OTHER_PANE_POSITION = {
+			{300, 10},
+			{100, 10}, {300, 10},
+			{30, 50}, {30 + 160, 0}, {30 + 320, 0},
+			{30, 200}, {30, 0}, {30 + 160, 0}, {30 + 320, 0},
+	};
 
 	String APP_TITLE = "Java 三国杀";
 	String APP_VERSION = "v0.1";
@@ -53,6 +71,43 @@ public interface Constants {
 	String STR_SETTING = "设置";
 	String STR_START_SERVER = "启动服务器";
 
-	Dimension DEFAULT_WINDOW_SIZE = new Dimension(500, 500);
+
+	Image[] IMG_ROLE = {
+			ImageUtils.getImage("system/roles/small-lord.png"),
+			ImageUtils.getImage("system/roles/small-loyalist.png"),
+			ImageUtils.getImage("system/roles/small-renegade.png"),
+			ImageUtils.getImage("system/roles/small-rebel.png")
+	};
+	
+	Image IMG_DASHBOARD_AVATAR = ImageUtils.getImage("system/dashboard-avatar.png");
+	Image IMG_DASHBOARD_EQUIP = ImageUtils.getImage("system/dashboard-equip.png");
+	Image IMG_DASHBOARD_BACK = ImageUtils.getImage("system/dashboard-hand.png");
+	Image IMG_GAME_FRAME_BACK = ImageUtils.getImage("system/gamebackground.jpg");
+
+	Image[] IMG_HP_SMALL = {
+			ImageUtils.getImage("system/magatamas/small-0.png"),
+			ImageUtils.getImage("system/magatamas/small-1.png"),
+			ImageUtils.getImage("system/magatamas/small-2.png"),
+			ImageUtils.getImage("system/magatamas/small-3.png"),
+			ImageUtils.getImage("system/magatamas/small-4.png"),
+			ImageUtils.getImage("system/magatamas/small-5.png")
+	};
+
+	Image[] IMG_ROLE_DEAD = {
+			ImageUtils.getImage("system/roles/small-lord.png"),
+			ImageUtils.getImage("system/roles/small-loyalist.png"),
+			ImageUtils.getImage("system/roles/small-renegade.png"),
+			ImageUtils.getImage("system/roles/small-rebel.png")
+	};
+
+	Image[] IMG_PHASE = {
+			ImageUtils.getImage("system/phase/start.png"),
+			ImageUtils.getImage("system/phase/judge.png"),
+			ImageUtils.getImage("system/phase/draw.png"),
+			ImageUtils.getImage("system/phase/play.png"),
+			ImageUtils.getImage("system/phase/discard.png"),
+			ImageUtils.getImage("system/phase/finish.png"),
+			ImageUtils.getImage("system/phase/response.png"),
+	};
 
 }
