@@ -3,6 +3,7 @@ package org.dizem.sanguosha.model.player;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.CharacterDeck;
 import org.dizem.sanguosha.model.card.character.*;
+import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.card.equipment.*;
 import org.dizem.sanguosha.model.exception.SGSException;
 
@@ -29,13 +30,15 @@ public class Player {
 	public Player(String name, Role role) {
 		this.role = role;
 		this.name = name;
-		character = CharacterDeck.getInstance().popCharacters(1)[0];
 		effectCards = new ArrayList<AbstractCard>();
 		handCards = new ArrayList<AbstractCard>();
 		equipmentCards = new ArrayList<EquipmentCard>();
-		this.phase = Phase.START;
+		this.phase = Phase.NOT_ACTIVE;
 	}
 
+	public void setCharacter(Character character) {
+		this.character = character;
+	}
 
 	public synchronized static List<Player> getPlayerList() {
 		if (instance == null)
@@ -96,6 +99,19 @@ public class Player {
 
 	public Role getRole() {
 		return role;
+	}
+
+	public int getRoleID() {
+		switch (role) {
+			case ZG:
+				return 0;
+			case ZC:
+				return 1;
+			case NJ:
+				return 3;
+			default:
+				return 2;
+		}
 	}
 
 	public int getLife() {

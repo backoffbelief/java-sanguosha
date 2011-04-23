@@ -82,8 +82,14 @@ public class Character {
 		this.killed = killed;
 	}
 
-	public String getFilename() {
+	public String getPNGFilename() {
 		return filename;
+	}
+
+	public String getJPGFilename() {
+		int index = filename.lastIndexOf(".");
+		String name = filename.substring(0, index);
+		return name + ".jpg";
 	}
 
 	public void decreaseLife() {

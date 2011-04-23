@@ -5,6 +5,7 @@ import org.dizem.sanguosha.model.player.Role;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 
 /**
  * User: DIZEM
@@ -75,10 +76,10 @@ public interface Constants {
 	Image[] IMG_ROLE = {
 			ImageUtils.getImage("system/roles/small-lord.png"),
 			ImageUtils.getImage("system/roles/small-loyalist.png"),
+			ImageUtils.getImage("system/roles/small-rebel.png"),
 			ImageUtils.getImage("system/roles/small-renegade.png"),
-			ImageUtils.getImage("system/roles/small-rebel.png")
 	};
-	
+
 	Image IMG_DASHBOARD_AVATAR = ImageUtils.getImage("system/dashboard-avatar.png");
 	Image IMG_DASHBOARD_EQUIP = ImageUtils.getImage("system/dashboard-equip.png");
 	Image IMG_DASHBOARD_BACK = ImageUtils.getImage("system/dashboard-hand.png");
@@ -96,8 +97,8 @@ public interface Constants {
 	Image[] IMG_ROLE_DEAD = {
 			ImageUtils.getImage("system/roles/small-lord.png"),
 			ImageUtils.getImage("system/roles/small-loyalist.png"),
+			ImageUtils.getImage("system/roles/small-rebel.png"),
 			ImageUtils.getImage("system/roles/small-renegade.png"),
-			ImageUtils.getImage("system/roles/small-rebel.png")
 	};
 
 	Image[] IMG_PHASE = {
@@ -109,5 +110,15 @@ public interface Constants {
 			ImageUtils.getImage("system/phase/finish.png"),
 			ImageUtils.getImage("system/phase/response.png"),
 	};
+
+	Image[] IMG_SUIT = {
+			ImageUtils.getImage("system/suit/1.png"),
+			ImageUtils.getImage("system/suit/2.png"),
+			ImageUtils.getImage("system/suit/3.png"),
+			ImageUtils.getImage("system/suit/4.png")
+	};
+
+
+	SimpleDateFormat LOG_TIME_FORMAT = new SimpleDateFormat("hh:mm:ss - ");
 
 }

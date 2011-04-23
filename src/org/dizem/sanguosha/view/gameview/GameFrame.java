@@ -6,7 +6,6 @@ import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
 import org.dizem.common.LogUtils;
 import org.dizem.common.TwoWayMap;
-import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.view.component.SGSMenu;
 
@@ -14,8 +13,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.dizem.sanguosha.model.Constants.*;
+
 /**
  * User: DIZEM
  * Time: 11-4-9 下午10:37
@@ -28,24 +29,40 @@ public class GameFrame extends JCFrame {
 	private TwoWayMap<Player, OtherPlayerPane> playerToPane = new TwoWayMap<Player, OtherPlayerPane>();
 	private DashboardPane dashboard;
 	private MessagePane msgPane = new MessagePane();
+	int[] roleList;
+
+	private JPanel rolePane = new JPanel() {
+		@Override
+		public void paint(Graphics g) {
+			super.paint(g);
+
+			for (int i = 0; i < playerList.size(); ++i) {
+				g.drawImage(IMG_ROLE[roleList[i]], i * 30, roleList[i] == 3 ? 23 : 20, null);
+			}
+		}
+	};
+
 
 	private void test() {
 
 		currentPlayerID = 0;
-		int size = 5;
-		int cnt = Constants.OTHER_PANE_POSITION_OFFSET[size - 1];
+		int size = 4;
+		roleList = new int[size];
+		int cnt = OTHER_PANE_POSITION_OFFSET[size - 1];
 
 		for (int i = 0; i < size; ++i) {
-			Player player = new Player("Player" + i, Constants.ROLE_DISTRIBUTION[i]);
+			Player player = new Player("Player" + i, ROLE_DISTRIBUTION[i]);
+			roleList[i] = player.getRoleID();
 			playerList.add(player);
 
 			if (i != currentPlayerID) {
 				OtherPlayerPane pane = new OtherPlayerPane(player);
-				pane.setLocation(Constants.OTHER_PANE_POSITION[cnt][0],
-						Constants.OTHER_PANE_POSITION[cnt++][1]);
+				pane.setLocation(OTHER_PANE_POSITION[cnt][0], OTHER_PANE_POSITION[cnt++][1]);
 				playerToPane.put(player, pane);
 			}
 		}
+		Arrays.sort(roleList);
+
 		dashboard = new DashboardPane(playerList.get(currentPlayerID));
 	}
 
@@ -71,10 +88,6 @@ public class GameFrame extends JCFrame {
 		add(dashboard, BorderLayout.SOUTH);
 	}
 
-	@Override
-	public void paint(Graphics g) {
-		super.paintComponents(g);
-	}
 
 	private JPanel createMainPane() {
 		JPanel pane = new JPanel();
@@ -83,7 +96,10 @@ public class GameFrame extends JCFrame {
 			pane.add(p);
 		}
 		msgPane.setLocation(500, 45);
+		rolePane.setBounds(530, -10, 150, 50);
+		rolePane.setOpaque(false);
 		pane.add(msgPane);
+		pane.add(rolePane);
 		pane.setOpaque(false);
 		return pane;
 	}

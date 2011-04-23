@@ -52,62 +52,56 @@ public class DashboardPane extends JLayeredPane
 
 
 	private int labelDisplayLevel = 100;
+	private boolean characterChoosed = false;
 
 	public DashboardPane(Player player) {
 		super();
-		this.character = player.getCharacter();
-		imgAvatar = ImageUtils.getImage("/generals/big/" + character.getFilename());
-		imgKingdom = ImageUtils.getImage("/kingdom/icon/" + character.getKingdomImgName());
+
 		this.player = player;
 		setSize(480 + IMG_DASHBOARD_AVATAR.getWidth(null)
 				+ IMG_DASHBOARD_EQUIP.getWidth(null), IMG_DASHBOARD_AVATAR.getHeight(null) + 30);
 		setPreferredSize(getSize());
 		setOpaque(false);
 		initButtons();
-
-		try {
-			player.getHandCards().add(Deck.getInstance().popCard());
-			player.getHandCards().add(Deck.getInstance().popCard());
-			player.getHandCards().add(Deck.getInstance().popCard());
-			player.getHandCards().add(Deck.getInstance().popCard());
-			player.getHandCards().add(Deck.getInstance().popCard());
-			player.getHandCards().add(Deck.getInstance().popCard());
-			player.getHandCards().add(Deck.getInstance().popCard());
-			player.getHandCards().add(Deck.getInstance().popCard());
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
 		for (AbstractCard card : player.getHandCards()) {
 			addHandCardLabel(createCardLabel(card));
 		}
-		character.decreaseLife();
-		character.decreaseLife();
+	}
 
+	public void setCharacter() {
+
+		this.character = player.getCharacter();
+		imgAvatar = ImageUtils.getImage("/generals/big/" + character.getPNGFilename());
+		imgKingdom = ImageUtils.getImage("/kingdom/icon/" + character.getKingdomImgName());
+		initButtons();
+		characterChoosed = true;
 	}
 
 	private void initButtons() {
-		btnOK = new SGSGameButton("确定");
-		btnOK.setLocation(avatarX, 0);
-		btnOK.addActionListener(listener);
-		add(btnOK);
+		if (!characterChoosed) {
+			btnOK = new SGSGameButton("确定");
+			btnOK.setLocation(avatarX, 0);
+			btnOK.addActionListener(listener);
+			add(btnOK);
 
-		btnCancel = new SGSGameButton("取消");
-		btnCancel.setLocation(avatarX + 62, 0);
-		btnCancel.setEnabled(true);
-		btnCancel.addActionListener(listener);
-		add(btnCancel);
+			btnCancel = new SGSGameButton("取消");
+			btnCancel.setLocation(avatarX + 62, 0);
+			btnCancel.setEnabled(true);
+			btnCancel.addActionListener(listener);
+			add(btnCancel);
+		} else {
 
-		btnSkills = new JButton[character.getSkills().length];
-		for (int i = 0; i < btnSkills.length; ++i) {
-			Skill skill = (Skill) character.getSkills()[i];
-			btnSkills[i] = new SGSGameButton(skill.getName(), skill.getHtmlDescription());
-			btnSkills[i].setLocation(avatarX + i * 62 + i, 140 + posY);
-			btnSkills[i].addActionListener(listener);
-			add(btnSkills[i]);
-		}
-		if (btnSkills.length == 1) {
-			btnSkills[0].setSize(124, 30);
+			btnSkills = new JButton[character.getSkills().length];
+			for (int i = 0; i < btnSkills.length; ++i) {
+				Skill skill = (Skill) character.getSkills()[i];
+				btnSkills[i] = new SGSGameButton(skill.getName(), skill.getHtmlDescription());
+				btnSkills[i].setLocation(avatarX + i * 62 + i, 140 + posY);
+				btnSkills[i].addActionListener(listener);
+				add(btnSkills[i]);
+			}
+			if (btnSkills.length == 1) {
+				btnSkills[0].setSize(124, 30);
+			}
 		}
 	}
 
@@ -130,20 +124,22 @@ public class DashboardPane extends JLayeredPane
 		if (imgKingdom != null) {
 			g.drawImage(imgKingdom, avatarX + 21, 62, null);
 		}
-		int x = avatarX - 3, y = 37;
-		switch (player.getRole()) {
-			case ZG:
-				g.drawImage(IMG_ROLE[0], x, y, null);
-				break;
-			case ZC:
-				g.drawImage(IMG_ROLE[1], x, y, null);
-				break;
-			case NJ:
-				g.drawImage(IMG_ROLE[2], x, y, null);
-				break;
-			case FZ:
-				g.drawImage(IMG_ROLE[3], x, y, null);
-				break;
+		if (characterChoosed) {
+			int x = avatarX - 3, y = 37;
+			switch (player.getRole()) {
+				case ZG:
+					g.drawImage(IMG_ROLE[0], x, y, null);
+					break;
+				case ZC:
+					g.drawImage(IMG_ROLE[1], x, y, null);
+					break;
+				case NJ:
+					g.drawImage(IMG_ROLE[2], x, y, null);
+					break;
+				case FZ:
+					g.drawImage(IMG_ROLE[3], x, y, null);
+					break;
+			}
 		}
 
 	}
@@ -203,12 +199,14 @@ public class DashboardPane extends JLayeredPane
 	}
 
 	private void drawLife(Graphics g) {
-		int rate = (int) ((double) character.getLife() / character.getMaxLife() * 5 + 0.01);
-		for (int i = 0; i < character.getLife(); ++i) {
-			g.drawImage(IMG_HP_SMALL[rate], avatarX + 2, 70 + i * 23, null);
-		}
-		for (int i = character.getLife(); i < character.getMaxLife(); ++i) {
-			g.drawImage(IMG_HP_SMALL[0], avatarX + 2, 70 + i * 23, null);
+		if (characterChoosed) {
+			int rate = (int) ((double) character.getLife() / character.getMaxLife() * 5 + 0.01);
+			for (int i = 0; i < character.getLife(); ++i) {
+				g.drawImage(IMG_HP_SMALL[rate], avatarX + 2, 70 + i * 23, null);
+			}
+			for (int i = character.getLife(); i < character.getMaxLife(); ++i) {
+				g.drawImage(IMG_HP_SMALL[0], avatarX + 2, 70 + i * 23, null);
+			}
 		}
 	}
 

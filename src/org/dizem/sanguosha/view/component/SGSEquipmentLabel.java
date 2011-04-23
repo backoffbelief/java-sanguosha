@@ -2,17 +2,14 @@ package org.dizem.sanguosha.view.component;
 
 import craky.componentc.GridBorder;
 import craky.util.UIUtil;
-import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
+import static org.dizem.sanguosha.model.Constants.*;
 /**
  * User: DIZEM
  * Time: 11-4-10 下午2:24
@@ -36,7 +33,7 @@ public class SGSEquipmentLabel extends JLabel {
 		System.out.println(card.getName() + " " + card.isSelectable());
 		setToolTipText(card.getHtmlDescription());
 		setSize(115, 22);
-		setName(Constants.UNSELECTED_TAG);
+		setName(UNSELECTED_TAG);
 		initEvent();
 	}
 
@@ -47,11 +44,11 @@ public class SGSEquipmentLabel extends JLabel {
 
 			public void actionPerformed(ActionEvent e) {
 				if (isSelectable) {
-					if (getName().equals(Constants.UNSELECTED_TAG)) {
-						setName(Constants.SELECTED_TAG);
+					if (getName().equals(UNSELECTED_TAG)) {
+						setName(SELECTED_TAG);
 						setBorder(selectedBorder);
 					} else {
-						setName(Constants.UNSELECTED_TAG);
+						setName(UNSELECTED_TAG);
 						setBorder(null);
 					}
 				}
@@ -62,7 +59,7 @@ public class SGSEquipmentLabel extends JLabel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(SGSHandCardLabel.imgSuit[suit], 8, 6, null);
+		g.drawImage(IMG_SUIT[suit], 8, 6, null);
 		g.setColor(color);
 		g.setFont(equipmentTextFont);
 		g.drawString(rank, 19, 15);
