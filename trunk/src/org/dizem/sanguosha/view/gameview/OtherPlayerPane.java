@@ -2,15 +2,14 @@ package org.dizem.sanguosha.view.gameview;
 
 import org.apache.log4j.Logger;
 import org.dizem.common.ImageUtils;
-import org.dizem.common.PanelViewer;
 import org.dizem.sanguosha.model.card.CharacterDeck;
 import org.dizem.sanguosha.model.card.Deck;
 import org.dizem.sanguosha.model.player.Player;
-import org.dizem.sanguosha.model.player.Role;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static org.dizem.sanguosha.model.Constants.*;
 /**
  * User: dizem
  * Time: 11-4-19 上午9:10
@@ -21,49 +20,25 @@ public class OtherPlayerPane extends JPanel {
 	public static final int DEFAULT_HEIGHT = 187;
 
 	private static Logger log = Logger.getLogger(OtherPlayerPane.class);
-	private Player player = new Player("Test", Role.ROLE_ZG);
 	private org.dizem.sanguosha.model.card.character.Character character = CharacterDeck.getInstance().popCharacters(1)[0];
 
 	private static final Image IMG_BACK = ImageUtils.getImage("system/photo-back.png");
 	public static final Color COLOR_CARD_COUNT_BACK = new Color(244, 229, 181);
 
-	private static final Image[] IMG_HP_SMALL = {
-			ImageUtils.getImage("system/magatamas/small-0.png"),
-			ImageUtils.getImage("system/magatamas/small-1.png"),
-			ImageUtils.getImage("system/magatamas/small-2.png"),
-			ImageUtils.getImage("system/magatamas/small-3.png"),
-			ImageUtils.getImage("system/magatamas/small-4.png"),
-			ImageUtils.getImage("system/magatamas/small-5.png")
-	};
-
-	private static final Image[] IMG_ROLE_DEAD = {
-			ImageUtils.getImage("system/roles/small-lord.png"),
-			ImageUtils.getImage("system/roles/small-loyalist.png"),
-			ImageUtils.getImage("system/roles/small-renegade.png"),
-			ImageUtils.getImage("system/roles/small-rebel.png")
-	};
-
-	private static final Image[] IMG_PHASE = {
-			ImageUtils.getImage("system/phase/start.png"),
-			ImageUtils.getImage("system/phase/judge.png"),
-			ImageUtils.getImage("system/phase/draw.png"),
-			ImageUtils.getImage("system/phase/play.png"),
-			ImageUtils.getImage("system/phase/discard.png"),
-			ImageUtils.getImage("system/phase/finish.png"),
-			ImageUtils.getImage("system/phase/response.png"),
-	};
 
 	private Image imgAvatar;
 	private Image imgKingdom;
 	private Image imgKingdomFrame;
 
-	public OtherPlayerPane() {
+	private Player player;
+
+	public OtherPlayerPane(Player player) {
 		super();
 		imgAvatar = ImageUtils.getImage("/generals/small/" + character.getFilename());
 		imgKingdom = ImageUtils.getImage("/kingdom/icon/" + character.getKingdomImgName());
 		imgKingdomFrame = ImageUtils.getImage("/kingdom/frame/" + character.getKingdomImgName());
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
+		this.player = player;
 		try {
 			player.getHandCards().add(Deck.getInstance().popCard());
 			player.getHandCards().add(Deck.getInstance().popCard());
@@ -119,7 +94,4 @@ public class OtherPlayerPane extends JPanel {
 		}
 	}
 
-	public static void main(String[] args) {
-		PanelViewer.display(new OtherPlayerPane(), "Test");
-	}
 }

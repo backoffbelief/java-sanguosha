@@ -1,6 +1,8 @@
 package org.dizem.sanguosha.model.player;
 
 import org.dizem.sanguosha.model.card.AbstractCard;
+import org.dizem.sanguosha.model.card.CharacterDeck;
+import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.equipment.*;
 import org.dizem.sanguosha.model.exception.SGSException;
 
@@ -27,6 +29,7 @@ public class Player {
 	public Player(String name, Role role) {
 		this.role = role;
 		this.name = name;
+		character = CharacterDeck.getInstance().popCharacters(1)[0];
 		effectCards = new ArrayList<AbstractCard>();
 		handCards = new ArrayList<AbstractCard>();
 		equipmentCards = new ArrayList<EquipmentCard>();
@@ -85,6 +88,10 @@ public class Player {
 
 	public List<AbstractCard> getEffectCards() {
 		return effectCards;
+	}
+
+	public org.dizem.sanguosha.model.card.character.Character getCharacter() {
+		return character;
 	}
 
 	public Role getRole() {

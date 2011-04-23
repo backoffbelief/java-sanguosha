@@ -1,6 +1,7 @@
 package org.dizem.common;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,13 @@ public class TwoWayMap<K, V> implements Cloneable, Serializable {
 		valueToKey = new HashMap<V, K>();
 	}
 
+	public Collection<V> values() {
+		return keyToValue.values();
+	}
+
+	public Collection<K> keys() {
+		return valueToKey.values();
+	}
 	public void put(K key, V value) {
 		if (keyToValue.containsKey(key)) {
 			throw new RuntimeException("Already contains key: " + key);
