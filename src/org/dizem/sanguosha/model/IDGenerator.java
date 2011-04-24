@@ -6,7 +6,7 @@ package org.dizem.sanguosha.model;
  */
 public class IDGenerator {
 
-	private static int id = 1;
+	private static int id = 0;
 
 	public synchronized static int nextId() {
 		return id++;

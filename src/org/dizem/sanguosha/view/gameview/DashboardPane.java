@@ -43,7 +43,7 @@ public class DashboardPane extends JLayeredPane
 	private Player player;
 	private Image imgAvatar;
 	private Image imgKingdom;
-
+	private String playerName;
 
 	private TwoWayMap<AbstractCard, JLabel> handCardLabelMap = new TwoWayMap<AbstractCard, JLabel>();
 	private TwoWayMap<Integer, JLabel> equipmentLabelMap = new TwoWayMap<Integer, JLabel>();
@@ -54,8 +54,9 @@ public class DashboardPane extends JLayeredPane
 	private int labelDisplayLevel = 100;
 	private boolean characterChoosed = false;
 
-	public DashboardPane() {
+	public DashboardPane(String playerName) {
 		super();
+		this.playerName = playerName;
 		setSize(480 + IMG_DASHBOARD_AVATAR.getWidth(null)
 				+ IMG_DASHBOARD_EQUIP.getWidth(null), IMG_DASHBOARD_AVATAR.getHeight(null) + 30);
 		setPreferredSize(getSize());
@@ -64,7 +65,7 @@ public class DashboardPane extends JLayeredPane
 	}
 
 	public DashboardPane(Player player) {
-		this();
+		this(player.getName());
 
 		this.player = player;
 
@@ -117,8 +118,7 @@ public class DashboardPane extends JLayeredPane
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawDashboard(g);
 		drawLife(g);
-		if(player != null)
-			drawName(g);
+		drawName(g);
 	}
 
 	private void drawDashboard(Graphics g) {
@@ -218,9 +218,8 @@ public class DashboardPane extends JLayeredPane
 
 	private void drawName(Graphics g) {
 		g.setColor(Color.WHITE);
-		String name = player.getName();
-		int nameWidth = g.getFontMetrics().stringWidth(name);
-		g.drawString(name, avatarX + (122 - nameWidth) / 2 + 8, 53);
+		int nameWidth = g.getFontMetrics().stringWidth(playerName);
+		g.drawString(playerName, avatarX + (122 - nameWidth) / 2 + 8, 53);
 	}
 
 	private void addHandCardLabel(JLabel handCardLabel) {

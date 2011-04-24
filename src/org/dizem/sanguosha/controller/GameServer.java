@@ -56,27 +56,41 @@ public class GameServer {
 		Player player = new Player(packet.getPlayerName(), address, packet.getClientPort());
 
 		//给客户端分配ID
-		SGSPacket idPacket = new SGSPacket(OP_DISTRIBUTE_ID);
+		SGSPacket idPacket = new SGSPacket(OP_INIT_CLIENT);
 		idPacket.setPlayerId(player.getPlayerId());
+		idPacket.setPlayerCount(playerCount);
 		send(idPacket, player);
 
 		idToPlayerMap.put(player.getPlayerId(), player);
 
-		for (Player p : players) {
-			if (p == null) {
-				p = player;
+		for (int i = 0; i < playerCount; ++i) {
+			if (players[i] == null) {
+				players[i] = player;
 				playerOnline++;
 				break;
 			}
 		}
+
 		log.info("在" + playerOnline + "位置添加玩家" + packet.getPlayerName());
+
+
+		SGSPacket updPacket = new SGSPacket(OP_UPDATE_PLAYERS);
+		updPacket.setPlayers(players);
+
+		for (Player p : players) {
+			send(updPacket, p);
+		}
 
 		if (playerOnline == playerCount) {
 			owner.appendLog("人数已满");
 		}
+
 	}
 
 	public void send(SGSPacket packet, Player player) {
+		if (player == null || packet == null) {
+			return;
+		}
 		try {
 			DatagramSocket ds = new DatagramSocket();
 			String message = JSONUtil.convertToString(packet);

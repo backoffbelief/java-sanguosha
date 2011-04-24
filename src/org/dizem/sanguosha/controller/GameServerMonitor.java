@@ -52,6 +52,7 @@ public class GameServerMonitor extends Thread {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getMessage());
 		}
 	}

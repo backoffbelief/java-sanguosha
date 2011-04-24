@@ -18,6 +18,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 
+import static org.dizem.sanguosha.model.Constants.*;
+
 /**
  * User: DIZEM
  * Time: 11-3-30 下午11:07
@@ -224,10 +226,10 @@ public class StartServerDialog extends JDialog implements ActionListener {
 			this.dispose();
 
 		} else if (e.getSource() == btnStart) {
-			if (!txtIp.getText().matches("((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)")) {
+			if (!txtIp.getText().matches(PATTERN_IP)) {
 				JCMessageBox.createErrorMessageBox(this, "Error", "IP地址格式错误").open();
 
-			} else if (!txtPort.getText().matches("\\d{1,4}")) {
+			} else if (!txtPort.getText().matches(PATTERN_PORT)) {
 				JCMessageBox.createErrorMessageBox(this, "Error", "端口格式错误").open();
 
 			} else {
@@ -235,7 +237,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 				mainFrame.startOrStopServer();
 				mainFrame.setServer(new GameServer(mainFrame, txtServerName.getText(),
 						Integer.parseInt(txtPort.getText()),
-						(int) Double.parseDouble(txtTimeDelay.getValue().toString()),
+						checkNoTimeDelay.isSelected() ? -1 : (int) Double.parseDouble(txtTimeDelay.getValue().toString()),
 						cbGameType.getSelectedIndex() + 2));
 				this.dispose();
 			}
