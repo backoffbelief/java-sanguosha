@@ -1,17 +1,12 @@
-package org.dizem.sanguosha.view.gameview.dialog;
+package org.dizem.sanguosha.view.dialog;
 
 import craky.componentc.JCDialog;
-import org.dizem.common.ImageUtils;
-import org.dizem.common.LogUtils;
+import org.dizem.common.LogUtil;
 import org.dizem.sanguosha.model.card.CharacterDeck;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.view.component.SGSCharacterCardLabel;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 /**
  * User: dizem
@@ -27,8 +22,8 @@ public class ChooseCharacterDialog extends JCDialog {
 		setSize(140 * 5 + 10, 250);
 
 		for (int i = 0; i < characters.length; ++i) {
-			SGSCharacterCardLabel label = new SGSCharacterCardLabel(characters[i]);
-			label.setLocation(10 + 140 * i, 30);
+			SGSCharacterCardLabel label = new SGSCharacterCardLabel(characters[i], this);
+			label.setLocation(10 + 140 * i, 20);
 			add(label);
 		}
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -39,7 +34,7 @@ public class ChooseCharacterDialog extends JCDialog {
 
 
 	public static void main(String[] args) {
-		LogUtils.init();
+		LogUtil.init();
 		new ChooseCharacterDialog(null, CharacterDeck.getInstance().popCharacters(5));
 	}
 }

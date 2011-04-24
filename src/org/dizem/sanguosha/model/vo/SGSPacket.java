@@ -7,7 +7,9 @@ import java.util.List;
  * Time: 11-4-6 下午3:45
  */
 public class SGSPacket {
+
 	private String operation;
+	private int clientPort;
 	private String playerId;
 	private CardVO cardVO;
 	private PlayerVO playerVO;
@@ -20,11 +22,24 @@ public class SGSPacket {
 		this.operation = operation;
 	}
 
+	public SGSPacket(String operation, int clientPort) {
+		this(operation);
+		this.clientPort = clientPort;
+	}
+
 	public String getOperation() {
 		return operation;
 	}
 
 	public void setOperation(String operation) {
 		this.operation = operation;
+	}
+
+	public int getClientPort() {
+		return clientPort;
+	}
+
+	public void setClientPort(int clientPort) {
+		this.clientPort = clientPort;
 	}
 }

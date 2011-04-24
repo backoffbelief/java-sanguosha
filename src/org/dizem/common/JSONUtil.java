@@ -12,12 +12,12 @@ import java.io.StringReader;
  * User: DIZEM
  * Time: 11-3-25 上午12:49
  */
-public class JSONUtils {
+public class JSONUtil {
 
 	/**
 	 * logger instance
 	 */
-	private static Logger log = Logger.getLogger(JSONUtils.class);
+	private static Logger log = Logger.getLogger(JSONUtil.class);
 
 	/**
 	 * convert object to JSON string

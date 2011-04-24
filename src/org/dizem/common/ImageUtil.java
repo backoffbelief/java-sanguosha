@@ -13,9 +13,9 @@ import java.util.Map;
  * User: DIZEM
  * Time: 11-2-27 下午12:32
  */
-public class ImageUtils {
+public class ImageUtil {
 
-	private static Logger log = Logger.getLogger(ImageUtils.class);
+	private static Logger log = Logger.getLogger(ImageUtil.class);
 
 	/**
 	 * cache to store image

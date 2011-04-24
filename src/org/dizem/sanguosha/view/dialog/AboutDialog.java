@@ -1,12 +1,12 @@
-package org.dizem.sanguosha.view;
+package org.dizem.sanguosha.view.dialog;
 
 import craky.component.JImagePane;
 import craky.componentc.*;
 import craky.layout.LineLayout;
 import craky.util.UIUtil;
+import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.view.component.EmptyComponent;
-import org.dizem.common.ImageUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -43,7 +43,7 @@ public class AboutDialog extends JCDialog implements ActionListener {
 		content.setBorder(new EmptyBorder(0, 2, 2, 2));
 		bannerPane.setPreferredSize(new Dimension(-1, 110));
 		bannerPane.setMode(JImagePane.TILED);
-		Image image = ImageUtils.getImage("system/banner.png");
+		Image image = ImageUtil.getImage("system/banner.png");
 		bannerPane.setImage(image);
 
 		content.add(bannerPane, BorderLayout.NORTH);

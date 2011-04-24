@@ -4,7 +4,7 @@ import craky.component.JImagePane;
 import craky.componentc.JCFrame;
 import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
-import org.dizem.common.LogUtils;
+import org.dizem.common.LogUtil;
 import org.dizem.common.TwoWayMap;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.view.component.SGSMenu;
@@ -121,7 +121,7 @@ public class GameFrame extends JCFrame {
 	}
 
 	public static void main(String[] args) {
-		LogUtils.init();
+		LogUtil.init();
 		new GameFrame();
 	}
 }

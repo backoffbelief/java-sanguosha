@@ -4,16 +4,23 @@ import craky.componentc.JCFrame;
 import craky.util.UIUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.dizem.sanguosha.controller.GameServer;
 import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.exception.SGSException;
 import org.dizem.sanguosha.view.component.SGSButton;
 import org.dizem.sanguosha.view.component.SGSTextArea;
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
+import org.dizem.sanguosha.view.dialog.AboutDialog;
+import org.dizem.sanguosha.view.dialog.StartGameDialog;
+import org.dizem.sanguosha.view.dialog.StartServerDialog;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -37,6 +44,9 @@ public class MainFrame extends JCFrame implements ActionListener {
 	private static int bgImageId = 1;
 	private boolean showLogger = false;
 
+	private GameServer server;
+
+	public static final Font LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 15);
 
 	public MainFrame() {
 		super(Constants.APP_TITLE);
@@ -47,7 +57,7 @@ public class MainFrame extends JCFrame implements ActionListener {
 	}
 
 	private void initFrame() {
-		setIconImage(ImageUtils.getImage("sgs.png"));
+		setIconImage(ImageUtil.getImage("sgs.png"));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(new Dimension(700, 525));
 		setLocationRelativeTo(null);
@@ -68,6 +78,13 @@ public class MainFrame extends JCFrame implements ActionListener {
 		scrollPane.setVisible(false);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.getVerticalScrollBar().setOpaque(false);
+		scrollPane.setForeground(Color.WHITE);
+		scrollPane.setBackground(Color.WHITE);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setBorder(
+				new TitledBorder(new LineBorder(Color.WHITE, 3), "服务器日志", 0, 0, LABEL_FONT, Color.WHITE));
+
+
 		add(scrollPane);
 
 
@@ -92,7 +109,14 @@ public class MainFrame extends JCFrame implements ActionListener {
 		btnAbout.setBounds(offsetX, offsetY, 100, 40);
 		btnAbout.addActionListener(this);
 		add(btnAbout);
+
 		updateBgImage();
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				updateBgImage();
+			}
+		});
 	}
 
 	private void updateBgImage() {
@@ -101,7 +125,8 @@ public class MainFrame extends JCFrame implements ActionListener {
 		bgImageId = rand.nextInt(4) + 1;
 		if (oldBgImageId == bgImageId)
 			bgImageId = bgImageId % 4 + 1;
-		setBackgroundImage(ImageUtils.getImage("system/background/bg" + bgImageId + ".jpg"));
+		setBackgroundImage(ImageUtil.getImage("system/background/bg" + bgImageId + ".jpg"));
+		log.info("Change background image");
 		repaint();
 
 	}
@@ -134,25 +159,31 @@ public class MainFrame extends JCFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAbout) {
+			log.info("Open about dialog");
 			new AboutDialog(this);
 
 		} else if (e.getSource() == btnStartServer) {
+			log.info("Open dialog to start server");
 			new StartServerDialog(this);
 
 		} else if (e.getSource() == btnSetting) {
-			appendLog("123123\n");
+			log.info("Open setting dialog");
 
 		} else if (e.getSource() == btnStartGame) {
+			log.info("Open dialog to start game");
 			new StartGameDialog(this);
 		}
 	}
 
-	public void changeLogVisible() {
+	public void startOrStopServer() {
 		if (showLogger) {
+			btnStartServer.setText("启动服务器");
 			loggerArea.setVisible(false);
 			scrollPane.setVisible(false);
 
 		} else {
+
+			btnStartServer.setText("关闭服务器");
 			loggerArea.setVisible(true);
 			scrollPane.setVisible(true);
 		}
@@ -160,9 +191,17 @@ public class MainFrame extends JCFrame implements ActionListener {
 		showLogger = !showLogger;
 	}
 
+	public void setServer(GameServer server) {
+		this.server = server;
+	}
+
 	public void appendLog(String s) {
-		loggerArea.append(s);
-		loggerArea.setCaretPosition(loggerArea.getText().length());
-		;
+		if (!showLogger) {
+			throw new SGSException("Server is not start");
+		}
+		loggerArea.append(Constants.LOG_TIME_FORMAT.format(new Date()) + s + "\n");
+		loggerArea.selectAll();
+		loggerArea.setCaretPosition(loggerArea.getSelectedText()
+				.length());
 	}
 }

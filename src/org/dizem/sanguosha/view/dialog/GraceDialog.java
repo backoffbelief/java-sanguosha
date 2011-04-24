@@ -1,4 +1,4 @@
-package org.dizem.sanguosha.view.gameview.dialog;
+package org.dizem.sanguosha.view.dialog;
 
 /**
  * User: dizem

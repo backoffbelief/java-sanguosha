@@ -1,6 +1,6 @@
 package org.dizem.sanguosha.view.component;
 
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class SGSDialog extends JDialog {
 
 	public SGSDialog(Window owner, String title) {
 		super(owner, title, ModalityType.DOCUMENT_MODAL);
-		setIconImage(ImageUtils.getImage("sgs.png"));
+		setIconImage(ImageUtil.getImage("sgs.png"));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 

@@ -1,9 +1,8 @@
 package org.dizem.sanguosha.model;
 
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.player.Role;
 
-import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 
@@ -72,50 +71,55 @@ public interface Constants {
 	String STR_SETTING = "设置";
 	String STR_START_SERVER = "启动服务器";
 
+	int DATA_PACKET_SIZE = 10000;
+	
+
+	String OP_TEST_SERVER = "OP_TEST_SERVER";
+	String OP_CONNECT = "OP_CONNECT";
 
 	Image[] IMG_ROLE = {
-			ImageUtils.getImage("system/roles/small-lord.png"),
-			ImageUtils.getImage("system/roles/small-loyalist.png"),
-			ImageUtils.getImage("system/roles/small-rebel.png"),
-			ImageUtils.getImage("system/roles/small-renegade.png"),
+			ImageUtil.getImage("system/roles/small-lord.png"),
+			ImageUtil.getImage("system/roles/small-loyalist.png"),
+			ImageUtil.getImage("system/roles/small-rebel.png"),
+			ImageUtil.getImage("system/roles/small-renegade.png"),
 	};
 
-	Image IMG_DASHBOARD_AVATAR = ImageUtils.getImage("system/dashboard-avatar.png");
-	Image IMG_DASHBOARD_EQUIP = ImageUtils.getImage("system/dashboard-equip.png");
-	Image IMG_DASHBOARD_BACK = ImageUtils.getImage("system/dashboard-hand.png");
-	Image IMG_GAME_FRAME_BACK = ImageUtils.getImage("system/gamebackground.jpg");
+	Image IMG_DASHBOARD_AVATAR = ImageUtil.getImage("system/dashboard-avatar.png");
+	Image IMG_DASHBOARD_EQUIP = ImageUtil.getImage("system/dashboard-equip.png");
+	Image IMG_DASHBOARD_BACK = ImageUtil.getImage("system/dashboard-hand.png");
+	Image IMG_GAME_FRAME_BACK = ImageUtil.getImage("system/gamebackground.jpg");
 
 	Image[] IMG_HP_SMALL = {
-			ImageUtils.getImage("system/magatamas/small-0.png"),
-			ImageUtils.getImage("system/magatamas/small-1.png"),
-			ImageUtils.getImage("system/magatamas/small-2.png"),
-			ImageUtils.getImage("system/magatamas/small-3.png"),
-			ImageUtils.getImage("system/magatamas/small-4.png"),
-			ImageUtils.getImage("system/magatamas/small-5.png")
+			ImageUtil.getImage("system/magatamas/small-0.png"),
+			ImageUtil.getImage("system/magatamas/small-1.png"),
+			ImageUtil.getImage("system/magatamas/small-2.png"),
+			ImageUtil.getImage("system/magatamas/small-3.png"),
+			ImageUtil.getImage("system/magatamas/small-4.png"),
+			ImageUtil.getImage("system/magatamas/small-5.png")
 	};
 
 	Image[] IMG_ROLE_DEAD = {
-			ImageUtils.getImage("system/roles/small-lord.png"),
-			ImageUtils.getImage("system/roles/small-loyalist.png"),
-			ImageUtils.getImage("system/roles/small-rebel.png"),
-			ImageUtils.getImage("system/roles/small-renegade.png"),
+			ImageUtil.getImage("system/roles/small-lord.png"),
+			ImageUtil.getImage("system/roles/small-loyalist.png"),
+			ImageUtil.getImage("system/roles/small-rebel.png"),
+			ImageUtil.getImage("system/roles/small-renegade.png"),
 	};
 
 	Image[] IMG_PHASE = {
-			ImageUtils.getImage("system/phase/start.png"),
-			ImageUtils.getImage("system/phase/judge.png"),
-			ImageUtils.getImage("system/phase/draw.png"),
-			ImageUtils.getImage("system/phase/play.png"),
-			ImageUtils.getImage("system/phase/discard.png"),
-			ImageUtils.getImage("system/phase/finish.png"),
-			ImageUtils.getImage("system/phase/response.png"),
+			ImageUtil.getImage("system/phase/start.png"),
+			ImageUtil.getImage("system/phase/judge.png"),
+			ImageUtil.getImage("system/phase/draw.png"),
+			ImageUtil.getImage("system/phase/play.png"),
+			ImageUtil.getImage("system/phase/discard.png"),
+			ImageUtil.getImage("system/phase/finish.png"),
+			ImageUtil.getImage("system/phase/response.png"),
 	};
 
 	Image[] IMG_SUIT = {
-			ImageUtils.getImage("system/suit/1.png"),
-			ImageUtils.getImage("system/suit/2.png"),
-			ImageUtils.getImage("system/suit/3.png"),
-			ImageUtils.getImage("system/suit/4.png")
+			ImageUtil.getImage("system/suit/1.png"),
+			ImageUtil.getImage("system/suit/2.png"),
+			ImageUtil.getImage("system/suit/3.png"),
+			ImageUtil.getImage("system/suit/4.png")
 	};
 
 

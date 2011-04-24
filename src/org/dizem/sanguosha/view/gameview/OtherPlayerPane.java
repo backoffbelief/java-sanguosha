@@ -1,10 +1,7 @@
 package org.dizem.sanguosha.view.gameview;
 
 import org.apache.log4j.Logger;
-import org.dizem.common.ImageUtils;
-import org.dizem.sanguosha.model.card.CharacterDeck;
-import org.dizem.sanguosha.model.card.Deck;
-import org.dizem.sanguosha.model.card.character.*;
+import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 
@@ -25,7 +22,7 @@ public class OtherPlayerPane extends JPanel {
 	private static Logger log = Logger.getLogger(OtherPlayerPane.class);
 	private org.dizem.sanguosha.model.card.character.Character character;
 
-	private static final Image IMG_BACK = ImageUtils.getImage("system/photo-back.png");
+	private static final Image IMG_BACK = ImageUtil.getImage("system/photo-back.png");
 	public static final Color COLOR_CARD_COUNT_BACK = new Color(244, 229, 181);
 
 
@@ -44,9 +41,9 @@ public class OtherPlayerPane extends JPanel {
 
 	public void setCharacter() {
 		character = player.getCharacter();
-		imgAvatar = ImageUtils.getImage("/generals/small/" + character.getPNGFilename());
-		imgKingdom = ImageUtils.getImage("/kingdom/icon/" + character.getKingdomImgName());
-		imgKingdomFrame = ImageUtils.getImage("/kingdom/frame/" + character.getKingdomImgName());
+		imgAvatar = ImageUtil.getImage("/generals/small/" + character.getPNGFilename());
+		imgKingdom = ImageUtil.getImage("/kingdom/icon/" + character.getKingdomImgName());
+		imgKingdomFrame = ImageUtil.getImage("/kingdom/frame/" + character.getKingdomImgName());
 		characterChoosed = true;
 	}
 

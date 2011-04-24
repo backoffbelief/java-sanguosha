@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AudioUtils {
+public class AudioUtil {
 
 	public static Map<String, AudioStream> cache = new HashMap<String, AudioStream>();
 

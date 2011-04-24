@@ -3,13 +3,12 @@ package org.dizem.sanguosha.view.component;
 import craky.componentc.JCMenu;
 import craky.componentc.JCMenuItem;
 import craky.util.UIUtil;
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -19,9 +18,9 @@ import java.awt.event.MouseEvent;
  */
 public class SGSMenu extends JCMenu implements PopupMenuListener {
 
-	private static final Icon ICON = ImageUtils.getIcon("system/menu_button_icon.png");
-	private static final Image ROLLOVER_IMAGE = ImageUtils.getImage("system/common_button_rollover_bg.png");
-	private static final Image PRESSED_IMAGE = ImageUtils.getImage("system/common_button_pressed_bg.png");
+	private static final Icon ICON = ImageUtil.getIcon("system/menu_button_icon.png");
+	private static final Image ROLLOVER_IMAGE = ImageUtil.getImage("system/common_button_rollover_bg.png");
+	private static final Image PRESSED_IMAGE = ImageUtil.getImage("system/common_button_pressed_bg.png");
 
 //	private ActionListener listener;
 
