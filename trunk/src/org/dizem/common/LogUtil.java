@@ -8,7 +8,7 @@ import org.dizem.sanguosha.model.Constants;
  * User: DIZEM
  * Time: 11-4-6 下午2:29
  */
-public class LogUtils {
+public class LogUtil {
 
 	public static void init() {
 		PropertyConfigurator.configure(Constants.LOG4J_CONFIG_PATH);

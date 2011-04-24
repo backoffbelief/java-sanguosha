@@ -1,6 +1,6 @@
 package org.dizem.sanguosha.view.gameview;
 
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 import org.dizem.common.PanelViewer;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.Deck;
@@ -17,7 +17,7 @@ public class CardImgPane extends JPanel {
 	private Image imgBack;
 	public CardImgPane(AbstractCard card) {
 		this.card = card;
-		imgBack = ImageUtils.getImage("card//" + card.getFilename());
+		imgBack = ImageUtil.getImage("card//" + card.getFilename());
 		setSize(imgBack.getWidth(null), imgBack.getHeight(null));
 		setToolTipText("<html>" + card.getDescription().replaceAll("\\n", "<p>") + "</html>");
 	}

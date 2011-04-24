@@ -1,15 +1,14 @@
 package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
-import org.dizem.common.LogUtils;
-import org.dizem.sanguosha.model.player.Player;
+import org.dizem.common.JSONUtil;
+import org.dizem.sanguosha.model.vo.SGSPacket;
+import org.dizem.sanguosha.view.MainFrame;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Vector;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * User: DIZEM
@@ -19,139 +18,49 @@ public class GameServer {
 
 	private static Logger log = Logger.getLogger(GameServer.class);
 
+	private String serverName;
 	private int port;
-	private ServerSocket serverSocket;
-	private Vector<ObjectInputStream> vi;
-	private Vector<ObjectOutputStream> vo;
-	private boolean isStarted = false;
-	private Thread listenThread;
+	private int timeDelay;
+	private int playerCount;
+	private MainFrame owner;
 
-	private Player[] players;
-
-
-	public GameServer(int port, int nPlayer) {
+	public GameServer(MainFrame owner, String serverName, int port, int timeDelay, int playerCount) {
+		this.serverName = serverName;
 		this.port = port;
-		vi = new Vector<ObjectInputStream>();
-		vo = new Vector<ObjectOutputStream>();
-		players = new Player[nPlayer];
-	}
-
-	public static void main(String[] args) {
-		LogUtils.init();
-		new GameServer(7000, 1).start();
-	}
-
-	public void start() {
+		this.timeDelay = timeDelay;
+		this.playerCount = playerCount;
+		this.owner = owner;
+		owner.appendLog("启动服务器:" + serverName);
+		owner.appendLog("本机地址:127.0.0.1");
 		try {
-			serverSocket = new ServerSocket(port);
-		} catch (IOException e) {
-			log.error(e.getMessage());
-			return;
+			owner.appendLog("局域网地址:" + InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
 		}
+		owner.appendLog("端口:" + port + "  游戏模式:" + playerCount + "人局");
+		owner.appendLog("出牌时间:" + (timeDelay == -1 ? "不限时间" : timeDelay + "秒"));
 
-		isStarted = true;
-
-		listenThread = new Thread(new Runnable() {
-
-			public void run() {
-				while (isStarted) {
-					Socket socket;
-					try {
-						socket = serverSocket.accept();
-						ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-						ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-						socket.getOutputStream().write("connected".getBytes());
-
-						new ServerThread(ois, oos).start();
-
-						log.info(socket.getInetAddress().getHostAddress() + " joined");
-
-					} catch (IOException e) {
-						log.error(e.getMessage());
-
-					}
-
-				}
-			}
-		});
-
-		listenThread.start();
-
-		log.info("Server started.");
-
+		new GameServerMonitor(this).start();
 	}
 
-	public void stop() throws IOException {
-		for (int i = 0; i < vi.size(); ++i) {
-			vi.get(i).close();
-			vo.get(i).close();
-		}
-		serverSocket.close();
-		listenThread.interrupt();//todo fix
-		log.info("Server stopped.");
+
+
+	public String getServerName() {
+		return serverName;
 	}
 
 	public int getPort() {
 		return port;
 	}
 
-	public void setPort(int port) {
-		if (!isStarted)
-			this.port = port;
+	public int getTimeDelay() {
+		return timeDelay;
 	}
 
-	public boolean isStarted() {
-		return isStarted;
+	public int getPlayerCount() {
+		return playerCount;
 	}
 
-	public void setStarted(boolean started) {
-		isStarted = started;
-	}
-
-
-	/**
-	 * Server Thread
-	 */
-	class ServerThread extends Thread {
-
-		private Logger log = Logger.getLogger(ServerThread.class);
-
-		private ObjectInputStream ois;
-		private ObjectOutputStream oos;
-
-		public ServerThread(ObjectInputStream ois, ObjectOutputStream oos) {
-			vi.add(ois);
-			vo.add(oos);
-			this.ois = ois;
-			this.oos = oos;
-		}
-
-		@Override
-		public void run() {
-			Object object = null;
-
-			while (true) {
-				try {
-					object = ois.readObject();
-					log.info("Received: " + object);
-					
-					for (int i = 0; i < vo.size(); i++) {
-						if (!vo.get(i).equals(oos)) {
-							vo.get(i).writeObject(object);
-						}
-					}
-
-				} catch (IOException e) {
-					vi.remove(ois);
-					vo.remove(oos);
-					log.info("A client is existed");
-					break;
-
-				} catch (ClassNotFoundException e) {
-					log.error(e.getMessage());
-					return;
-				}
-			}
-		}
+	public MainFrame getOwner() {
+		return owner;
 	}
 }

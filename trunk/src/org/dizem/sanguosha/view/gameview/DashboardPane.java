@@ -2,7 +2,7 @@ package org.dizem.sanguosha.view.gameview;
 
 import craky.util.UIUtil;
 import org.apache.log4j.Logger;
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 import org.dizem.common.TwoWayMap;
 import org.dizem.sanguosha.model.card.*;
 import org.dizem.sanguosha.model.card.Skill;
@@ -71,8 +71,8 @@ public class DashboardPane extends JLayeredPane
 	public void setCharacter() {
 
 		this.character = player.getCharacter();
-		imgAvatar = ImageUtils.getImage("/generals/big/" + character.getPNGFilename());
-		imgKingdom = ImageUtils.getImage("/kingdom/icon/" + character.getKingdomImgName());
+		imgAvatar = ImageUtil.getImage("/generals/big/" + character.getPNGFilename());
+		imgKingdom = ImageUtil.getImage("/kingdom/icon/" + character.getKingdomImgName());
 		initButtons();
 		characterChoosed = true;
 	}

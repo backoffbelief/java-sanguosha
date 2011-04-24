@@ -1,4 +1,4 @@
-package org.dizem.sanguosha.view;
+package org.dizem.sanguosha.view.dialog;
 
 import craky.component.JImagePane;
 import craky.componentc.GridBorder;
@@ -6,21 +6,31 @@ import craky.componentc.JCButton;
 import craky.componentc.JCLabel;
 import craky.componentc.JCTextField;
 import craky.layout.LineLayout;
+import org.apache.log4j.Logger;
+import org.dizem.sanguosha.controller.GameClient;
+import org.dizem.sanguosha.controller.UDPSender;
+import org.dizem.sanguosha.model.vo.SGSPacket;
 import org.dizem.sanguosha.view.component.EmptyComponent;
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
 import java.util.Map;
+
+import static org.dizem.sanguosha.model.Constants.*;
 
 /**
  * User: DIZEM
  * Time: 11-3-31 上午1:16
  */
 public class StartGameDialog extends JDialog implements ActionListener {
+
+	private static Logger log = Logger.getLogger(StartGameDialog.class);
 
 	private JLabel lblName;
 	private JLabel lblServerIp;
@@ -36,7 +46,7 @@ public class StartGameDialog extends JDialog implements ActionListener {
 		super(owner, "\u542f\u52a8\u6e38\u620f", ModalityType.DOCUMENT_MODAL);
 		getContentPane().setPreferredSize(new Dimension(300, 150));
 
-		setIconImage(ImageUtils.getImage("sgs.png"));
+		setIconImage(ImageUtil.getImage("sgs.png"));
 		setSize(new Dimension(300, 150));
 		add(createMainPane(), BorderLayout.CENTER);
 		add(createBottomPane(), BorderLayout.SOUTH);
@@ -124,7 +134,7 @@ public class StartGameDialog extends JDialog implements ActionListener {
 	private JImagePane createBottomPane() {
 		JImagePane bottomPane = new JImagePane();
 		bottomPane.setPreferredSize(new Dimension(334, 30));
-		bottomPane.setImage(ImageUtils.getImage("dialog_bottom.png"));
+		bottomPane.setImage(ImageUtil.getImage("dialog_bottom.png"));
 		bottomPane.setPreferredSize(new Dimension(334, 30));
 		bottomPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		bottomPane.setLayout(new LineLayout(5, 5, 7, 5, 0,
@@ -149,10 +159,38 @@ public class StartGameDialog extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource() == btnCancel) {
+
+		if (e.getSource() == btnCancel) {
 			dispose();
+
+		} else if (e.getSource() == btnStart) {
+			if (!txtServerIp.getText().matches("((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)")) {
+				JOptionPane.showMessageDialog(this, "IP格式错误");
+
+			} else if (txtServerPort.getText().matches("\\d{1,4}")) {
+				JOptionPane.showMessageDialog(this, "端口格式错误");
+
+			} else {
+				new GameClient(Integer.parseInt(txtServerPort.getText()),txtServerIp.getText(), txtName.getText());
+				dispose();
+			}
 		}
+	}
+
+	private void connect() {
+		SGSPacket packet = new SGSPacket(OP_TEST_SERVER, 5068);
+		UDPSender.send(packet, txtServerIp.getText(), Integer.parseInt(txtServerPort.getText()));
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage());
+				}
+			}
+		});
+
+
 	}
 
 	public static void main(String[] args) {

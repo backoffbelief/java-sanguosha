@@ -1,6 +1,6 @@
 package org.dizem.sanguosha.view.gameview;
 
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +12,8 @@ import java.awt.*;
 public class PlayerRolePane extends JPanel  {
 	
 
-	private static Image imgBack = ImageUtils.getImage("/system/photo-back.png");
-	private Image imgRole = ImageUtils.getImage("/generals/big/caocao.png");
+	private static Image imgBack = ImageUtil.getImage("/system/photo-back.png");
+	private Image imgRole = ImageUtil.getImage("/generals/big/caocao.png");
 	private int imgRoleX = 15;
 	private int imgRoleY = 5;
 

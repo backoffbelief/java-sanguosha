@@ -1,6 +1,6 @@
 package org.dizem.sanguosha.view.component;
 
-import org.dizem.common.ImageUtils;
+import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ public class SGSHandCardLabel extends JLabel
 
 
 	public SGSHandCardLabel(AbstractCard card) {
-		super(ImageUtils.getIcon("/card/" + card.getFilename()));
+		super(ImageUtil.getIcon("/card/" + card.getFilename()));
 		suit = card.getSuit() - 1;
 		rank = card.getRank();
 		color = card.isRed() ? Color.RED : Color.BLACK;

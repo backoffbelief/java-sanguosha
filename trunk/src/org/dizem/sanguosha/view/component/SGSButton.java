@@ -1,7 +1,7 @@
 package org.dizem.sanguosha.view.component;
 
 import craky.componentc.JCButton;
-import org.dizem.common.AudioUtils;
+import org.dizem.common.AudioUtil;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -24,12 +24,12 @@ public class SGSButton extends JCButton {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				AudioUtils.play("system/button-hover.wav");
+				AudioUtil.play("system/button-hover.wav");
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				AudioUtils.play("system/button-down.wav");
+				AudioUtil.play("system/button-down.wav");
 			}
 		});
 	}

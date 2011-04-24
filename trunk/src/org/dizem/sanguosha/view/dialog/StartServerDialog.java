@@ -1,11 +1,13 @@
-package org.dizem.sanguosha.view;
+package org.dizem.sanguosha.view.dialog;
 
 import craky.component.JImagePane;
 import craky.componentc.*;
 import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
+import org.dizem.common.ImageUtil;
+import org.dizem.sanguosha.controller.GameServer;
+import org.dizem.sanguosha.view.MainFrame;
 import org.dizem.sanguosha.view.component.EmptyComponent;
-import org.dizem.common.ImageUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -47,7 +49,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 
 		mainFrame = (MainFrame) owner;
 
-		setIconImage(ImageUtils.getImage("sgs.png"));
+		setIconImage(ImageUtil.getImage("sgs.png"));
 		setSize(new Dimension(300, 200));
 		setLayout(new BorderLayout());
 		add(createMainPane(), BorderLayout.CENTER);
@@ -126,6 +128,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 		lblIp.setHorizontalAlignment(JCLabel.RIGHT);
 
 		txtIp = new JCTextField("127.0.0.1");
+		txtIp.setEditable(false);
 		txtIp.setPreferredSize(new Dimension(100, 26));
 
 
@@ -184,7 +187,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 	private JImagePane createBottomPane() {
 		JImagePane bottomPane = new JImagePane();
 		bottomPane.setPreferredSize(new Dimension(334, 30));
-		bottomPane.setImage(ImageUtils.getImage("dialog_bottom.png"));
+		bottomPane.setImage(ImageUtil.getImage("dialog_bottom.png"));
 		bottomPane.setPreferredSize(new Dimension(334, 30));
 		bottomPane.setBorder(new EmptyBorder(0, 0, 0, 0));
 		bottomPane.setLayout(new LineLayout(5, 5, 7, 5, 0,
@@ -220,9 +223,22 @@ public class StartServerDialog extends JDialog implements ActionListener {
 		} else if (e.getSource() == btnCancel) {
 			this.dispose();
 
-		} else if(e.getSource() == btnStart) {
-			mainFrame.changeLogVisible();
-			this.dispose();
+		} else if (e.getSource() == btnStart) {
+			if (!txtIp.getText().matches("((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)")) {
+				JOptionPane.showMessageDialog(this, "IP格式错误");
+
+			} else if (txtPort.getText().matches("\\d{1,4}")) {
+				JOptionPane.showMessageDialog(this, "端口格式错误");
+
+			} else {
+
+				mainFrame.startOrStopServer();
+				mainFrame.setServer(new GameServer(mainFrame, txtServerName.getText(),
+						Integer.parseInt(txtPort.getText()),
+						(int) Double.parseDouble(txtTimeDelay.getValue().toString()),
+						cbGameType.getSelectedIndex() + 2));
+				this.dispose();
+			}
 		}
 	}
 
