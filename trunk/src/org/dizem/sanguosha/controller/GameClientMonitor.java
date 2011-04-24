@@ -3,6 +3,7 @@ package org.dizem.sanguosha.controller;
 import org.apache.log4j.Logger;
 import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.vo.SGSPacket;
+import org.dizem.sanguosha.view.gameview.GameFrame;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -41,13 +42,13 @@ public class GameClientMonitor extends Thread {
 				log.info("Received:" + jsonString);
 				SGSPacket dp = (SGSPacket) JSONUtil.convertToVO(jsonString, SGSPacket.class);
 
-				if(dp.getOperation().equals(OP_CONNECT)) {
-					
+				if(dp.getOperation().equals(OP_DISTRIBUTE_ID)) {
+					client.showGameFrame(dp);
 				}
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 	}
 
@@ -64,4 +65,16 @@ public class GameClientMonitor extends Thread {
 		}
 	}
 
+	public int getClientPort() {
+		return clientPort;
+	}
+
+
+	public boolean isReady() {
+		return isReady;
+	}
+
+	public void setReady(boolean ready) {
+		isReady = ready;
+	}
 }

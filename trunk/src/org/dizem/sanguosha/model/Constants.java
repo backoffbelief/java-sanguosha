@@ -76,7 +76,11 @@ public interface Constants {
 
 	String OP_TEST_SERVER = "OP_TEST_SERVER";
 	String OP_CONNECT = "OP_CONNECT";
+	String OP_UPDATE_PLAYERS = "OP_UPDATE_PLAYERS";
+	String OP_DISTRIBUTE_ID = "OP_DISTRIBUTE_ID";
 
+
+	
 	Image[] IMG_ROLE = {
 			ImageUtil.getImage("system/roles/small-lord.png"),
 			ImageUtil.getImage("system/roles/small-loyalist.png"),
