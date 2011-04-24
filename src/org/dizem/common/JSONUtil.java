@@ -5,6 +5,7 @@ import com.sdicons.json.mapper.MapperException;
 import com.sdicons.json.model.JSONValue;
 import com.sdicons.json.parser.JSONParser;
 import org.apache.log4j.Logger;
+import org.dizem.sanguosha.model.vo.SGSPacket;
 
 import java.io.StringReader;
 
@@ -50,5 +51,12 @@ public class JSONUtil {
 			log.error(e.getMessage());
 		}
 		return null;
+	}
+
+	public static void main(String[] args) {
+		String s = convertToString(new SGSPacket("123", "dizem", 123));
+		System.out.println(s);
+		SGSPacket p = (SGSPacket) convertToVO(s, SGSPacket.class);
+		System.out.println(p.getPlayerName());
 	}
 }

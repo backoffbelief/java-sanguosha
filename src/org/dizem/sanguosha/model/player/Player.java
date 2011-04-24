@@ -1,5 +1,6 @@
 package org.dizem.sanguosha.model.player;
 
+import org.dizem.sanguosha.model.IDGenerator;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.CharacterDeck;
 import org.dizem.sanguosha.model.card.character.*;
@@ -16,6 +17,9 @@ import java.util.List;
  */
 public class Player {
 
+	private String ip;
+	private int port;
+	private int playerId;
 	private String name;
 	private int score;
 	private Role role;
@@ -27,14 +31,22 @@ public class Player {
 	private List<AbstractCard> effectCards;
 	private static List<Player> instance;
 
-	public Player(String name, Role role) {
+	public Player(String name) {
 		this.role = role;
 		this.name = name;
 		effectCards = new ArrayList<AbstractCard>();
 		handCards = new ArrayList<AbstractCard>();
 		equipmentCards = new ArrayList<EquipmentCard>();
+		this.playerId = IDGenerator.nextId();
 		this.phase = Phase.NOT_ACTIVE;
 	}
+
+	public Player(String name, String ip, int port) {
+		this(name);
+		this.ip = ip;
+		this.port = port;
+	}
+
 
 	public void setCharacter(Character character) {
 		this.character = character;
@@ -48,7 +60,7 @@ public class Player {
 
 	public synchronized static Player getSelf() {
 		if (Player.getPlayerList().size() == 0) {
-			instance.add(new Player("", null));
+			//instance.add(new Player("", null));
 		}
 		return instance.get(0);
 	}
@@ -158,5 +170,23 @@ public class Player {
 		}
 	}
 
+	public String getIp() {
+		return ip;
+	}
 
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public int getPlayerId() {
+		return playerId;
+	}
 }

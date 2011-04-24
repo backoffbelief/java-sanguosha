@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <CharacterSettings>
-	<Character gender="男" kingdom="蜀" life="4" name="刘备" filename="liubei.png">
+	<Character gender="男" kingdom="蜀" life="4" playerName="刘备" filename="liubei.png">
 		<Skill>
 			<Name>仁德</Name>
 			<Description>
@@ -18,7 +18,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="蜀" life="4" name="关羽" filename="guanyu.png">
+	<Character gender="男" kingdom="蜀" life="4" playerName="关羽" filename="guanyu.png">
 		<Skill>
 			<Name>武圣</Name>
 			<Description>
@@ -27,7 +27,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="蜀" life="4" name="张飞" filename="zhangfei.png">
+	<Character gender="男" kingdom="蜀" life="4" playerName="张飞" filename="zhangfei.png">
 		<Skill>
 			<Name>咆哮</Name>
 			<Description>
@@ -35,7 +35,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="蜀" life="3" name="诸葛亮" filename="zhugeliang.png">
+	<Character gender="男" kingdom="蜀" life="3" playerName="诸葛亮" filename="zhugeliang.png">
 		<Skill>
 			<Name>观星</Name>
 			<Description>
@@ -48,13 +48,13 @@
 			<Description>无手牌时，不受杀的影响（包括决斗中出的杀）。</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="蜀" life="4" name="赵云" filename="zhaoyun.png">
+	<Character gender="男" kingdom="蜀" life="4" playerName="赵云" filename="zhaoyun.png">
 		<Skill>
 			<Name>龙胆</Name>
 			<Description>可以用杀代替闪使用，也可以用闪代替杀使用。</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="蜀" life="4" name="马超" filename="machao.png">
+	<Character gender="男" kingdom="蜀" life="4" playerName="马超" filename="machao.png">
 		<Skill>
 			<Name>马术</Name>
 			<Description>
@@ -63,7 +63,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="女" kingdom="蜀" life="3" name="黄月英" filename="huangyueying.png">
+	<Character gender="女" kingdom="蜀" life="3" playerName="黄月英" filename="huangyueying.png">
 		<Skill>
 			<Name>集智</Name>
 			<Description>
@@ -77,7 +77,7 @@
 			<Description>使用任何锦囊牌无距离限制，如顺手牵羊。</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="吴" life="4" name="孙权" filename="sunquan.png">
+	<Character gender="男" kingdom="吴" life="4" playerName="孙权" filename="sunquan.png">
 		<Skill>
 			<Name>制衡</Name>
 			<Description>
@@ -92,7 +92,7 @@
 			<Description>可以要求（但不强制要求）吴国的角色在他们各自的回合给孙权一张手牌。</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="吴" life="4" name="甘宁" filename="ganning.png">
+	<Character gender="男" kingdom="吴" life="4" playerName="甘宁" filename="ganning.png">
 		<Skill>
 			<Name>奇袭</Name>
 			<Description>
@@ -100,7 +100,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="吴" life="4" name="吕蒙" filename="lumeng.png">
+	<Character gender="男" kingdom="吴" life="4" playerName="吕蒙" filename="lumeng.png">
 		<Skill>
 			<Name>克己</Name>
 			<Description>
@@ -109,7 +109,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="吴" life="4" name="黄盖" filename="huanggai.png">
+	<Character gender="男" kingdom="吴" life="4" playerName="黄盖" filename="huanggai.png">
 		<Skill>
 			<Name>苦肉</Name>
 			<Description>
@@ -119,7 +119,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="吴" life="3" name="周瑜" filename="zhouyu.png">
+	<Character gender="男" kingdom="吴" life="3" playerName="周瑜" filename="zhouyu.png">
 		<Skill>
 			<Name>英姿</Name>
 			<Description>摸牌阶段，你可以额外摸一张牌</Description>
@@ -135,7 +135,7 @@
 
 		</Skill>
 	</Character>
-	<Character gender="女" kingdom="吴" life="3" name="大乔" filename="daqiao.png">
+	<Character gender="女" kingdom="吴" life="3" playerName="大乔" filename="daqiao.png">
 		<Skill>
 			<Name>国色</Name>
 			<Description>
@@ -153,7 +153,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="吴" life="3" name="陆逊" filename="luxun.png">
+	<Character gender="男" kingdom="吴" life="3" playerName="陆逊" filename="luxun.png">
 		<Skill>
 			<Name>谦逊</Name>
 			<Description>不受顺手牵羊和乐不思蜀的影响。</Description>
@@ -167,7 +167,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="女" kingdom="吴" life="3" name="孙尚香" filename="sunshangxiang.png">
+	<Character gender="女" kingdom="吴" life="3" playerName="孙尚香" filename="sunshangxiang.png">
 		<Skill>
 			<Name>联姻</Name>
 			<Description>
@@ -181,7 +181,7 @@
 			<Description>任何时候，当自己失去一张已装备的牌时，摸两张牌。</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="魏" life="4" name="曹操" filename="caocao.png">
+	<Character gender="男" kingdom="魏" life="4" playerName="曹操" filename="caocao.png">
 		<Skill>
 			<Name>奸雄</Name>
 			<Description>
@@ -199,7 +199,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="魏" life="3" name="司马懿" filename="simayi.png">
+	<Character gender="男" kingdom="魏" life="3" playerName="司马懿" filename="simayi.png">
 		<Skill>
 			<Name>反馈</Name>
 			<Description>
@@ -218,7 +218,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="魏" life="4" name="夏侯敦" filename="xiahoudun.png">
+	<Character gender="男" kingdom="魏" life="4" playerName="夏侯敦" filename="xiahoudun.png">
 		<Skill>
 			<Name>刚烈</Name>
 			<Description>
@@ -229,7 +229,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="魏" life="4" name="张辽" filename="zhangliao.png">
+	<Character gender="男" kingdom="魏" life="4" playerName="张辽" filename="zhangliao.png">
 		<Skill>
 			<Name>突袭</Name>
 			<Description>
@@ -239,7 +239,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="魏" life="4" name="许褚" filename="xuchu.png">
+	<Character gender="男" kingdom="魏" life="4" playerName="许褚" filename="xuchu.png">
 		<Skill>
 			<Name>裸衣</Name>
 			<Description>
@@ -248,7 +248,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="魏" life="3" name="郭嘉" filename="guojia.png">
+	<Character gender="男" kingdom="魏" life="3" playerName="郭嘉" filename="guojia.png">
 		<Skill>
 			<Name>天妒</Name>
 			<Description>
@@ -263,7 +263,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="女" kingdom="魏" life="3" name="甄姬" filename="zhenji.png">
+	<Character gender="女" kingdom="魏" life="3" playerName="甄姬" filename="zhenji.png">
 		<Skill>
 			<Name>洛神</Name>
 			<Description>
@@ -280,7 +280,7 @@
 			<Description>可以用任意手牌代替闪使用。</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="群" life="3" name="华佗" filename="huatuo.png">
+	<Character gender="男" kingdom="群" life="3" playerName="华佗" filename="huatuo.png">
 		<Skill>
 			<Name>急救</Name>
 			<Description>
@@ -296,7 +296,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="男" kingdom="群" life="4" name="吕布" filename="lubu.png">
+	<Character gender="男" kingdom="群" life="4" playerName="吕布" filename="lubu.png">
 		<Skill>
 			<Name>无双</Name>
 			<Description>
@@ -306,7 +306,7 @@
 			</Description>
 		</Skill>
 	</Character>
-	<Character gender="女" kingdom="群" life="3" name="貂蝉" filename="diaochan.png">
+	<Character gender="女" kingdom="群" life="3" playerName="貂蝉" filename="diaochan.png">
 		<Skill>
 			<Name>闭月</Name>
 			<Description>

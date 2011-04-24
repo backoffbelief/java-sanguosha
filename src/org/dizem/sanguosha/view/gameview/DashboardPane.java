@@ -54,15 +54,20 @@ public class DashboardPane extends JLayeredPane
 	private int labelDisplayLevel = 100;
 	private boolean characterChoosed = false;
 
-	public DashboardPane(Player player) {
+	public DashboardPane() {
 		super();
-
-		this.player = player;
 		setSize(480 + IMG_DASHBOARD_AVATAR.getWidth(null)
 				+ IMG_DASHBOARD_EQUIP.getWidth(null), IMG_DASHBOARD_AVATAR.getHeight(null) + 30);
 		setPreferredSize(getSize());
 		setOpaque(false);
 		initButtons();
+	}
+
+	public DashboardPane(Player player) {
+		this();
+
+		this.player = player;
+
 		for (AbstractCard card : player.getHandCards()) {
 			addHandCardLabel(createCardLabel(card));
 		}
@@ -112,7 +117,8 @@ public class DashboardPane extends JLayeredPane
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawDashboard(g);
 		drawLife(g);
-		drawName(g);
+		if(player != null)
+			drawName(g);
 	}
 
 	private void drawDashboard(Graphics g) {

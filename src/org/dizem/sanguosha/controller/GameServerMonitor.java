@@ -9,6 +9,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import static org.dizem.sanguosha.model.Constants.*;
+
 /**
  * User: dizem
  * Time: 11-4-23 下午9:57
@@ -36,15 +37,17 @@ public class GameServerMonitor extends Thread {
 			while (true) {
 				log.info("Listening at port:" + port);
 
-				byte[] data = new byte[10000];
+				byte[] data = new byte[DATA_PACKET_SIZE];
 				DatagramPacket packet = new DatagramPacket(data, data.length);
 				ds.receive(packet);
 
 				String jsonString = new String(packet.getData(), 0, packet.getLength(), "UTF-8");
+				log.info("receive:" + jsonString);
 				SGSPacket dp = (SGSPacket) JSONUtil.convertToVO(jsonString, SGSPacket.class);
 
-				if(dp.getOperation().equals(OP_TEST_SERVER)) {
-					
+				if (dp.getOperation().equals(OP_CONNECT)) {
+					owner.appendLog("玩家:" + dp.getPlayerName() + "加入服务器");
+					server.playerConnect(dp, packet.getAddress().getHostAddress());
 				}
 			}
 
@@ -52,4 +55,5 @@ public class GameServerMonitor extends Thread {
 			log.error(e.getMessage());
 		}
 	}
+
 }

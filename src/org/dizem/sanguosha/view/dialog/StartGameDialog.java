@@ -1,10 +1,7 @@
 package org.dizem.sanguosha.view.dialog;
 
 import craky.component.JImagePane;
-import craky.componentc.GridBorder;
-import craky.componentc.JCButton;
-import craky.componentc.JCLabel;
-import craky.componentc.JCTextField;
+import craky.componentc.*;
 import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
 import org.dizem.sanguosha.controller.GameClient;
@@ -165,10 +162,10 @@ public class StartGameDialog extends JDialog implements ActionListener {
 
 		} else if (e.getSource() == btnStart) {
 			if (!txtServerIp.getText().matches("((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)")) {
-				JOptionPane.showMessageDialog(this, "IP格式错误");
+				JCMessageBox.createErrorMessageBox(this, "Error", "IP地址格式错误").open();
 
-			} else if (txtServerPort.getText().matches("\\d{1,4}")) {
-				JOptionPane.showMessageDialog(this, "端口格式错误");
+			} else if (!txtServerPort.getText().matches("\\d{1,4}")) {
+				JCMessageBox.createErrorMessageBox(this, "Error", "端口格式错误").open();
 
 			} else {
 				new GameClient(Integer.parseInt(txtServerPort.getText()),txtServerIp.getText(), txtName.getText());

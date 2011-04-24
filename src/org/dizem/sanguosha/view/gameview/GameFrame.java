@@ -27,7 +27,7 @@ public class GameFrame extends JCFrame {
 	private java.util.List<Player> playerList = new ArrayList<Player>();
 	private int currentPlayerID;
 	private TwoWayMap<Player, OtherPlayerPane> playerToPane = new TwoWayMap<Player, OtherPlayerPane>();
-	private DashboardPane dashboard;
+	private DashboardPane dashboard = new DashboardPane();
 	private MessagePane msgPane = new MessagePane();
 	int[] roleList;
 
@@ -42,32 +42,32 @@ public class GameFrame extends JCFrame {
 		}
 	};
 
-
-	private void test() {
-
-		currentPlayerID = 0;
-		int size = 4;
-		roleList = new int[size];
-		int cnt = OTHER_PANE_POSITION_OFFSET[size - 1];
-
-		for (int i = 0; i < size; ++i) {
-			Player player = new Player("Player" + i, ROLE_DISTRIBUTION[i]);
-			roleList[i] = player.getRoleID();
-			playerList.add(player);
-
-			if (i != currentPlayerID) {
-				OtherPlayerPane pane = new OtherPlayerPane(player);
-				pane.setLocation(OTHER_PANE_POSITION[cnt][0], OTHER_PANE_POSITION[cnt++][1]);
-				playerToPane.put(player, pane);
-			}
-		}
-		Arrays.sort(roleList);
-
-		dashboard = new DashboardPane(playerList.get(currentPlayerID));
-	}
+//
+//	private void test() {
+//
+//		currentPlayerID = 0;
+//		int size = 4;
+//		roleList = new int[size];
+//		int cnt = OTHER_PANE_POSITION_OFFSET[size - 1];
+//
+//		for (int i = 0; i < size; ++i) {
+//			Player player = new Player("Player" + i, ROLE_DISTRIBUTION[i]);
+//			roleList[i] = player.getRoleID();
+//			playerList.add(player);
+//
+//			if (i != currentPlayerID) {
+//				OtherPlayerPane pane = new OtherPlayerPane(player);
+//				pane.setLocation(OTHER_PANE_POSITION[cnt][0], OTHER_PANE_POSITION[cnt++][1]);
+//				playerToPane.put(player, pane);
+//			}
+//		}
+//		Arrays.sort(roleList);
+//
+//		dashboard = new DashboardPane(playerList.get(currentPlayerID));
+//	}
 
 	public GameFrame() {
-		test();
+		//test();
 		initFrame();
 		initLayout();
 		initMenu();
@@ -104,6 +104,13 @@ public class GameFrame extends JCFrame {
 		return pane;
 	}
 
+	public int getCurrentPlayerID() {
+		return currentPlayerID;
+	}
+
+	public void setCurrentPlayerID(int currentPlayerID) {
+		this.currentPlayerID = currentPlayerID;
+	}
 
 	private void initMenu() {
 		JMenuBar bar = new JMenuBar();

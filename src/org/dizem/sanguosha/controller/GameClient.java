@@ -1,6 +1,13 @@
 package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
+import org.dizem.common.JSONUtil;
+import org.dizem.sanguosha.model.vo.SGSPacket;
+import org.dizem.sanguosha.view.gameview.GameFrame;
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 import static org.dizem.sanguosha.model.Constants.*;
 
@@ -13,17 +20,50 @@ public class GameClient {
 	private static Logger log = Logger.getLogger(GameClient.class);
 	private String serverAddress;
 	private int serverPort;
-	private String userName;
+	private String name;
 
 	private GameClientMonitor clientMonitor;
+	private GameFrame gameFrame;
 
-
-	public GameClient(int serverPort, String serverAddress, String userName) {
+	public GameClient(int serverPort, String serverAddress, String name) {
 		this.serverPort = serverPort;
 		this.serverAddress = serverAddress;
-		this.userName = userName;
+		this.name = name;
 		clientMonitor = new GameClientMonitor(this);
 		clientMonitor.start();
+		connect();
+	}
+
+	public void connect() {
+		while (!clientMonitor.isReady()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		send(new SGSPacket(OP_CONNECT, name, clientMonitor.getClientPort()));
+	}
+
+	public void showGameFrame(SGSPacket packet) {
+		gameFrame = new GameFrame();
+		gameFrame.setCurrentPlayerID(packet.getPlayerId());
+	}
+
+	public void send(SGSPacket packet) {
+		try {
+			DatagramSocket ds = new DatagramSocket();
+			String message = JSONUtil.convertToString(packet);
+			log.info("send : " + message);
+			byte[] data = message.getBytes("UTF-8");
+			DatagramPacket dp = new DatagramPacket(
+					data, data.length, InetAddress.getByName(serverAddress), serverPort
+			);
+			ds.send(dp);
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 	}
 
 	public String getServerAddress() {
@@ -34,7 +74,7 @@ public class GameClient {
 		return serverPort;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
 }

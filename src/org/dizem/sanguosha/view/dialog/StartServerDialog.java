@@ -225,10 +225,10 @@ public class StartServerDialog extends JDialog implements ActionListener {
 
 		} else if (e.getSource() == btnStart) {
 			if (!txtIp.getText().matches("((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)")) {
-				JOptionPane.showMessageDialog(this, "IP格式错误");
+				JCMessageBox.createErrorMessageBox(this, "Error", "IP地址格式错误").open();
 
-			} else if (txtPort.getText().matches("\\d{1,4}")) {
-				JOptionPane.showMessageDialog(this, "端口格式错误");
+			} else if (!txtPort.getText().matches("\\d{1,4}")) {
+				JCMessageBox.createErrorMessageBox(this, "Error", "端口格式错误").open();
 
 			} else {
 
