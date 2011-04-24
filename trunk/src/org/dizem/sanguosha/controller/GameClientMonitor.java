@@ -10,6 +10,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 import static org.dizem.sanguosha.model.Constants.*;
+
 /**
  * User: dizem
  * Time: 11-4-23 下午9:57
@@ -42,12 +43,16 @@ public class GameClientMonitor extends Thread {
 				log.info("Received:" + jsonString);
 				SGSPacket dp = (SGSPacket) JSONUtil.convertToVO(jsonString, SGSPacket.class);
 
-				if(dp.getOperation().equals(OP_DISTRIBUTE_ID)) {
-					client.showGameFrame(dp);
+				if (dp.getOperation().equals(OP_INIT_CLIENT)) {
+					this.client.showGameFrame(dp);
+
+				} else if (dp.getOperation().equals(OP_UPDATE_PLAYERS)) {
+					this.client.updatePlayers(dp);
 				}
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getMessage());
 		}
 	}

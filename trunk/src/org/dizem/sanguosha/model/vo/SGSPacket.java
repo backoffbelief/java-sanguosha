@@ -1,5 +1,7 @@
 package org.dizem.sanguosha.model.vo;
 
+import org.dizem.sanguosha.model.player.Player;
+
 import java.util.List;
 
 /**
@@ -12,10 +14,11 @@ public class SGSPacket {
 	private int clientPort;
 
 	private String playerName;
+	private int playerCount;
+
 	private int playerId;
-	private CardVO cardVO;
-	private PlayerVO playerVO;
-	private List<CardVO> cardVOList;
+
+	private PlayerVO[] players;
 
 	public SGSPacket() {
 	}
@@ -64,5 +67,30 @@ public class SGSPacket {
 
 	public void setPlayerId(int playerId) {
 		this.playerId = playerId;
+	}
+
+	public int getPlayerCount() {
+		return playerCount;
+	}
+
+	public void setPlayerCount(int playerCount) {
+		this.playerCount = playerCount;
+	}
+
+	public PlayerVO[] getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(PlayerVO[] players) {
+		this.players = players;
+	}
+
+	public void setPlayers(Player[] players) {
+		this.players = new PlayerVO[players.length];
+		for (int i = 0; i < players.length; ++i) {
+			if (players[i] != null) {
+				this.players[i] = new PlayerVO(players[i]);
+			}
+		}
 	}
 }

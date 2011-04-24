@@ -2,6 +2,7 @@ package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
 import org.dizem.common.JSONUtil;
+import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.vo.SGSPacket;
 import org.dizem.sanguosha.view.gameview.GameFrame;
 
@@ -21,9 +22,10 @@ public class GameClient {
 	private String serverAddress;
 	private int serverPort;
 	private String name;
-
 	private GameClientMonitor clientMonitor;
 	private GameFrame gameFrame;
+	private Player[] players;
+	private int playerCount;
 
 	public GameClient(int serverPort, String serverAddress, String name) {
 		this.serverPort = serverPort;
@@ -39,15 +41,20 @@ public class GameClient {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				log.error(e.getMessage());
 			}
 		}
 		send(new SGSPacket(OP_CONNECT, name, clientMonitor.getClientPort()));
 	}
 
 	public void showGameFrame(SGSPacket packet) {
-		gameFrame = new GameFrame();
+		playerCount = packet.getPlayerCount();
+		gameFrame = new GameFrame(this, name);
 		gameFrame.setCurrentPlayerID(packet.getPlayerId());
+	}
+
+	public void updatePlayers(SGSPacket packet) {
+		gameFrame.updatePlayers(packet.getPlayers());
 	}
 
 	public void send(SGSPacket packet) {
@@ -66,6 +73,7 @@ public class GameClient {
 		}
 	}
 
+
 	public String getServerAddress() {
 		return serverAddress;
 	}
@@ -77,4 +85,10 @@ public class GameClient {
 	public String getName() {
 		return name;
 	}
+
+	public int getPlayerCount() {
+		return playerCount;
+	}
+
+
 }

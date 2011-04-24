@@ -72,15 +72,18 @@ public interface Constants {
 	String STR_START_SERVER = "启动服务器";
 
 	int DATA_PACKET_SIZE = 10000;
-	
+	String LOCAL_ADDRESS = "127.0.0.1";
+	int DEFAULT_SERVER_PORT = 7777;
 
 	String OP_TEST_SERVER = "OP_TEST_SERVER";
 	String OP_CONNECT = "OP_CONNECT";
 	String OP_UPDATE_PLAYERS = "OP_UPDATE_PLAYERS";
-	String OP_DISTRIBUTE_ID = "OP_DISTRIBUTE_ID";
+	String OP_INIT_CLIENT = "OP_INIT_CLIENT";
+
+	String PATTERN_IP = "((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)";
+	String PATTERN_PORT = "\\d{1,5}";
 
 
-	
 	Image[] IMG_ROLE = {
 			ImageUtil.getImage("system/roles/small-lord.png"),
 			ImageUtil.getImage("system/roles/small-loyalist.png"),

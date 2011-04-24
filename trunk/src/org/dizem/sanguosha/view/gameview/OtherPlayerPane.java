@@ -31,12 +31,22 @@ public class OtherPlayerPane extends JPanel {
 	private Image imgKingdomFrame;
 
 	private Player player;
+	private String playerName;
 	private boolean characterChoosed = false;
 
-	public OtherPlayerPane(Player player) {
+	public OtherPlayerPane() {
 		super();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+
+	public void setPlayer(Player player) {
 		this.player = player;
+		setPlayerName(player.getName());
+		repaint();
+	}
+
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 
 	public void setCharacter() {
@@ -63,19 +73,22 @@ public class OtherPlayerPane extends JPanel {
 		if (imgKingdom != null) {
 			g.drawImage(imgKingdom, -3, -3, null);
 		}
-		g.setColor(COLOR_CARD_COUNT_BACK);
-		g.fillRect(1, 103, 16, 16);
-		g.setColor(Color.BLACK);
-		g.drawString("" + player.getHandCards().size(), 5, 115);
 
-		g.setColor(Color.WHITE);
-		g.drawString(player.getName(), (DEFAULT_WIDTH - g.getFontMetrics().stringWidth(player.getName())) / 2, 15);
-
-		if (player.getPhase() != Phase.NOT_ACTIVE) {
-			g.drawImage(IMG_PHASE[player.getPhaseID()], 115, 120, null);
+		if (player != null) {
+			g.setColor(COLOR_CARD_COUNT_BACK);
+			g.fillRect(1, 103, 16, 16);
+			g.setColor(Color.BLACK);
+			g.drawString("" + player.getHandCards().size(), 5, 115);
+			if (player.getPhase() != Phase.NOT_ACTIVE) {
+				g.drawImage(IMG_PHASE[player.getPhaseID()], 115, 120, null);
+			}
+			drawLife(g);
+		}
+		if (playerName != null) {
+			g.setColor(Color.WHITE);
+			g.drawString(playerName, (DEFAULT_WIDTH - g.getFontMetrics().stringWidth(player.getName())) / 2, 15);
 		}
 
-		drawLife(g);
 	}
 
 	private void drawLife(Graphics g) {

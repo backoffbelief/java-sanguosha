@@ -161,10 +161,10 @@ public class StartGameDialog extends JDialog implements ActionListener {
 			dispose();
 
 		} else if (e.getSource() == btnStart) {
-			if (!txtServerIp.getText().matches("((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)")) {
+			if (!txtServerIp.getText().matches(PATTERN_IP)) {
 				JCMessageBox.createErrorMessageBox(this, "Error", "IP地址格式错误").open();
 
-			} else if (!txtServerPort.getText().matches("\\d{1,4}")) {
+			} else if (!txtServerPort.getText().matches(PATTERN_PORT)) {
 				JCMessageBox.createErrorMessageBox(this, "Error", "端口格式错误").open();
 
 			} else {

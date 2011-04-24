@@ -7,6 +7,7 @@ import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.card.equipment.*;
 import org.dizem.sanguosha.model.exception.SGSException;
+import org.dizem.sanguosha.model.vo.PlayerVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class Player {
 	private List<AbstractCard> effectCards;
 	private static List<Player> instance;
 
+
 	public Player(String name) {
 		this.role = role;
 		this.name = name;
@@ -41,12 +43,24 @@ public class Player {
 		this.phase = Phase.NOT_ACTIVE;
 	}
 
+
 	public Player(String name, String ip, int port) {
 		this(name);
 		this.ip = ip;
 		this.port = port;
 	}
 
+	public Player(PlayerVO playerVO) {
+		this.ip = playerVO.getIp();
+		this.port = playerVO.getPort();
+		this.name = playerVO.getName();
+		this.playerId = playerVO.getPlayerId();
+		effectCards = new ArrayList<AbstractCard>();
+		handCards = new ArrayList<AbstractCard>();
+		equipmentCards = new ArrayList<EquipmentCard>();
+		this.phase = Phase.NOT_ACTIVE;
+
+	}
 
 	public void setCharacter(Character character) {
 		this.character = character;
