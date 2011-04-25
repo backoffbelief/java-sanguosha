@@ -17,13 +17,14 @@ import static org.dizem.sanguosha.model.Constants.UNSELECTED_TAG;
  * User: dizem
  * Time: 11-4-23 下午4:45
  */
-public class SGSCharacterCardLabel extends JLabel
+public class CharacterCardLabel extends JLabel
 		implements MouseMotionListener, MouseListener {
 
 	private org.dizem.sanguosha.model.card.character.Character character;
 	private ChooseCharacterDialog owner;
+	private int posX, posY;
 
-	public SGSCharacterCardLabel(Character character, ChooseCharacterDialog owner) {
+	public CharacterCardLabel(Character character, ChooseCharacterDialog owner) {
 		super(ImageUtil.getIcon("generals/card/" + character.getJPGFilename()));
 		this.character = character;
 		this.owner = owner;
@@ -43,6 +44,13 @@ public class SGSCharacterCardLabel extends JLabel
 
 	}
 
+
+	public void setPosition(int x, int y) {
+		setLocation(x, y);
+		posX = x;
+		posY = y;
+	}
+
 	public void mousePressed(MouseEvent e) {
 		JLabel label = (JLabel) e.getSource();
 		label.setBorder(new LineBorder(Color.GREEN, 4));
@@ -54,7 +62,7 @@ public class SGSCharacterCardLabel extends JLabel
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		owner.dispose();
+		owner.selectCharacter(character);
 	}
 
 	public void mouseEntered(MouseEvent e) {
@@ -63,7 +71,7 @@ public class SGSCharacterCardLabel extends JLabel
 	public void mouseExited(MouseEvent e) {
 		JLabel label = (JLabel) e.getSource();
 		if (label.getName().equals(UNSELECTED_TAG)) {
-			label.setLocation(label.getX(), 30);
+			label.setLocation(posX, posY);
 		}
 	}
 
@@ -72,8 +80,11 @@ public class SGSCharacterCardLabel extends JLabel
 
 	public void mouseMoved(MouseEvent e) {
 		JLabel label = (JLabel) e.getSource();
+		int offsetX = (int) ((double) (e.getX() - 65) / 65. * 40);
+		int offsetY = (int) ((double) (e.getY() - 98) / 98. * 40);
+
 		if (label.getName().equals(UNSELECTED_TAG)) {
-			label.setLocation(label.getX(), 20 - (int) (20 * Math.sin(e.getX() * Math.acos(-1.) / 130.)));
+			label.setLocation(posX + offsetX, posY + offsetY);
 			label.updateUI();
 		}
 	}

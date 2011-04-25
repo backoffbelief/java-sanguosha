@@ -6,7 +6,11 @@ import craky.componentc.JCTextArea;
 import craky.componentc.JCTextField;
 import craky.layout.LineLayout;
 import org.dizem.common.PanelViewer;
+import org.dizem.sanguosha.controller.GameClient;
 import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.player.Player;
+import org.dizem.sanguosha.model.vo.PlayerVO;
+import org.dizem.sanguosha.view.component.ComboBoxItem;
 import org.dizem.sanguosha.view.component.EmptyComponent;
 
 import javax.swing.*;
@@ -58,8 +62,12 @@ public class MessagePane extends JPanel {
 
 	public static final Font MSG_FONT = new Font("微软雅黑", Font.PLAIN, 12);
 
-	public MessagePane() {
+	private GameClient client;
+
+	public MessagePane(final GameClient client) {
 		super();
+		this.client = client;
+
 		cbUsers.addItem("所有人");
 		setSize(220, 350);
 		setOpaque(false);
@@ -67,7 +75,9 @@ public class MessagePane extends JPanel {
 		txtLog.setEditable(false);
 		txtLog.setFocusable(false);
 		txtLog.setLineWrap(true);
+		txtLog.setForeground(Color.BLACK);
 		txtLog.setOpaque(false);
+		txtLog.setFont(MSG_FONT);
 
 		scLog.setFocusable(false);
 		scLog.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -84,6 +94,7 @@ public class MessagePane extends JPanel {
 		txtMessage.setLineWrap(true);
 		txtMessage.setOpaque(false);
 		txtMessage.setFont(MSG_FONT);
+		txtMessage.setForeground(Color.BLACK);
 		scMessage.setFocusable(false);
 		scMessage.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
@@ -93,11 +104,15 @@ public class MessagePane extends JPanel {
 		scMessage.getViewport().setOpaque(false);
 		scMessage.getVerticalScrollBar().setOpaque(false);
 		scMessage.setBorder(new TitledBorder(new LineBorder(new Color(37, 35, 22), 3), "聊天记录", 0, 0, LABEL_FONT));
+
 		txtInput.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (txtInput.getText().trim().length() != 0) {
-					appendLog(txtInput.getText());
+					ComboBoxItem item = (ComboBoxItem) cbUsers.getSelectedItem();
+					client.sendMessage(txtInput.getText(), item.getId());
 					txtInput.setText("");
+
+
 				} else {
 					appendMessage("不能发送空消息");
 				}
@@ -135,6 +150,14 @@ public class MessagePane extends JPanel {
 	}
 
 
+	public void clearUsers() {
+		cbUsers.removeAllItems();
+		cbUsers.addItem(ComboBoxItem.ANY_ONE_ITEM);
+	}
+
+	public void addUser(ComboBoxItem item) {
+		cbUsers.addItem(item);
+	}
 
 	public void appendLog(String info) {
 		txtLog.append(Constants.LOG_TIME_FORMAT.format(new Date()) + info + "\n");

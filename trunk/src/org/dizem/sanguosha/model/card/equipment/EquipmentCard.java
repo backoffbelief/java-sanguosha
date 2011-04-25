@@ -5,7 +5,7 @@ import org.dizem.sanguosha.model.card.ICard;
 
 public class EquipmentCard extends AbstractCard {
 
-	
+
 	public static int TYPE_HORSE_CARD_MINUS = 3;
 
 	public static int TYPE_HORSE_CARD_PLUS = 2;

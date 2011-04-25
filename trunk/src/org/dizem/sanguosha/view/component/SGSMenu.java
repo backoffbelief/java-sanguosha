@@ -25,7 +25,7 @@ public class SGSMenu extends JCMenu implements PopupMenuListener {
 //	private ActionListener listener;
 
 	public SGSMenu() {
-	//this.listener = listener;
+		//this.listener = listener;
 		setToolTipText("\u4E3B\u83DC\u5355");
 		setPreferredSize(new Dimension(5, 20));
 		setShowWhenRollover(false);
@@ -65,7 +65,7 @@ public class SGSMenu extends JCMenu implements PopupMenuListener {
 		this.add(itemHelp);
 		JMenuItem itemAbout = new JCMenuItem("\u5173\u4e8e(A)");
 		itemAbout.setMnemonic('A');
-	//	itemAbout.addActionListener(listener);
+		//	itemAbout.addActionListener(listener);
 		this.add(itemAbout);
 	}
 

@@ -15,7 +15,7 @@ import static org.dizem.sanguosha.model.Constants.*;
  * User: DIZEM
  * Time: 11-4-10 下午2:19
  */
-public class SGSHandCardLabel extends JLabel
+public class HandCardLabel extends JLabel
 		implements MouseMotionListener, MouseListener {
 
 
@@ -26,7 +26,7 @@ public class SGSHandCardLabel extends JLabel
 	private Color color;
 
 
-	public SGSHandCardLabel(AbstractCard card) {
+	public HandCardLabel(AbstractCard card) {
 		super(ImageUtil.getIcon("/card/" + card.getFilename()));
 		suit = card.getSuit() - 1;
 		rank = card.getRank();

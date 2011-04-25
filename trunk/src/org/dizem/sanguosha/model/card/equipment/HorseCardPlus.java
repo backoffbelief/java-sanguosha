@@ -2,7 +2,7 @@ package org.dizem.sanguosha.model.card.equipment;
 
 /**
  * 加1马
- *
+ * <p/>
  * User: DIZEM
  * Time: 11-4-1 下午10:48
  */

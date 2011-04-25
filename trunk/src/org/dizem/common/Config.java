@@ -71,7 +71,7 @@ public class Config {
 	}
 
 	public void remove(String key) {
-		if(config.containsKey(key))
+		if (config.containsKey(key))
 			config.remove(key);
 	}
 

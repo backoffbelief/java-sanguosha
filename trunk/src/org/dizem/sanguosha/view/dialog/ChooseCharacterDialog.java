@@ -4,7 +4,8 @@ import craky.componentc.JCDialog;
 import org.dizem.common.LogUtil;
 import org.dizem.sanguosha.model.card.CharacterDeck;
 import org.dizem.sanguosha.model.card.character.Character;
-import org.dizem.sanguosha.view.component.SGSCharacterCardLabel;
+import org.dizem.sanguosha.view.component.CharacterCardLabel;
+import org.dizem.sanguosha.view.gameview.GameFrame;
 
 import java.awt.*;
 
@@ -14,27 +15,39 @@ import java.awt.*;
  */
 public class ChooseCharacterDialog extends JCDialog {
 
+	private GameFrame owner;
+	private boolean isLord;
 
-	public ChooseCharacterDialog(Frame owner, Character[] characters) {
+	public ChooseCharacterDialog(GameFrame owner, Character[] characters) {
 
 		super(owner, "选择武将牌");
 		setLayout(null);
-		setSize(140 * 5 + 10, 250);
+		this.owner = owner;
+		isLord = characters.length == 5;
+
+		setSize(140 * characters.length + 10, 250);
 
 		for (int i = 0; i < characters.length; ++i) {
-			SGSCharacterCardLabel label = new SGSCharacterCardLabel(characters[i], this);
-			label.setLocation(10 + 140 * i, 20);
+			CharacterCardLabel label = new CharacterCardLabel(characters[i], this);
+			label.setPosition(10 + 140 * i, 20);
 			add(label);
 		}
+		int offsetX = (owner.getWidth() - getWidth()) / 2;
+		int offsetY = (owner.getHeight() - getHeight()) / 2;
+		setLocation(owner.getX() + offsetX, owner.getY() + offsetY);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setModal(true);
+//		setModal(true);
 		setVisible(true);
 	}
-
 
 
 	public static void main(String[] args) {
 		LogUtil.init();
 		new ChooseCharacterDialog(null, CharacterDeck.getInstance().popCharacters(5));
+	}
+
+	public void selectCharacter(Character character) {
+		owner.setCharacter(character, isLord);
+		dispose();
 	}
 }

@@ -3,7 +3,6 @@ package org.dizem.sanguosha.controller;
 import org.apache.log4j.Logger;
 import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.vo.SGSPacket;
-import org.dizem.sanguosha.view.gameview.GameFrame;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -48,7 +47,23 @@ public class GameClientMonitor extends Thread {
 
 				} else if (dp.getOperation().equals(OP_UPDATE_PLAYERS)) {
 					this.client.updatePlayers(dp);
+
+				} else if (dp.getOperation().equals(OP_SEND_MESSAGE)) {
+					this.client.showMessage(dp.getMessage());
+
+				} else if (dp.getOperation().equals(OP_SEND_CHAT_MESSAGE)) {
+					this.client.showChatMessage(dp.getMessage());
+
+				} else if(dp.getOperation().equals(OP_DISTRIBUTE_ROLE)) {
+					this.client.setRole(dp.getRole(), dp.getLordId());
+
+				} else if(dp.getOperation().equals(OP_DISTRIBUTE_LORD_CHARACTER)) {
+					this.client.distributeLordCharacter(dp);
+
+				} else if(dp.getOperation().equals(OP_DISTRIBUTE_CHARACTER)) {
+					this.client.distributeCharacter(dp);
 				}
+
 			}
 
 		} catch (Exception e) {

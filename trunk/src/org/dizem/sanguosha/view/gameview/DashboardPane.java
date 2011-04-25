@@ -6,11 +6,13 @@ import org.dizem.common.ImageUtil;
 import org.dizem.common.TwoWayMap;
 import org.dizem.sanguosha.model.card.*;
 import org.dizem.sanguosha.model.card.Skill;
+import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.player.Player;
-import org.dizem.sanguosha.view.component.SGSEquipmentLabel;
+import org.dizem.sanguosha.model.player.Role;
+import org.dizem.sanguosha.view.component.HandCardLabel;
+import org.dizem.sanguosha.view.component.EquipmentLabel;
 import org.dizem.sanguosha.view.component.SGSGameButton;
-import org.dizem.sanguosha.view.component.SGSHandCardLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,6 +58,7 @@ public class DashboardPane extends JLayeredPane
 
 	public DashboardPane(String playerName) {
 		super();
+		this.player = new Player(playerName);
 		this.playerName = playerName;
 		setSize(480 + IMG_DASHBOARD_AVATAR.getWidth(null)
 				+ IMG_DASHBOARD_EQUIP.getWidth(null), IMG_DASHBOARD_AVATAR.getHeight(null) + 30);
@@ -74,13 +77,14 @@ public class DashboardPane extends JLayeredPane
 		}
 	}
 
-	public void setCharacter() {
-
+	public void setCharacter(org.dizem.sanguosha.model.card.character.Character character) {
+		player.setCharacter(character);
 		this.character = player.getCharacter();
 		imgAvatar = ImageUtil.getImage("/generals/big/" + character.getPNGFilename());
 		imgKingdom = ImageUtil.getImage("/kingdom/icon/" + character.getKingdomImgName());
-		initButtons();
 		characterChoosed = true;
+		initButtons();
+		repaint();
 	}
 
 	private void initButtons() {
@@ -130,29 +134,12 @@ public class DashboardPane extends JLayeredPane
 		if (imgKingdom != null) {
 			g.drawImage(imgKingdom, avatarX + 21, 62, null);
 		}
-		if (characterChoosed) {
-			int x = avatarX - 3, y = 37;
-			switch (player.getRole()) {
-				case ZG:
-					g.drawImage(IMG_ROLE[0], x, y, null);
-					break;
-				case ZC:
-					g.drawImage(IMG_ROLE[1], x, y, null);
-					break;
-				case NJ:
-					g.drawImage(IMG_ROLE[2], x, y, null);
-					break;
-				case FZ:
-					g.drawImage(IMG_ROLE[3], x, y, null);
-					break;
-			}
-		}
 
 	}
 
 	private JLabel createCardLabel(final AbstractCard card) {
 
-		final JLabel label = new SGSHandCardLabel(card);
+		final JLabel label = new HandCardLabel(card);
 
 		handCardLabelMap.put(card, label);
 
@@ -186,7 +173,7 @@ public class DashboardPane extends JLayeredPane
 	}
 
 	private JLabel createEquipmentLabel(final EquipmentCard card) {
-		final JLabel label = new SGSEquipmentLabel(card);
+		final JLabel label = new EquipmentLabel(card);
 		equipmentLabelMap.put(card.getCardType(), label);
 		label.setLocation(10, 42 + posY + card.getCardType() * 32);
 		return label;
@@ -273,4 +260,25 @@ public class DashboardPane extends JLayeredPane
 	}
 
 
+	public void setRole(final Role role) {
+		player.setRole(role);
+		final JLabel roleLabel = new JLabel(IMG_ROLE[player.getRoleID()]);
+		roleLabel.setSize(IMG_ROLE[player.getRoleID()].getIconWidth(), IMG_ROLE[player.getRoleID()].getIconHeight());
+		final int x = avatarX - 3, y = 140;
+		roleLabel.setLocation(x, y);
+		add(roleLabel, new Integer(labelDisplayLevel++));
+
+		new Thread(new Runnable() {
+			public void run() {
+				while (roleLabel.getY() > 38) {
+					roleLabel.setLocation(x, roleLabel.getY() - 2);
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+	}
 }

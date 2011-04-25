@@ -15,6 +15,7 @@ import java.awt.*;
 public class CardImgPane extends JPanel {
 	private AbstractCard card;
 	private Image imgBack;
+
 	public CardImgPane(AbstractCard card) {
 		this.card = card;
 		imgBack = ImageUtil.getImage("card//" + card.getFilename());
