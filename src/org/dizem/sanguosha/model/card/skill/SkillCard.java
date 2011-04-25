@@ -9,7 +9,7 @@ import org.dizem.sanguosha.model.card.ICard;
 public class SkillCard extends AbstractCard {
 
 	public SkillCard(String pattern, String number, String name,
-			String description, String filename) {
+					 String description, String filename) {
 		super(pattern, number, name, description, filename);
 	}
 

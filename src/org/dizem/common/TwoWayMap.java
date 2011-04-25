@@ -26,6 +26,7 @@ public class TwoWayMap<K, V> implements Cloneable, Serializable {
 	public Collection<K> keys() {
 		return valueToKey.values();
 	}
+
 	public void put(K key, V value) {
 		if (keyToValue.containsKey(key)) {
 			throw new RuntimeException("Already contains key: " + key);
@@ -52,7 +53,7 @@ public class TwoWayMap<K, V> implements Cloneable, Serializable {
 	}
 
 	private void display() {
-		for(Map.Entry<V, K> entry : valueToKey.entrySet()) {
+		for (Map.Entry<V, K> entry : valueToKey.entrySet()) {
 			System.out.print(entry.getKey() + " ");
 		}
 	}

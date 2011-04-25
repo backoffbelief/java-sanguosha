@@ -168,7 +168,7 @@ public class StartGameDialog extends JDialog implements ActionListener {
 				JCMessageBox.createErrorMessageBox(this, "Error", "端口格式错误").open();
 
 			} else {
-				new GameClient(Integer.parseInt(txtServerPort.getText()),txtServerIp.getText(), txtName.getText());
+				new GameClient(Integer.parseInt(txtServerPort.getText()), txtServerIp.getText(), txtName.getText());
 				dispose();
 			}
 		}

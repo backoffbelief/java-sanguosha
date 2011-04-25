@@ -6,13 +6,19 @@ import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
 import org.dizem.common.TwoWayMap;
 import org.dizem.sanguosha.controller.GameClient;
+import org.dizem.sanguosha.model.card.character.*;
+import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Player;
+import org.dizem.sanguosha.model.player.Role;
 import org.dizem.sanguosha.model.vo.PlayerVO;
+import org.dizem.sanguosha.view.component.ComboBoxItem;
+import org.dizem.sanguosha.view.component.MessageLabel;
 import org.dizem.sanguosha.view.component.SGSMenu;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.image.ImageFilter;
 import java.util.ArrayList;
 
 import static org.dizem.sanguosha.model.Constants.*;
@@ -31,7 +37,9 @@ public class GameFrame extends JCFrame {
 	private TwoWayMap<Player, OtherPlayerPane> playerToPane = new TwoWayMap<Player, OtherPlayerPane>();
 	private java.util.List<OtherPlayerPane> otherPlayerPaneList = new ArrayList<OtherPlayerPane>();
 	private DashboardPane dashboard;
-	private MessagePane msgPane = new MessagePane();
+	private MessagePane msgPane;
+	private MessageLabel msgLabel = new MessageLabel();
+
 	int[] roleList;
 
 	private JPanel rolePane = new JPanel() {
@@ -40,40 +48,17 @@ public class GameFrame extends JCFrame {
 			super.paint(g);
 			if (players != null) {
 				for (int i = 0; i < players.length; ++i) {
-				//	g.drawImage(IMG_ROLE[roleList[i]], i * 30, roleList[i] == 3 ? 23 : 20, null);
+					//	g.drawImage(IMG_ROLE[roleList[i]], i * 30, roleList[i] == 3 ? 23 : 20, null);
 				}
 			}
 		}
 	};
 
-//
-//	private void test() {
-//
-//		currentPlayerID = 0;
-//		int size = 4;
-//		roleList = new int[size];
-//		int cnt = OTHER_PANE_POSITION_OFFSET[size - 1];
-//
-//		for (int i = 0; i < size; ++i) {
-//			Player player = new Player("Player" + i, ROLE_DISTRIBUTION[i]);
-//			roleList[i] = player.getRoleID();
-//			players.add(player);
-//
-//			if (i != currentPlayerID) {
-//				OtherPlayerPane pane = new OtherPlayerPane(player);
-//				pane.setLocation(OTHER_PANE_POSITION[cnt][0], OTHER_PANE_POSITION[cnt++][1]);
-//				playerToPane.put(player, pane);
-//			}
-//		}
-//		Arrays.sort(roleList);
-//
-//		dashboard = new DashboardPane(players.get(currentPlayerID));
-//	}
-
 	public GameFrame(GameClient client, String playerName) {
 		if (client != null) {
 			this.client = client;
 			this.playerCount = client.getPlayerCount();
+			msgPane = new MessagePane(client);
 		}
 		initGamePane(playerName);
 		initFrame();
@@ -103,6 +88,7 @@ public class GameFrame extends JCFrame {
 
 	private void initFrame() {
 		setSize(740, 620);
+		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 	}
@@ -124,8 +110,10 @@ public class GameFrame extends JCFrame {
 		msgPane.setLocation(500, 45);
 		rolePane.setBounds(530, -10, 150, 50);
 		rolePane.setOpaque(false);
+		msgLabel.setLocation(100, 330);
 		pane.add(msgPane);
 		pane.add(rolePane);
+		pane.add(msgLabel);
 		pane.setOpaque(false);
 		return pane;
 	}
@@ -161,14 +149,51 @@ public class GameFrame extends JCFrame {
 	public void updatePlayers(PlayerVO[] players) {
 		this.players = new Player[players.length];
 		int index = 0;
+		msgPane.clearUsers();
 		for (int i = 0; i < players.length; ++i) {
-			System.out.println(i + " " + currentPlayerID);
-
-			if (i != currentPlayerID && players[i] != null) {
-
+			if (players[i] != null)
 				this.players[i] = new Player(players[i]);
+			if (i != currentPlayerID && players[i] != null) {
+				msgPane.addUser(new ComboBoxItem(players[i].getName(), players[i].getPlayerId()));
 				otherPlayerPaneList.get(index++).setPlayer(this.players[i]);
 			}
 		}
+	}
+
+
+	public void appendLog(String message) {
+		msgPane.appendLog(message);
+	}
+
+
+	public void appendChatMessage(String message) {
+		msgPane.appendMessage(message);
+	}
+
+	public void setRole(Role role, int lordId) {
+		dashboard.setRole(role);
+		if (players != null)
+			this.players[lordId].setRole(Role.ZG);
+		otherPlayerPaneList.get(lordId).repaint();
+		showMessage("您分配了角色: " + role);
+	}
+
+	public void showMessage(String text) {
+		appendLog(text);
+		msgLabel.showText(text);
+	}
+
+	public void setCharacter(Character character, boolean isLord) {
+		showMessage("您选择了武将：" + character.getName());
+		dashboard.setCharacter(character);
+		players[currentPlayerID].setCharacter(character);
+		if(isLord)
+			client.chooseLordCharacterFinish();
+		else
+			client.chooseCharacterFinish();
+	}
+
+	public Player[] getPlayers() {
+		return players;
 	}
 }

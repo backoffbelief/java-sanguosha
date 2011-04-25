@@ -3,6 +3,7 @@ package org.dizem.sanguosha.model;
 import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.player.Role;
 
+import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 
@@ -15,7 +16,9 @@ public interface Constants {
 	Role[] ROLE_DISTRIBUTION = {
 			Role.ZG, Role.NJ, Role.FZ, Role.ZC, Role.FZ
 	};
-
+	String[] ROLE_NAME = {
+			"主公", "忠臣", "反贼", "内奸"
+	};
 	int[] OTHER_PANE_POSITION_OFFSET = {
 			0, 0, 1, 3, 6,
 	};
@@ -50,7 +53,7 @@ public interface Constants {
 	String LOG4J_CONFIG_PATH = CONFIG_DIR + FILE_SEP + "log4j.properties";
 	String CARD_SETTING_PATH = CONFIG_DIR + FILE_SEP + "CardSettings.xml";
 	String CHARACTER_SETTING_PATH = CONFIG_DIR + FILE_SEP + "CharacterSettings.xml";
-	;
+
 
 	String ICON_PATH = IMAGE_DIR + FILE_SEP + "sgs.ico";
 	String LOGO_FILE_NAME = "system" + FILE_SEP + "logo.png";
@@ -79,16 +82,30 @@ public interface Constants {
 	String OP_CONNECT = "OP_CONNECT";
 	String OP_UPDATE_PLAYERS = "OP_UPDATE_PLAYERS";
 	String OP_INIT_CLIENT = "OP_INIT_CLIENT";
+	String OP_SEND_MESSAGE = "OP_SEND_MESSAGE";
+	String OP_SEND_CHAT_MESSAGE = "OP_SEND_CHAT_MESSAGE";
+	String OP_DISTRIBUTE_ROLE = "OP_DISTRIBUTE_ROLE";
+	String OP_DISTRIBUTE_LORD_CHARACTER = "OP_DISTRIBUTE_LORD_CHARACTER";
+	String OP_DISTRIBUTE_CHARACTER = "OP_DISTRIBUTE_CHARACTER";
+	String OP_FINISH_CHOOSING_LORD_CHARACTER = "OP_FINISH_CHOOSING_LORD_CHARACTER";
+	String OP_FINISH_CHOOSING_CHARACTER = "OP_FINISH_CHOOSING_CHARACTER";
 
 	String PATTERN_IP = "((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)";
 	String PATTERN_PORT = "\\d{1,5}";
 
 
-	Image[] IMG_ROLE = {
-			ImageUtil.getImage("system/roles/small-lord.png"),
-			ImageUtil.getImage("system/roles/small-loyalist.png"),
-			ImageUtil.getImage("system/roles/small-rebel.png"),
-			ImageUtil.getImage("system/roles/small-renegade.png"),
+	ImageIcon[] IMG_ROLE = {
+			ImageUtil.getIcon("system/roles/small-lord.png"),
+			ImageUtil.getIcon("system/roles/small-loyalist.png"),
+			ImageUtil.getIcon("system/roles/small-rebel.png"),
+			ImageUtil.getIcon("system/roles/small-renegade.png"),
+	};
+
+	Image[] IMG_ROLE2 = {
+			ImageUtil.getImage("system/roles/lord-1.png"),
+			ImageUtil.getImage("system/roles/loyalist-1.png"),
+			ImageUtil.getImage("system/roles/rebel-1.png"),
+			ImageUtil.getImage("system/roles/renegade-1.png"),
 	};
 
 	Image IMG_DASHBOARD_AVATAR = ImageUtil.getImage("system/dashboard-avatar.png");
@@ -106,10 +123,10 @@ public interface Constants {
 	};
 
 	Image[] IMG_ROLE_DEAD = {
-			ImageUtil.getImage("system/roles/small-lord.png"),
-			ImageUtil.getImage("system/roles/small-loyalist.png"),
-			ImageUtil.getImage("system/roles/small-rebel.png"),
-			ImageUtil.getImage("system/roles/small-renegade.png"),
+			ImageUtil.getImage("system/rolessmall--lord.png"),
+			ImageUtil.getImage("system/rolessmall--loyalist.png"),
+			ImageUtil.getImage("system/rolessmall--rebel.png"),
+			ImageUtil.getImage("system/rolessmall--renegade.png"),
 	};
 
 	Image[] IMG_PHASE = {

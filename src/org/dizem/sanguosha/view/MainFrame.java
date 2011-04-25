@@ -132,7 +132,7 @@ public class MainFrame extends JCFrame implements ActionListener {
 	}
 
 
-	public static void main(String[] args) throws InvocationTargetException, InterruptedException {
+	public static void main(String[] args) {
 
 		PropertyConfigurator.configure(Constants.LOG4J_CONFIG_PATH);
 		log.info("start");

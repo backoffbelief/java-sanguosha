@@ -5,19 +5,8 @@ import org.dizem.sanguosha.model.player.Player;
 
 public class Skill {
 
-	public final static int EFFECT_NONE = 0;
-	public final static int EFFECT_INCREASE_LIFE = 1;
-	public final static int EFFECT_DECREASE_LIFE = 2;
-	public final static int EFFECT_GET_CARD = 3;
-	public final static int EFFECT_DROP_HANDCARD = 4;
-	public final static int EFFECT_DROP_EQUIPMENTCARD = 5;
-	public final static int EFFECT_GIVE_CARD = 6;
-	public final static int EFFECT_KILL_OTHER = 7;
-	public final static int EFFECT_CANT_SHOW = 8;
-	public final static int EFFECT_INCREASE_DISTANCE = 9;
-	public final static int EFFECT_DECREASE_DISTANCE = 10;
-	public final static int TO_PLAYER = 100;
-	public final static int TO_DROP = 101;
+	public Skill() {
+	}
 
 	/**
 	 * 技能名称
@@ -94,10 +83,107 @@ public class Skill {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getDescription() {
 		return description;
 	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public String getHtmlDescription() {
 		return "<HTML>" + description.replaceAll("\\n", "<p>") + "</HTML>";
+	}
+
+	public boolean isImmediate() {
+		return isImmediate;
+	}
+
+	public void setImmediate(boolean immediate) {
+		isImmediate = immediate;
+	}
+
+	public boolean isPassive() {
+		return isPassive;
+	}
+
+	public void setPassive(boolean passive) {
+		isPassive = passive;
+	}
+
+	public String[] getCostHandCard() {
+		return costHandCard;
+	}
+
+	public void setCostHandCard(String[] costHandCard) {
+		this.costHandCard = costHandCard;
+	}
+
+	public int getCostToWhere() {
+		return costToWhere;
+	}
+
+	public void setCostToWhere(int costToWhere) {
+		this.costToWhere = costToWhere;
+	}
+
+	public Player[] getToPlayer() {
+		return toPlayer;
+	}
+
+	public void setToPlayer(Player[] toPlayer) {
+		this.toPlayer = toPlayer;
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
+	}
+
+	public String[] getResponseCard() {
+		return responseCard;
+	}
+
+	public void setResponseCard(String[] responseCard) {
+		this.responseCard = responseCard;
+	}
+
+	public int getNoResponseEffect() {
+		return noResponseEffect;
+	}
+
+	public void setNoResponseEffect(int noResponseEffect) {
+		this.noResponseEffect = noResponseEffect;
+	}
+
+	public int getNoResponseEffectCount() {
+		return noResponseEffectCount;
+	}
+
+	public void setNoResponseEffectCount(int noResponseEffectCount) {
+		this.noResponseEffectCount = noResponseEffectCount;
+	}
+
+	public int getResponseEffect() {
+		return responseEffect;
+	}
+
+	public void setResponseEffect(int responseEffect) {
+		this.responseEffect = responseEffect;
+	}
+
+	public int getResponseEffectCount() {
+		return responseEffectCount;
+	}
+
+	public void setResponseEffectCount(int responseEffectCount) {
+		this.responseEffectCount = responseEffectCount;
 	}
 }

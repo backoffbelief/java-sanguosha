@@ -93,14 +93,13 @@ public class CharacterDeck {
 			DocumentBuilder bf = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Node charSettings = bf.parse(CardXML).getChildNodes().item(0);
 			NodeList charList = charSettings.getChildNodes();
-
+			
 			for (int i = 1; i < charList.getLength(); i++) {
 				Node node = charList.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 
 
 					NamedNodeMap map = node.getAttributes();
-
 					Character ch = new Character(map.getNamedItem("name")
 							.getNodeValue(), map.getNamedItem("gender")
 							.getNodeValue(), map.getNamedItem("life")
@@ -135,6 +134,7 @@ public class CharacterDeck {
 			log.info("Read " + cnt + " characters from CharacterSetting.xml");
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getMessage());
 		}
 	}

@@ -14,7 +14,7 @@ public class PanelViewer extends JFrame {
 	private PanelViewer(JComponent panel) {
 		setLayout(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(panel.getWidth()+12, panel.getHeight() + 38);
+		setSize(panel.getWidth() + 12, panel.getHeight() + 38);
 		panel.setLocation(0, 0);
 		add(panel);
 		setVisible(true);

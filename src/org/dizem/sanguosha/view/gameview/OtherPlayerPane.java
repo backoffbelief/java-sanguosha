@@ -73,7 +73,6 @@ public class OtherPlayerPane extends JPanel {
 		if (imgKingdom != null) {
 			g.drawImage(imgKingdom, -3, -3, null);
 		}
-
 		if (player != null) {
 			g.setColor(COLOR_CARD_COUNT_BACK);
 			g.fillRect(1, 103, 16, 16);
@@ -81,6 +80,9 @@ public class OtherPlayerPane extends JPanel {
 			g.drawString("" + player.getHandCards().size(), 5, 115);
 			if (player.getPhase() != Phase.NOT_ACTIVE) {
 				g.drawImage(IMG_PHASE[player.getPhaseID()], 115, 120, null);
+			}
+			if (player.getRole() != null) {
+				g.drawImage(IMG_ROLE2[player.getRoleID()], 85, 3, null);
 			}
 			drawLife(g);
 		}

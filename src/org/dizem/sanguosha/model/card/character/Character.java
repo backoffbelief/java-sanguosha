@@ -2,6 +2,7 @@ package org.dizem.sanguosha.model.card.character;
 
 import org.apache.log4j.Logger;
 import org.dizem.sanguosha.model.card.Skill;
+import org.dizem.sanguosha.model.vo.CharacterVO;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,19 @@ public class Character {
 
 	private String filename;
 
+	public Character(CharacterVO vo) {
+		this.name = vo.getName();
+		this.gender = vo.getGender();
+		this.filename = vo.getFilename();
+		this.maxLife = vo.getMaxLife();
+		this.life = vo.getLife();
+		this.kingdom = vo.getKingdom();
+		this.skills = new ArrayList<Skill>();
+		for (Skill skill : vo.getSkills()) {
+			skills.add(skill);
+		}
+	}
+
 	public Character(String name, String gender, String life, String kingdom, String filename) {
 		this.name = name;
 		this.gender = gender;
@@ -49,8 +63,11 @@ public class Character {
 		skills.add(skill);
 	}
 
-	public Object[] getSkills() {
-		return this.skills.toArray();
+	public Skill[] getSkills() {
+		Skill[] skills = new Skill[this.skills.size()];
+		for (int i = 0; i < skills.length; ++i)
+			skills[i] = this.skills.get(i);
+		return skills;
 	}
 
 	public String getName() {
@@ -96,7 +113,7 @@ public class Character {
 		if (life > 0) {
 			life--;
 			log.info("Decrease life");
-			
+
 		} else {
 			log.error("Can not decrease life");
 		}

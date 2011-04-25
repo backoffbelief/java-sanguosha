@@ -18,20 +18,19 @@ public class ArmorCard extends EquipmentCard {
 	}
 
 	/**
-	 *
 	 * @param attackCard
 	 * @return true if cancelled the attack
 	 */
 	public boolean cancelAttack(AbstractCard attackCard) {
 
-		if(attackCard.getName().equals("杀")
+		if (attackCard.getName().equals("杀")
 				|| attackCard.getName().equals("万箭齐发")) {
 
-			if(getName().equals("八卦阵")) {
+			if (getName().equals("八卦阵")) {
 				AbstractCard card = Deck.getInstance().popCard();
 				return card.isRed();
 
-			} else if(getName().equals("仁王盾")) {
+			} else if (getName().equals("仁王盾")) {
 				return !attackCard.isRed();
 			}
 		}

@@ -10,11 +10,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 import static org.dizem.sanguosha.model.Constants.*;
+
 /**
  * User: DIZEM
  * Time: 11-4-10 下午2:24
  */
-public class SGSEquipmentLabel extends JLabel {
+public class EquipmentLabel extends JLabel {
 
 	private int suit;
 	private String rank;
@@ -23,7 +24,7 @@ public class SGSEquipmentLabel extends JLabel {
 	private boolean isSelectable;
 	private final Font equipmentTextFont = new Font("宋体", Font.PLAIN, 13);
 
-	public SGSEquipmentLabel(EquipmentCard card) {
+	public EquipmentLabel(EquipmentCard card) {
 		super();
 		suit = card.getSuit() - 1;
 		rank = card.getRank();
@@ -70,7 +71,7 @@ public class SGSEquipmentLabel extends JLabel {
 
 	@Override
 	public String toString() {
-		return "SGSEquipmentLabel{" +
+		return "EquipmentLabel{" +
 				"rank='" + rank + '\'' +
 				", suit=" + suit +
 				", name='" + name + '\'' +

@@ -1,6 +1,7 @@
 package org.dizem.sanguosha.model.vo;
 
 import org.dizem.sanguosha.model.player.Player;
+import org.dizem.sanguosha.model.player.Role;
 
 import java.util.List;
 
@@ -15,10 +16,14 @@ public class SGSPacket {
 
 	private String playerName;
 	private int playerCount;
-
 	private int playerId;
-
+	private int lordId;
 	private PlayerVO[] players;
+	private Role role;
+	private String message;
+	private int messageToID;
+	private CharacterVO[] characterVOs;
+	private CharacterVO characterVO;
 
 	public SGSPacket() {
 	}
@@ -92,5 +97,53 @@ public class SGSPacket {
 				this.players[i] = new PlayerVO(players[i]);
 			}
 		}
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getMessageToID() {
+		return messageToID;
+	}
+
+	public void setMessageToID(int messageToID) {
+		this.messageToID = messageToID;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public int getLordId() {
+		return lordId;
+	}
+
+	public void setLordId(int lordId) {
+		this.lordId = lordId;
+	}
+
+	public CharacterVO[] getCharacterVOs() {
+		return characterVOs;
+	}
+
+	public void setCharacterVOs(CharacterVO[] characterVOs) {
+		this.characterVOs = characterVOs;
+	}
+
+	public CharacterVO getCharacterVO() {
+		return characterVO;
+	}
+
+	public void setCharacterVO(CharacterVO characterVO) {
+		this.characterVO = characterVO;
 	}
 }

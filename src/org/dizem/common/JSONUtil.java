@@ -38,7 +38,8 @@ public class JSONUtil {
 
 	/**
 	 * Convert JSON string to object
-	 * @param message JSON string
+	 *
+	 * @param message   JSON string
 	 * @param destClass object class
 	 * @return object
 	 */

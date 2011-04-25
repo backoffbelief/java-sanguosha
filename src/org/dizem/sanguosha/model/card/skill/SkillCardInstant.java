@@ -2,7 +2,7 @@ package org.dizem.sanguosha.model.card.skill;
 
 /**
  * 及时性锦囊牌
- *
+ * <p/>
  * User: DIZEM
  * Time: 11-4-6 下午12:44
  */

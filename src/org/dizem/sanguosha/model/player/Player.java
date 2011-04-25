@@ -39,7 +39,6 @@ public class Player {
 		effectCards = new ArrayList<AbstractCard>();
 		handCards = new ArrayList<AbstractCard>();
 		equipmentCards = new ArrayList<EquipmentCard>();
-		this.playerId = IDGenerator.nextId();
 		this.phase = Phase.NOT_ACTIVE;
 	}
 
@@ -78,6 +77,7 @@ public class Player {
 		}
 		return instance.get(0);
 	}
+
 
 
 	/**
@@ -125,6 +125,10 @@ public class Player {
 
 	public Role getRole() {
 		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public int getRoleID() {
@@ -202,5 +206,9 @@ public class Player {
 
 	public int getPlayerId() {
 		return playerId;
+	}
+
+	public void setPlayerId(int playerId) {
+		this.playerId = playerId;
 	}
 }

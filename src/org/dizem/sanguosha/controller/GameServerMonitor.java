@@ -48,6 +48,13 @@ public class GameServerMonitor extends Thread {
 				if (dp.getOperation().equals(OP_CONNECT)) {
 					owner.appendLog("玩家:" + dp.getPlayerName() + "加入服务器");
 					server.playerConnect(dp, packet.getAddress().getHostAddress());
+
+				} else if(dp.getOperation().equals(OP_SEND_CHAT_MESSAGE)) {
+					server.playerTalk(dp);
+
+				} else if(dp.getOperation().equals(OP_FINISH_CHOOSING_LORD_CHARACTER)) {
+					server.distributeCharacters(dp);
+
 				}
 			}
 
