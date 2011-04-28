@@ -1,5 +1,6 @@
 package org.dizem.sanguosha.model.vo;
 
+import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
 
@@ -24,7 +25,8 @@ public class SGSPacket {
 	private int messageToID;
 	private CharacterVO[] characterVOs;
 	private CharacterVO characterVO;
-
+	private CardVO[] cardVOs;
+	private int handCardCount;
 	public SGSPacket() {
 	}
 
@@ -40,6 +42,14 @@ public class SGSPacket {
 	public SGSPacket(String operation, String playerName, int clientPort) {
 		this(operation, clientPort);
 		this.playerName = playerName;
+	}
+
+	public int getHandCardCount() {
+		return handCardCount;
+	}
+
+	public void setHandCardCount(int handCardCount) {
+		this.handCardCount = handCardCount;
 	}
 
 	public String getOperation() {
@@ -146,4 +156,13 @@ public class SGSPacket {
 	public void setCharacterVO(CharacterVO characterVO) {
 		this.characterVO = characterVO;
 	}
+
+	public CardVO[] getCardVOs() {
+		return cardVOs;
+	}
+
+	public void setCardVOs(CardVO[] cardVOs) {
+		this.cardVOs = cardVOs;
+	}
+
 }

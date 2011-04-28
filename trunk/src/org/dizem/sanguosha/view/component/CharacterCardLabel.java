@@ -85,7 +85,7 @@ public class CharacterCardLabel extends JLabel
 
 		if (label.getName().equals(UNSELECTED_TAG)) {
 			label.setLocation(posX + offsetX, posY + offsetY);
-			label.updateUI();
+			//label.updateUI();
 		}
 	}
 }

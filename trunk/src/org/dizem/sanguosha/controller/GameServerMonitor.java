@@ -2,6 +2,7 @@ package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
 import org.dizem.common.JSONUtil;
+import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.vo.SGSPacket;
 import org.dizem.sanguosha.view.MainFrame;
 
@@ -21,9 +22,10 @@ public class GameServerMonitor extends Thread {
 
 	private GameServer server;
 	private MainFrame owner;
-
+	private ServerDispatcher dispatcher;
 	public GameServerMonitor(GameServer server) {
 		this.server = server;
+		this.dispatcher = new ServerDispatcher(server);
 		this.owner = server.getOwner();
 		this.port = server.getPort();
 	}
@@ -49,12 +51,8 @@ public class GameServerMonitor extends Thread {
 					owner.appendLog("玩家:" + dp.getPlayerName() + "加入服务器");
 					server.playerConnect(dp, packet.getAddress().getHostAddress());
 
-				} else if(dp.getOperation().equals(OP_SEND_CHAT_MESSAGE)) {
-					server.playerTalk(dp);
-
-				} else if(dp.getOperation().equals(OP_FINISH_CHOOSING_LORD_CHARACTER)) {
-					server.distributeCharacters(dp);
-
+				} else {
+					dispatcher.dispatch(dp);
 				}
 			}
 

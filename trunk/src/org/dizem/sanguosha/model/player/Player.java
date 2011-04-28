@@ -71,12 +71,6 @@ public class Player {
 		return instance;
 	}
 
-	public synchronized static Player getSelf() {
-		if (Player.getPlayerList().size() == 0) {
-			//instance.add(new Player("", null));
-		}
-		return instance.get(0);
-	}
 
 
 
@@ -106,9 +100,20 @@ public class Player {
 		}
 	}
 
+	public String getCharacterName() {
+		return character.getName();
+	}
 
 	public String getName() {
 		return name;
+	}
+
+	public void addHandCard(AbstractCard card) {
+		handCards.add(card);
+	}
+
+	public void removeHandCard(AbstractCard card) {
+		handCards.remove(card);
 	}
 
 	public List<AbstractCard> getHandCards() {

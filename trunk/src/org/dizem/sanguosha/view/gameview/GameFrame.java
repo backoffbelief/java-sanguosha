@@ -6,6 +6,7 @@ import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
 import org.dizem.common.TwoWayMap;
 import org.dizem.sanguosha.controller.GameClient;
+import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Player;
@@ -30,7 +31,7 @@ import static org.dizem.sanguosha.model.Constants.*;
 public class GameFrame extends JCFrame {
 
 	private static Logger log = Logger.getLogger(GameFrame.class);
-	private Player[] players;
+
 	private GameClient client;
 	private int currentPlayerID;
 	private int playerCount = 5;
@@ -46,11 +47,11 @@ public class GameFrame extends JCFrame {
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
-			if (players != null) {
-				for (int i = 0; i < players.length; ++i) {
-					//	g.drawImage(IMG_ROLE[roleList[i]], i * 30, roleList[i] == 3 ? 23 : 20, null);
-				}
-			}
+//			if (players != null) {
+//				for (int i = 0; i < players.length; ++i) {
+//					//	g.drawImage(IMG_ROLE[roleList[i]], i * 30, roleList[i] == 3 ? 23 : 20, null);
+//				}
+//			}
 		}
 	};
 
@@ -101,6 +102,11 @@ public class GameFrame extends JCFrame {
 	}
 
 
+	public void setCharacter(int id, Character character) {
+		client.players[id].setCharacter(character);
+		otherPlayerPaneList.get(getIndex(id)).setCharacter();
+	}
+
 	private JPanel createMainPane() {
 		JPanel pane = new JPanel();
 		pane.setLayout(null);
@@ -123,6 +129,7 @@ public class GameFrame extends JCFrame {
 	}
 
 	public void setCurrentPlayerID(int currentPlayerID) {
+		client.setPlayerId(currentPlayerID);
 		this.currentPlayerID = currentPlayerID;
 	}
 
@@ -147,19 +154,27 @@ public class GameFrame extends JCFrame {
 
 
 	public void updatePlayers(PlayerVO[] players) {
-		this.players = new Player[players.length];
-		int index = 0;
+		client.players = new Player[players.length];
 		msgPane.clearUsers();
 		for (int i = 0; i < players.length; ++i) {
 			if (players[i] != null)
-				this.players[i] = new Player(players[i]);
+				client.players[i] = new Player(players[i]);
 			if (i != currentPlayerID && players[i] != null) {
 				msgPane.addUser(new ComboBoxItem(players[i].getName(), players[i].getPlayerId()));
-				otherPlayerPaneList.get(index++).setPlayer(this.players[i]);
+				otherPlayerPaneList.get(getIndex(i)).setPlayer(client.players[i]);
 			}
 		}
 	}
 
+	public int getIndex(int id) {
+		if (id > currentPlayerID) {
+			return id - currentPlayerID - 1;
+		} else if (id < currentPlayerID) {
+			return (id + currentPlayerID) % (playerCount - 1);
+		} else {
+			return 0;
+		}
+	}
 
 	public void appendLog(String message) {
 		msgPane.appendLog(message);
@@ -171,14 +186,18 @@ public class GameFrame extends JCFrame {
 	}
 
 	public void setRole(Role role, int lordId) {
+		log.info(role + " " + lordId);
 		dashboard.setRole(role);
-		if (players != null)
-			this.players[lordId].setRole(Role.ZG);
-		otherPlayerPaneList.get(lordId).repaint();
+		if (client.players != null) {
+			client.players[getIndex(lordId)].setRole(Role.ZG);
+			otherPlayerPaneList.get(getIndex(lordId)).repaint();
+		}
 		showMessage("您分配了角色: " + role);
 	}
 
 	public void showMessage(String text) {
+		if(text == null || text.isEmpty())
+			return;
 		appendLog(text);
 		msgLabel.showText(text);
 	}
@@ -186,14 +205,24 @@ public class GameFrame extends JCFrame {
 	public void setCharacter(Character character, boolean isLord) {
 		showMessage("您选择了武将：" + character.getName());
 		dashboard.setCharacter(character);
-		players[currentPlayerID].setCharacter(character);
-		if(isLord)
+		client.players[currentPlayerID].setCharacter(character);
+		if (isLord)
 			client.chooseLordCharacterFinish();
 		else
 			client.chooseCharacterFinish();
 	}
 
 	public Player[] getPlayers() {
-		return players;
+		return client.players;
+	}
+
+
+	public void distributeCards(AbstractCard[] cards) {
+		for (AbstractCard card : cards)
+			client.players[currentPlayerID].addHandCard(card);
+	}
+
+	public void setOtherPlayerInfo(int playerId, int handCardCount) {
+		otherPlayerPaneList.get(getIndex(playerId)).setHandCardCount(handCardCount);
 	}
 }

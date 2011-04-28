@@ -2,6 +2,7 @@ package org.dizem.sanguosha.view.gameview;
 
 import org.apache.log4j.Logger;
 import org.dizem.common.ImageUtil;
+import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 
@@ -20,7 +21,6 @@ public class OtherPlayerPane extends JPanel {
 	public static final int DEFAULT_HEIGHT = 187;
 
 	private static Logger log = Logger.getLogger(OtherPlayerPane.class);
-	private org.dizem.sanguosha.model.card.character.Character character;
 
 	private static final Image IMG_BACK = ImageUtil.getImage("system/photo-back.png");
 	public static final Color COLOR_CARD_COUNT_BACK = new Color(244, 229, 181);
@@ -32,6 +32,7 @@ public class OtherPlayerPane extends JPanel {
 
 	private Player player;
 	private String playerName;
+	private int handCardCount;
 	private boolean characterChoosed = false;
 
 	public OtherPlayerPane() {
@@ -50,11 +51,11 @@ public class OtherPlayerPane extends JPanel {
 	}
 
 	public void setCharacter() {
-		character = player.getCharacter();
-		imgAvatar = ImageUtil.getImage("/generals/small/" + character.getPNGFilename());
-		imgKingdom = ImageUtil.getImage("/kingdom/icon/" + character.getKingdomImgName());
-		imgKingdomFrame = ImageUtil.getImage("/kingdom/frame/" + character.getKingdomImgName());
+		imgAvatar = ImageUtil.getImage("/generals/small/" + player.getCharacter().getPNGFilename());
+		imgKingdom = ImageUtil.getImage("/kingdom/icon/" + player.getCharacter().getKingdomImgName());
+		imgKingdomFrame = ImageUtil.getImage("/kingdom/frame/" + player.getCharacter().getKingdomImgName());
 		characterChoosed = true;
+		repaint();
 	}
 
 	@Override
@@ -77,14 +78,16 @@ public class OtherPlayerPane extends JPanel {
 			g.setColor(COLOR_CARD_COUNT_BACK);
 			g.fillRect(1, 103, 16, 16);
 			g.setColor(Color.BLACK);
-			g.drawString("" + player.getHandCards().size(), 5, 115);
+			g.drawString("" + handCardCount, 5, 115);
 			if (player.getPhase() != Phase.NOT_ACTIVE) {
 				g.drawImage(IMG_PHASE[player.getPhaseID()], 115, 120, null);
 			}
 			if (player.getRole() != null) {
 				g.drawImage(IMG_ROLE2[player.getRoleID()], 85, 3, null);
 			}
-			drawLife(g);
+			if (player.getCharacter() != null) {
+				drawLife(g);
+			}
 		}
 		if (playerName != null) {
 			g.setColor(Color.WHITE);
@@ -94,6 +97,7 @@ public class OtherPlayerPane extends JPanel {
 	}
 
 	private void drawLife(Graphics g) {
+		org.dizem.sanguosha.model.card.character.Character character = player.getCharacter();
 		if (characterChoosed) {
 			int rate = (int) ((double) character.getLife() / character.getMaxLife() * 5 + 0.01);
 			for (int i = 0; i < character.getLife(); ++i) {
@@ -105,4 +109,12 @@ public class OtherPlayerPane extends JPanel {
 		}
 	}
 
+	public int getHandCardCount() {
+		return handCardCount;
+	}
+
+	public void setHandCardCount(int handCardCount) {
+		this.handCardCount = handCardCount;
+		repaint();
+	}
 }

@@ -2,6 +2,9 @@ package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
 import org.dizem.common.JSONUtil;
+import org.dizem.sanguosha.model.card.AbstractCard;
+import org.dizem.sanguosha.model.card.character.*;
+import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
 import org.dizem.sanguosha.model.vo.CharacterVO;
@@ -22,12 +25,23 @@ import static org.dizem.sanguosha.model.Constants.*;
 public class GameClient {
 
 	private static Logger log = Logger.getLogger(GameClient.class);
+
+	//服务器地址
 	private String serverAddress;
+	//服务器端口
 	private int serverPort;
+	//玩家姓名
 	private String name;
+	//消息接收监控
 	private GameClientMonitor clientMonitor;
+	//游戏界面
 	private GameFrame gameFrame;
+	//玩家数
 	private int playerCount;
+	//主公位置
+	private int lordId;
+	private int playerId;
+	public Player[] players;
 
 	public GameClient(int serverPort, String serverAddress, String name) {
 		this.serverPort = serverPort;
@@ -100,6 +114,15 @@ public class GameClient {
 		return playerCount;
 	}
 
+	public int getLordId() {
+		return lordId;
+	}
+
+	public void setLordId(int lordId) {
+		this.lordId = lordId;
+	}
+
+
 
 	public void showMessage(String message) {
 		gameFrame.appendLog(message);
@@ -114,7 +137,8 @@ public class GameClient {
 	}
 
 	public void distributeLordCharacter(SGSPacket dp) {
-		if (dp.getLordId() == gameFrame.getCurrentPlayerID()) {
+		lordId = dp.getLordId();
+		if (lordId == gameFrame.getCurrentPlayerID()) {
 			org.dizem.sanguosha.model.card.character.Character[] characters
 					= new org.dizem.sanguosha.model.card.character.Character[5];
 			for (int i = 0; i < 5; ++i) {
@@ -136,6 +160,10 @@ public class GameClient {
 
 	public void distributeCharacter(SGSPacket dp) {
 		gameFrame.showMessage("主公选择了武将:" + dp.getCharacterVO().getName());
+		org.dizem.sanguosha.model.card.character.Character ch
+				= new org.dizem.sanguosha.model.card.character.Character(dp.getCharacterVO());
+		gameFrame.setCharacter(lordId, ch);
+
 		org.dizem.sanguosha.model.card.character.Character[] characters
 				= new org.dizem.sanguosha.model.card.character.Character[3];
 		for (int i = 0; i < 3; ++i) {
@@ -147,7 +175,29 @@ public class GameClient {
 
 	public void chooseCharacterFinish() {
 		SGSPacket packet = new SGSPacket(OP_FINISH_CHOOSING_CHARACTER);
+		packet.setPlayerId(playerId);
 		packet.setCharacterVO(new CharacterVO(gameFrame.getPlayers()[gameFrame.getCurrentPlayerID()].getCharacter()));
 		send(packet);
+	}
+
+	public void distributeCards(SGSPacket dp) {
+		AbstractCard[] cards = new AbstractCard[dp.getCardVOs().length];
+		for (int i = 0; i < dp.getCardVOs().length; ++i) {
+			cards[i] = AbstractCard.createCard(dp.getCardVOs()[i]);
+		}
+		gameFrame.distributeCards(cards);
+	}
+
+	public void setPlayerId(int currentPlayerID) {
+		this.playerId = currentPlayerID;
+	}
+
+	public void setCharacter(SGSPacket dp) {
+		gameFrame.setCharacter(dp.getPlayerId(), new Character(dp.getCharacterVO()));
+	}
+
+	public void updatePlayersInfo(SGSPacket dp) {
+		gameFrame.showMessage(dp.getMessage());
+		gameFrame.setOtherPlayerInfo(dp.getPlayerId(), dp.getHandCardCount());
 	}
 }
