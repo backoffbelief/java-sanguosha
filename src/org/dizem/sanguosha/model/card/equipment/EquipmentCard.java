@@ -6,13 +6,13 @@ import org.dizem.sanguosha.model.card.ICard;
 public class EquipmentCard extends AbstractCard {
 
 
-	public static int TYPE_HORSE_CARD_MINUS = 3;
+	public static final int TYPE_HORSE_CARD_MINUS = 3;
 
-	public static int TYPE_HORSE_CARD_PLUS = 2;
+	public static final int TYPE_HORSE_CARD_PLUS = 2;
 
-	public static int TYPE_ARMOR_CARD = 1;
+	public static final int TYPE_ARMOR_CARD = 1;
 
-	public static int TYPE_WEAPON_CARD = 0;
+	public static final int TYPE_WEAPON_CARD = 0;
 
 	private int cardType;
 

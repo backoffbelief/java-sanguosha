@@ -3,11 +3,14 @@ package org.dizem.sanguosha.controller;
 import org.apache.log4j.Logger;
 import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.IDGenerator;
+import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.CharacterDeck;
+import org.dizem.sanguosha.model.card.Deck;
 import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
+import org.dizem.sanguosha.model.vo.CardVO;
 import org.dizem.sanguosha.model.vo.CharacterVO;
 import org.dizem.sanguosha.model.vo.SGSPacket;
 import org.dizem.sanguosha.view.MainFrame;
@@ -36,6 +39,7 @@ public class GameServer {
 	private MainFrame owner;
 	private Player[] players;
 	private int lordId;
+	private int currentId;
 	private Map<Integer, Player> idToPlayerMap = new HashMap<Integer, Player>();
 
 	public GameServer(MainFrame owner, String serverName, int port, int timeDelay, int playerCount) {
@@ -108,19 +112,20 @@ public class GameServer {
 		}
 		Collections.shuffle(roleList);
 		lordId = roleList.indexOf(Role.ZG);
-
 		owner.appendLog("分配角色:");
 		for (int i = 0; i < playerCount; ++i) {
 			players[i].setRole(roleList.get(i));
 			owner.appendLog(players[i].getName() + "的角色是" + roleList.get(i));
+			log.info(players[i].getName() + "的角色是" + roleList.get(i));
 			packet.setRole(roleList.get(i));
+			packet.setLordId(lordId);
 			send(packet, players[i]);
 		}
 
-		distributeLordCharacter(lordId);
+		distributeLordCharacter();
 	}
 
-	private void distributeLordCharacter(int lordId) {
+	private void distributeLordCharacter() {
 		SGSPacket packet = new SGSPacket(OP_DISTRIBUTE_LORD_CHARACTER);
 		packet.setLordId(lordId);
 		CharacterVO[] characterVOs = new CharacterVO[5];
@@ -138,7 +143,7 @@ public class GameServer {
 
 		SGSPacket packet = new SGSPacket(OP_DISTRIBUTE_CHARACTER);
 		packet.setCharacterVO(dp.getCharacterVO());
-
+		packet.setLordId(lordId);
 		CharacterVO[] characterVOs = new CharacterVO[3];
 
 		for (int i = 0; i < playerCount; ++i) {
@@ -210,5 +215,38 @@ public class GameServer {
 		return owner;
 	}
 
+	public void distributeCards(SGSPacket dp) {
+		currentId = lordId;
+		CardVO[] cards = new CardVO[4];
+		Deck deck = Deck.getInstance();
+		SGSPacket packet = new SGSPacket(OP_DISTRIBUTE_CARD);
+		SGSPacket infoPacket = new SGSPacket(OP_UPDATE_PLAYERS_INFO);
+		for (int i = 0; i < playerCount; ++i) {
+			int playerId = (i + currentId) % playerCount;
+			AbstractCard card = deck.popCard();
+			for (int j = 0; j < 4; ++j) {
+				players[playerId].addHandCard(card);
+				cards[j] = new CardVO(card);
+			}
+			packet.setCardVOs(cards);
+			send(packet, players[(i + currentId) % playerCount]);
 
+			infoPacket.setPlayerId(playerId);
+			infoPacket.setHandCardCount(players[playerId].getHandCards().size());
+			infoPacket.setMessage(players[playerId].getCharacterName() + "从牌堆摸了4张牌");
+			send(infoPacket, players);
+		}
+	}
+
+	public void tellCharacters(SGSPacket dp) {
+		for (Player p : players) {
+			if (p.getPlayerId() != dp.getPlayerId()) {
+				send(dp, p);
+			}
+		}
+	}
+
+	public void setCharacter(int playerId, Character character) {
+		players[playerId].setCharacter(character);
+	}
 }

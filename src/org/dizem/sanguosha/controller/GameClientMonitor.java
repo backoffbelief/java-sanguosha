@@ -23,9 +23,11 @@ public class GameClientMonitor extends Thread {
 
 	private GameClient client;
 	private boolean isReady = false;
+	private ClientDispatcher dispatcher;
 
 	public GameClientMonitor(GameClient client) {
 		this.client = client;
+		this.dispatcher = new ClientDispatcher(client);
 	}
 
 	@Override
@@ -40,30 +42,7 @@ public class GameClientMonitor extends Thread {
 				ds.receive(packet);
 				String jsonString = new String(packet.getData(), 0, packet.getLength(), "UTF-8");
 				log.info("Received:" + jsonString);
-				SGSPacket dp = (SGSPacket) JSONUtil.convertToVO(jsonString, SGSPacket.class);
-
-				if (dp.getOperation().equals(OP_INIT_CLIENT)) {
-					this.client.showGameFrame(dp);
-
-				} else if (dp.getOperation().equals(OP_UPDATE_PLAYERS)) {
-					this.client.updatePlayers(dp);
-
-				} else if (dp.getOperation().equals(OP_SEND_MESSAGE)) {
-					this.client.showMessage(dp.getMessage());
-
-				} else if (dp.getOperation().equals(OP_SEND_CHAT_MESSAGE)) {
-					this.client.showChatMessage(dp.getMessage());
-
-				} else if(dp.getOperation().equals(OP_DISTRIBUTE_ROLE)) {
-					this.client.setRole(dp.getRole(), dp.getLordId());
-
-				} else if(dp.getOperation().equals(OP_DISTRIBUTE_LORD_CHARACTER)) {
-					this.client.distributeLordCharacter(dp);
-
-				} else if(dp.getOperation().equals(OP_DISTRIBUTE_CHARACTER)) {
-					this.client.distributeCharacter(dp);
-				}
-
+				dispatcher.dispatch(jsonString);
 			}
 
 		} catch (Exception e) {
