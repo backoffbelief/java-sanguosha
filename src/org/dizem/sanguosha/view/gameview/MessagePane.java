@@ -29,8 +29,8 @@ import java.util.Date;
  * Time: 11-4-22 下午12:58
  */
 public class MessagePane extends JPanel {
-	private JTextArea txtLog = new JTextArea();
-	private JTextArea txtMessage = new JTextArea();
+	private JCTextArea txtLog = new JCTextArea();
+	private JCTextArea txtMessage = new JCTextArea();
 	private JScrollPane scMessage = new JScrollPane(txtMessage);
 	private JScrollPane scLog = new JScrollPane(txtLog);
 	private JTextField txtInput = new JTextField() {
@@ -75,8 +75,8 @@ public class MessagePane extends JPanel {
 		txtLog.setEditable(false);
 		txtLog.setFocusable(false);
 		txtLog.setLineWrap(true);
+		txtLog.setAlpha(0.3f);
 		txtLog.setForeground(Color.BLACK);
-		txtLog.setOpaque(false);
 		txtLog.setFont(MSG_FONT);
 
 		scLog.setFocusable(false);
@@ -90,9 +90,9 @@ public class MessagePane extends JPanel {
 				new TitledBorder(new LineBorder(new Color(37, 35, 22), 3), "出牌记录", 0, 0, LABEL_FONT));
 
 		txtMessage.setEditable(false);
+		txtMessage.setAlpha(0.3f);
 		txtMessage.setFocusable(false);
 		txtMessage.setLineWrap(true);
-		txtMessage.setOpaque(false);
 		txtMessage.setFont(MSG_FONT);
 		txtMessage.setForeground(Color.BLACK);
 		scMessage.setFocusable(false);
@@ -166,7 +166,7 @@ public class MessagePane extends JPanel {
 	}
 
 	public void appendMessage(String info) {
-		txtMessage.append(Constants.LOG_TIME_FORMAT.format(new Date()) + info + "\n");
+		txtMessage.append(info + "\n");
 		txtMessage.selectAll();
 		txtMessage.setCaretPosition(txtMessage.getSelectedText().length());
 	}

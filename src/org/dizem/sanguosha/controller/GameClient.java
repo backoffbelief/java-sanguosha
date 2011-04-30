@@ -5,13 +5,17 @@ import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
+import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
+import org.dizem.sanguosha.model.vo.CardVO;
 import org.dizem.sanguosha.model.vo.CharacterVO;
 import org.dizem.sanguosha.model.vo.SGSPacket;
 import org.dizem.sanguosha.view.dialog.ChooseCharacterDialog;
 import org.dizem.sanguosha.view.gameview.GameFrame;
+import org.dizem.sanguosha.view.gameview.OtherPlayerPane;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -82,19 +86,7 @@ public class GameClient {
 	}
 
 	public void send(SGSPacket packet) {
-		try {
-			DatagramSocket ds = new DatagramSocket();
-			String message = JSONUtil.convertToString(packet);
-			log.info("send : " + message);
-			byte[] data = message.getBytes("UTF-8");
-			DatagramPacket dp = new DatagramPacket(
-					data, data.length, InetAddress.getByName(serverAddress), serverPort
-			);
-			ds.send(dp);
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
+		UDPSender.send(packet, serverAddress, serverPort);
 	}
 
 
@@ -123,7 +115,6 @@ public class GameClient {
 	}
 
 
-
 	public void showMessage(String message) {
 		gameFrame.appendLog(message);
 	}
@@ -133,6 +124,7 @@ public class GameClient {
 	}
 
 	public void setRole(Role role, int lordId) {
+		System.out.println(role + " " + lordId);
 		gameFrame.setRole(role, lordId);
 	}
 
@@ -200,4 +192,71 @@ public class GameClient {
 		gameFrame.showMessage(dp.getMessage());
 		gameFrame.setOtherPlayerInfo(dp.getPlayerId(), dp.getHandCardCount());
 	}
+
+
+	/**
+	 * 摸牌阶段
+	 */
+	public void startPhase(int id) {
+		gameFrame.showMessage(getPlayerName(id) + "进入开始阶段");
+		if (id != playerId) {
+			players[id].setPhase(Phase.START);
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(playerId)).repaint();
+		} else {
+			players[playerId].setPhase(Phase.START);
+		}
+	}
+
+	/*
+	 * 判定阶段
+	 *
+	 */
+	public void judgePhase(int id) {
+		gameFrame.showMessage(getPlayerName(id) + "进入判定阶段");
+
+		players[id].setPhase(Phase.JUDGE);
+		if (id != playerId) {
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(playerId)).repaint();
+		} else {
+
+		}
+
+		SGSPacket packet = new SGSPacket(OP_PHASE_JUDGE_END);
+		if (players[id].getEffectCards().size() == 0) {
+			log.info("没有判定牌，跳过判定阶段");
+			send(packet);
+		}
+
+
+	}
+
+	public void drawPhase(SGSPacket packet) {
+		int id = packet.getPlayerId();
+		players[id].setPhase(Phase.DRAW);
+		gameFrame.showMessage(getPlayerName(id) + "进入摸牌阶段");
+
+		gameFrame.showMessage(getPlayerName(id) + "从牌堆里摸了" + packet.getCardVOs().length + "张牌");
+		players[id].setPhase(Phase.JUDGE);
+		if (id != playerId) {
+			OtherPlayerPane pane = gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id));
+			pane.setHandCardCount(packet.getHandCardCount());
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id)).repaint();
+
+		} else {
+			for (CardVO vo : packet.getCardVOs()) {
+				AbstractCard card = AbstractCard.createCard(vo);
+				gameFrame.dashboard.addHandCard(card);
+			}
+		}
+	}
+
+	public String getPlayerName(int id) {
+		if (id != playerId) {
+			return players[id].getCharacterName();
+		} else {
+			return players[id].getCharacterName() + "(你)";
+		}
+	}
+
+
 }

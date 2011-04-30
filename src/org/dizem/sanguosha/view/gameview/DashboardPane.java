@@ -3,11 +3,11 @@ package org.dizem.sanguosha.view.gameview;
 import craky.util.UIUtil;
 import org.apache.log4j.Logger;
 import org.dizem.common.ImageUtil;
-import org.dizem.common.TwoWayMap;
+import org.dizem.common.collection.TwoWayMap;
 import org.dizem.sanguosha.model.card.*;
 import org.dizem.sanguosha.model.card.Skill;
-import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
+import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
 import org.dizem.sanguosha.view.component.HandCardLabel;
@@ -55,9 +55,11 @@ public class DashboardPane extends JLayeredPane
 
 	private int labelDisplayLevel = 100;
 	private boolean characterChoosed = false;
+	private GameFrame owner;
 
-	public DashboardPane(String playerName) {
+	public DashboardPane(String playerName, GameFrame owner) {
 		super();
+		this.owner = owner;
 		this.player = new Player(playerName);
 		this.playerName = playerName;
 		setSize(480 + IMG_DASHBOARD_AVATAR.getWidth(null)
@@ -67,8 +69,8 @@ public class DashboardPane extends JLayeredPane
 		initButtons();
 	}
 
-	public DashboardPane(Player player) {
-		this(player.getName());
+	public DashboardPane(Player player, GameFrame owner) {
+		this(player.getName(), owner);
 
 		this.player = player;
 
@@ -125,6 +127,11 @@ public class DashboardPane extends JLayeredPane
 		drawName(g);
 	}
 
+	public void updateHandCards() {
+
+
+	}
+
 	private void drawDashboard(Graphics g) {
 		g.drawImage(IMG_DASHBOARD_EQUIP, equipX, posY, null);
 		g.drawImage(IMG_DASHBOARD_AVATAR, avatarX, 0, null);
@@ -139,13 +146,15 @@ public class DashboardPane extends JLayeredPane
 
 	private JLabel createCardLabel(final AbstractCard card) {
 
-		final JLabel label = new HandCardLabel(card);
+		final JLabel label = new HandCardLabel(card, owner);
 
 		handCardLabelMap.put(card, label);
 
 		UIUtil.actionLabel(label, new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
+				if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
+					return;
 
 				if (label.getName().equals(SELECTED_TAG)) {
 					label.setName(UNSELECTED_TAG);
@@ -209,7 +218,7 @@ public class DashboardPane extends JLayeredPane
 		g.drawString(playerName, avatarX + (122 - nameWidth) / 2 + 8, 53);
 	}
 
-	private void addHandCardLabel(JLabel handCardLabel) {
+	public void addHandCardLabel(JLabel handCardLabel) {
 		add(handCardLabel, new Integer(labelDisplayLevel++));
 		handCardLabelList.add(handCardLabel);
 		updateHandCardGap();
@@ -280,5 +289,10 @@ public class DashboardPane extends JLayeredPane
 				}
 			}
 		}).start();
+	}
+
+	public void addHandCard(AbstractCard card) {
+		addHandCardLabel(createCardLabel(card));
+		repaint();
 	}
 }

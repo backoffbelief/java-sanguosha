@@ -2,6 +2,8 @@ package org.dizem.sanguosha.view.component;
 
 import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
+import org.dizem.sanguosha.model.player.Phase;
+import org.dizem.sanguosha.view.gameview.GameFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,10 +26,12 @@ public class HandCardLabel extends JLabel
 	private int suit;
 	private String rank;
 	private Color color;
+	private GameFrame owner;
 
 
-	public HandCardLabel(AbstractCard card) {
+	public HandCardLabel(AbstractCard card, GameFrame owner) {
 		super(ImageUtil.getIcon("/card/" + card.getFilename()));
+		this.owner = owner;
 		suit = card.getSuit() - 1;
 		rank = card.getRank();
 		color = card.isRed() ? Color.RED : Color.BLACK;
@@ -59,6 +63,8 @@ public class HandCardLabel extends JLabel
 	}
 
 	public void mouseMoved(MouseEvent e) {
+		if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
+			return;
 		JLabel label = (JLabel) e.getSource();
 		/*
 			f(0) = f(90) = 0, f(45) = 30
@@ -74,8 +80,10 @@ public class HandCardLabel extends JLabel
 	}
 
 	public void mouseClicked(MouseEvent e) {
+		if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
+			return;
 		JLabel label = (JLabel) e.getSource();
-		if (label.getName().equals("F")) {
+		if (label.getName().equals(UNSELECTED_TAG)) {
 			label.setLocation(label.getX(), 30 + 38);
 		}
 	}
@@ -90,6 +98,8 @@ public class HandCardLabel extends JLabel
 	}
 
 	public void mouseExited(MouseEvent e) {
+		if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
+			return;
 		JLabel label = (JLabel) e.getSource();
 		if (label.getName().equals(UNSELECTED_TAG)) {
 			label.setLocation(label.getX(), 30 + 38);

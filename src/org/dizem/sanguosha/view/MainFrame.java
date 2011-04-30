@@ -4,6 +4,7 @@ import craky.componentc.JCFrame;
 import craky.util.UIUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.dizem.common.AudioUtil;
 import org.dizem.sanguosha.controller.GameServer;
 import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.exception.SGSException;
@@ -43,17 +44,34 @@ public class MainFrame extends JCFrame implements ActionListener {
 	private static Random rand = new Random();
 	private static int bgImageId = 1;
 	private boolean showLogger = false;
-
+	private Thread backMusicThread;
+	private boolean playBackMusic = false;
 	private GameServer server;
 
 	public static final Font LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 15);
 
 	public MainFrame() {
+
 		super(Constants.APP_TITLE);
 		initFrame();
 		initLayout();
 		setVisible(true);
 		startGC();
+
+		startOrStopBackMusic();
+	}
+
+	public void startOrStopBackMusic() {
+		if(playBackMusic) {
+			backMusicThread.stop();
+			backMusicThread = null;
+			System.gc();
+
+		} else {
+			backMusicThread = AudioUtil.play("system/background.mp3");
+		}
+
+		playBackMusic = !playBackMusic;
 	}
 
 	private void initFrame() {

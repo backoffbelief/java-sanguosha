@@ -8,6 +8,7 @@ import org.dizem.sanguosha.model.card.CharacterDeck;
 import org.dizem.sanguosha.model.card.Deck;
 import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
+import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
 import org.dizem.sanguosha.model.vo.CardVO;
@@ -63,6 +64,12 @@ public class GameServer {
 		new GameServerMonitor(this).start();
 	}
 
+	/**
+	 * 处理客户端的接入
+	 *
+	 * @param packet  数据包
+	 * @param address 客户端地址
+	 */
 	public synchronized void playerConnect(SGSPacket packet, String address) {
 
 		Player player = new Player(packet.getPlayerName(), address, packet.getClientPort());
@@ -104,6 +111,9 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 分配角色
+	 */
 	private void distributeRole() {
 		SGSPacket packet = new SGSPacket(OP_DISTRIBUTE_ROLE);
 		List<Role> roleList = new ArrayList<Role>();
@@ -125,6 +135,9 @@ public class GameServer {
 		distributeLordCharacter();
 	}
 
+	/**
+	 * 分配主公武将
+	 */
 	private void distributeLordCharacter() {
 		SGSPacket packet = new SGSPacket(OP_DISTRIBUTE_LORD_CHARACTER);
 		packet.setLordId(lordId);
@@ -137,9 +150,15 @@ public class GameServer {
 		send(packet, players);
 	}
 
+	/**
+	 * 分配其他武将颜色
+	 *
+	 * @param dp
+	 */
 	public void distributeCharacters(SGSPacket dp) {
 		Character character = new Character(dp.getCharacterVO());
 		players[lordId].setCharacter(character);
+		characterCount = 1;
 
 		SGSPacket packet = new SGSPacket(OP_DISTRIBUTE_CHARACTER);
 		packet.setCharacterVO(dp.getCharacterVO());
@@ -159,12 +178,23 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 发送数据包至所有玩家
+	 *
+	 * @param packet  数据包
+	 * @param players 玩家列表
+	 */
 	public void send(SGSPacket packet, Player[] players) {
 		for (Player p : players) {
 			send(packet, p);
 		}
 	}
 
+	/**
+	 * 玩家聊天
+	 *
+	 * @param packet 数据包
+	 */
 	public void playerTalk(SGSPacket packet) {
 		packet.setMessage(players[packet.getPlayerId()].getName() + "说: " + packet.getMessage());
 		if (packet.getMessageToID() == -1) {
@@ -176,23 +206,17 @@ public class GameServer {
 		}
 	}
 
+	/**
+	 * 发送数据包至一名玩家
+	 *
+	 * @param packet 数据包
+	 * @param player 玩家
+	 */
 	public void send(SGSPacket packet, Player player) {
 		if (player == null || packet == null) {
 			return;
 		}
-		try {
-			DatagramSocket ds = new DatagramSocket();
-			String message = JSONUtil.convertToString(packet);
-			log.info("send : " + message);
-			byte[] data = message.getBytes("UTF-8");
-			DatagramPacket dp = new DatagramPacket(
-					data, data.length, InetAddress.getByName(player.getIp()), player.getPort()
-			);
-			ds.send(dp);
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
+		UDPSender.send(packet, player.getIp(), player.getPort());
 	}
 
 	public String getServerName() {
@@ -215,7 +239,10 @@ public class GameServer {
 		return owner;
 	}
 
-	public void distributeCards(SGSPacket dp) {
+	/**
+	 * 游戏开始时，为每位玩家分配四张手牌
+	 */
+	public void distributeCards() {
 		currentId = lordId;
 		CardVO[] cards = new CardVO[4];
 		Deck deck = Deck.getInstance();
@@ -223,8 +250,9 @@ public class GameServer {
 		SGSPacket infoPacket = new SGSPacket(OP_UPDATE_PLAYERS_INFO);
 		for (int i = 0; i < playerCount; ++i) {
 			int playerId = (i + currentId) % playerCount;
-			AbstractCard card = deck.popCard();
+
 			for (int j = 0; j < 4; ++j) {
+				AbstractCard card = deck.popCard();
 				players[playerId].addHandCard(card);
 				cards[j] = new CardVO(card);
 			}
@@ -246,7 +274,117 @@ public class GameServer {
 		}
 	}
 
+	private int characterCount;
+
+	/**
+	 * 设置玩家的武将
+	 *
+	 * @param playerId  玩家id
+	 * @param character 武将
+	 */
 	public void setCharacter(int playerId, Character character) {
 		players[playerId].setCharacter(character);
+		characterCount++;
+
+		if (characterCount == playerCount) { //全部玩家准备完毕
+			SGSPacket packet = new SGSPacket(OP_FINISH_CHOOSING_CHARACTER);
+			for (Player p : players) { //广播所有玩家的角色
+				if (p.getPlayerId() != lordId) {
+					packet.setPlayerId(p.getPlayerId());
+					packet.setCharacterVO(new CharacterVO(p.getCharacter()));
+					send(packet, players);
+				}
+			}
+			distributeCards(); //初始所有玩家发四张牌
+			gameStart(); //从主公开始游戏
+		}
+	}
+
+
+	/**
+	 * 游戏开始阶段
+	 */
+	public void startPhase() {
+		showMessage(players[currentId].getCharacterName() + "进入开始阶段");
+		log.info(players[currentId].getCharacterName() + "进入开始阶段");
+		SGSPacket packet = new SGSPacket(OP_PHASE_START);
+		packet.setPlayerId(currentId);
+		packet.setPhase(Phase.START);
+		send(packet, players);
+	}
+
+	/**
+	 * 判定阶段
+	 */
+	public void judgePhase() {
+		showMessage(players[currentId].getCharacterName() + "进入判定阶段");
+		log.info(players[currentId].getCharacterName() + "进入判定阶段");
+		SGSPacket packet = new SGSPacket(OP_PHASE_JUDGE_BEGIN);
+		packet.setPlayerId(currentId);
+		packet.setPhase(Phase.JUDGE);
+		send(packet, players);
+
+
+	}
+
+	public void drawPhase() {
+		showMessage(players[currentId].getCharacterName() + "进入摸牌阶段");
+		log.info(players[currentId].getCharacterName() + "进入摸牌阶段");
+		SGSPacket packet = new SGSPacket(OP_PHASE_DRAW_BEGIN);
+		packet.setPlayerId(currentId);
+		packet.setPhase(Phase.DRAW);
+		AbstractCard[] cards = new AbstractCard[2];
+		CardVO[] cardVOs = new CardVO[cards.length];
+		for (int i = 0; i < cards.length; ++i) {
+			cards[i] = Deck.getInstance().popCard();
+			cardVOs[i] = new CardVO(cards[i]);
+			players[currentId].addHandCard(cards[i]);
+		}
+		packet.setCardVOs(cardVOs);
+		packet.setHandCardCount(players[currentId].getHandCards().size());
+		send(packet, players);
+	}
+
+
+	public void playPhase() {
+		log.info(players[currentId].getCharacterName() + "进入出牌阶段");
+		SGSPacket packet = new SGSPacket(OP_PHASE_PLAY_BEGIN);
+		packet.setPlayerId(currentId);
+		packet.setPhase(Phase.PLAY);
+		send(packet, players);
+	}
+
+	public Thread gameThread = new Thread(new Runnable() {
+		public void run() {
+			while (true) {
+				try {
+					startPhase();
+					Thread.sleep(500);
+
+					judgePhase();
+					synchronized (gameThread) {
+						gameThread.wait();
+					}
+
+					drawPhase();
+					synchronized (gameThread) {
+						gameThread.wait();
+					}
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					log.error(e.getMessage());
+				}
+			}
+		}
+	});
+
+	public void gameStart() {
+		currentId = lordId;
+		gameThread.start();
+	}
+
+	public void showMessage(String log) {
+		owner.appendLog(log);
 	}
 }

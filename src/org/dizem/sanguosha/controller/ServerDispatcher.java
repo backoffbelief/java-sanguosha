@@ -25,8 +25,11 @@ public class ServerDispatcher {
 		} else if (packet.getOperation().equals(OP_FINISH_CHOOSING_CHARACTER)) {
 			server.setCharacter(packet.getPlayerId(),
 					new org.dizem.sanguosha.model.card.character.Character(packet.getCharacterVO()));
-			server.tellCharacters(packet);
-			server.distributeCards(packet);
+
+		} else if (packet.getOperation().equals(OP_PHASE_JUDGE_END)) {
+			synchronized (server.gameThread) {
+				server.gameThread.notify();
+			}
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package org.dizem.sanguosha.model.vo;
 
+import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
+import org.dizem.sanguosha.model.card.Deck;
 import org.dizem.sanguosha.model.card.equipment.ArmorCard;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.card.equipment.WeaponCard;
@@ -101,5 +103,10 @@ public class CardVO {
 
 	public void setRange(int range) {
 		this.range = range;
+	}
+
+	public static void main(String[] args) {
+		CardVO vo = new CardVO(Deck.getInstance().popCard());
+		System.out.println(JSONUtil.convertToString(vo));
 	}
 }
