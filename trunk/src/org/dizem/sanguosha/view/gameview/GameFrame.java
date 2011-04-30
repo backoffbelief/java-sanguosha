@@ -2,12 +2,12 @@ package org.dizem.sanguosha.view.gameview;
 
 import craky.component.JImagePane;
 import craky.componentc.JCFrame;
+import craky.componentc.JCMessageBox;
 import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
-import org.dizem.common.TwoWayMap;
+import org.dizem.common.collection.TwoWayMap;
 import org.dizem.sanguosha.controller.GameClient;
 import org.dizem.sanguosha.model.card.AbstractCard;
-import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
@@ -19,7 +19,8 @@ import org.dizem.sanguosha.view.component.SGSMenu;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.image.ImageFilter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import static org.dizem.sanguosha.model.Constants.*;
@@ -35,12 +36,10 @@ public class GameFrame extends JCFrame {
 	private GameClient client;
 	private int currentPlayerID;
 	private int playerCount = 5;
-	private TwoWayMap<Player, OtherPlayerPane> playerToPane = new TwoWayMap<Player, OtherPlayerPane>();
-	private java.util.List<OtherPlayerPane> otherPlayerPaneList = new ArrayList<OtherPlayerPane>();
-	private DashboardPane dashboard;
+	public java.util.List<OtherPlayerPane> otherPlayerPaneList = new ArrayList<OtherPlayerPane>();
+	public DashboardPane dashboard;
 	private MessagePane msgPane;
 	private MessageLabel msgLabel = new MessageLabel();
-
 	int[] roleList;
 
 	private JPanel rolePane = new JPanel() {
@@ -84,14 +83,24 @@ public class GameFrame extends JCFrame {
 			}
 		}
 		//Arrays.sort(roleList);
-		dashboard = new DashboardPane(playerName);
+		dashboard = new DashboardPane(playerName, this);
 	}
 
 	private void initFrame() {
 		setSize(740, 620);
 		setResizable(false);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+				//todo: complete code
+				if(JCMessageBox.createQuestionMessageBox(GameFrame.this, "退出游戏", "中途离开游戏是不道德的，是否继续").open()
+					 == JCMessageBox.YES_OPTION) {
+					GameFrame.this.dispose();
+				}
+			}
+		});
 	}
 
 	private void initLayout() {
@@ -148,11 +157,6 @@ public class GameFrame extends JCFrame {
 		titleContent.add(bar, LineLayout.END);
 	}
 
-	public static void main(String[] args) {
-		new GameFrame(null, "Test");
-	}
-
-
 	public void updatePlayers(PlayerVO[] players) {
 		client.players = new Player[players.length];
 		msgPane.clearUsers();
@@ -186,8 +190,10 @@ public class GameFrame extends JCFrame {
 	}
 
 	public void setRole(Role role, int lordId) {
-		log.info(role + " " + lordId);
 		dashboard.setRole(role);
+
+		if(lordId == currentPlayerID)
+			return;
 		if (client.players != null) {
 			client.players[getIndex(lordId)].setRole(Role.ZG);
 			otherPlayerPaneList.get(getIndex(lordId)).repaint();
@@ -216,10 +222,15 @@ public class GameFrame extends JCFrame {
 		return client.players;
 	}
 
+	public Player getCurrentPlayer() {
+		return client.players[currentPlayerID];
+	}
 
 	public void distributeCards(AbstractCard[] cards) {
-		for (AbstractCard card : cards)
+		for (AbstractCard card : cards) {
 			client.players[currentPlayerID].addHandCard(card);
+			dashboard.addHandCard(card);
+		}
 	}
 
 	public void setOtherPlayerInfo(int playerId, int handCardCount) {

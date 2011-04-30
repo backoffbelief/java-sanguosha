@@ -7,7 +7,10 @@ import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static org.dizem.sanguosha.model.Constants.*;
 
@@ -30,14 +33,30 @@ public class OtherPlayerPane extends JPanel {
 	private Image imgKingdom;
 	private Image imgKingdomFrame;
 
-	private Player player;
+	public Player player;
 	private String playerName;
 	private int handCardCount;
 	private boolean characterChoosed = false;
+	private boolean canSelect = true;
+	private boolean isSelected = true;
 
 	public OtherPlayerPane() {
 		super();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (!canSelect)
+					return;
+				if (isSelected) {
+					setBorder(null);
+					isSelected = false;
+				} else {
+					setBorder(new LineBorder(Color.RED, 5));
+					isSelected = true;
+				}
+			}
+		});
 	}
 
 	public void setPlayer(Player player) {
@@ -80,7 +99,7 @@ public class OtherPlayerPane extends JPanel {
 			g.setColor(Color.BLACK);
 			g.drawString("" + handCardCount, 5, 115);
 			if (player.getPhase() != Phase.NOT_ACTIVE) {
-				g.drawImage(IMG_PHASE[player.getPhaseID()], 115, 120, null);
+				g.drawImage(IMG_PHASE[player.getPhaseID()], 113, 120, null);
 			}
 			if (player.getRole() != null) {
 				g.drawImage(IMG_ROLE2[player.getRoleID()], 85, 3, null);

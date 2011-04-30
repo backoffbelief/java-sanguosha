@@ -69,6 +69,7 @@ public class Deck {
 				return bottomBufferDeck.remove(0);
 			refreshDeck();
 		}
+		System.out.println(deck.size());
 		AbstractCard card = deck.remove(random.nextInt(deck.size()));
 		return card;
 	}

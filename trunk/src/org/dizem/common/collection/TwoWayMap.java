@@ -1,4 +1,4 @@
-package org.dizem.common;
+package org.dizem.common.collection;
 
 import java.io.Serializable;
 import java.util.Collection;

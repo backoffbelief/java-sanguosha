@@ -24,12 +24,12 @@ public class SGSButton extends JCButton {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				AudioUtil.play("system/button-hover.wav");
+				AudioUtil.play("system/button-hover.mp3");
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				AudioUtil.play("system/button-down.wav");
+				AudioUtil.play("system/button-down.mp3");
 			}
 		});
 	}
