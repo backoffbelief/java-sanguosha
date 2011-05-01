@@ -1,6 +1,7 @@
 package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
+import org.dizem.common.AudioUtil;
 import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.character.*;
@@ -74,6 +75,8 @@ public class GameClient {
 	}
 
 	public void updatePlayers(SGSPacket packet) {
+
+		AudioUtil.play("system/add-player.mp3");
 		gameFrame.updatePlayers(packet.getPlayers());
 	}
 
@@ -124,7 +127,6 @@ public class GameClient {
 	}
 
 	public void setRole(Role role, int lordId) {
-		System.out.println(role + " " + lordId);
 		gameFrame.setRole(role, lordId);
 	}
 
@@ -218,25 +220,26 @@ public class GameClient {
 		if (id != playerId) {
 			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(playerId)).repaint();
 		} else {
-
-		}
-
-		SGSPacket packet = new SGSPacket(OP_PHASE_JUDGE_END);
-		if (players[id].getEffectCards().size() == 0) {
-			log.info("没有判定牌，跳过判定阶段");
-			send(packet);
+			SGSPacket packet = new SGSPacket(OP_PHASE_JUDGE_END);
+			if (players[id].getEffectCards().size() == 0) {
+				log.info("没有判定牌，跳过判定阶段");
+				send(packet);
+			}
 		}
 
 
 	}
 
+	/**
+	 * 摸牌阶段
+	 *
+	 * @param packet 数据包
+	 */
 	public void drawPhase(SGSPacket packet) {
 		int id = packet.getPlayerId();
 		players[id].setPhase(Phase.DRAW);
 		gameFrame.showMessage(getPlayerName(id) + "进入摸牌阶段");
-
 		gameFrame.showMessage(getPlayerName(id) + "从牌堆里摸了" + packet.getCardVOs().length + "张牌");
-		players[id].setPhase(Phase.JUDGE);
 		if (id != playerId) {
 			OtherPlayerPane pane = gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id));
 			pane.setHandCardCount(packet.getHandCardCount());
@@ -247,6 +250,7 @@ public class GameClient {
 				AbstractCard card = AbstractCard.createCard(vo);
 				gameFrame.dashboard.addHandCard(card);
 			}
+			send(new SGSPacket(OP_PHASE_DRAW_END));
 		}
 	}
 
@@ -259,4 +263,11 @@ public class GameClient {
 	}
 
 
+	public void playPhase(int id) {
+		gameFrame.showMessage(getPlayerName(id) + "进入出牌阶段");
+		if (id != playerId) {
+			players[id].setPhase(Phase.PLAY);
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id)).repaint();
+		}
+	}
 }

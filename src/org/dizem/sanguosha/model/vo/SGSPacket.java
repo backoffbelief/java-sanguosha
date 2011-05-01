@@ -33,6 +33,10 @@ public class SGSPacket {
 	public SGSPacket() {
 	}
 
+	public boolean is(String operation) {
+		return this.operation.equals(operation);
+	}
+
 	public SGSPacket(String operation) {
 		this.operation = operation;
 	}

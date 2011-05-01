@@ -347,6 +347,7 @@ public class GameServer {
 
 
 	public void playPhase() {
+		showMessage(players[currentId].getCharacterName() + "进入出牌阶段");
 		log.info(players[currentId].getCharacterName() + "进入出牌阶段");
 		SGSPacket packet = new SGSPacket(OP_PHASE_PLAY_BEGIN);
 		packet.setPlayerId(currentId);
@@ -367,6 +368,11 @@ public class GameServer {
 					}
 
 					drawPhase();
+					synchronized (gameThread) {
+						gameThread.wait();
+					}
+
+					playPhase();
 					synchronized (gameThread) {
 						gameThread.wait();
 					}

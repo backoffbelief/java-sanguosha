@@ -21,45 +21,47 @@ public class ClientDispatcher {
 	public void dispatch(SGSPacket packet) {
 
 
-		if (packet.getOperation().equals(OP_INIT_CLIENT)) {//客户端接入
+		if (packet.is(OP_INIT_CLIENT)) {//客户端接入
 			this.client.showGameFrame(packet);
 
-		} else if (packet.getOperation().equals(OP_UPDATE_PLAYERS)) {//添加玩家
-			AudioUtil.play("system/add-player.mp3");
+		} else if (packet.is(OP_UPDATE_PLAYERS)) {//添加玩家
 			this.client.updatePlayers(packet);
 
-		} else if (packet.getOperation().equals(OP_SEND_MESSAGE)) {//系统消息
+		} else if (packet.is(OP_SEND_MESSAGE)) {//系统消息
 			this.client.showMessage(packet.getMessage());
 
-		} else if (packet.getOperation().equals(OP_SEND_CHAT_MESSAGE)) {//聊天消息
+		} else if (packet.is(OP_SEND_CHAT_MESSAGE)) {//聊天消息
 			this.client.showChatMessage(packet.getMessage());
 
-		} else if (packet.getOperation().equals(OP_DISTRIBUTE_ROLE)) {//分配角色
+		} else if (packet.is(OP_DISTRIBUTE_ROLE)) {//分配角色
 			this.client.setRole(packet.getRole(), packet.getLordId());
 
-		} else if (packet.getOperation().equals(OP_DISTRIBUTE_LORD_CHARACTER)) {//分配主公角色
+		} else if (packet.is(OP_DISTRIBUTE_LORD_CHARACTER)) {//分配主公角色
 			this.client.distributeLordCharacter(packet);
 
-		} else if (packet.getOperation().equals(OP_DISTRIBUTE_CHARACTER)) {//分配其他玩家角色
+		} else if (packet.is(OP_DISTRIBUTE_CHARACTER)) {//分配其他玩家角色
 			this.client.distributeCharacter(packet);
 
-		} else if (packet.getOperation().equals(OP_DISTRIBUTE_CARD)) {//发牌
+		} else if (packet.is(OP_DISTRIBUTE_CARD)) {//发牌
 			this.client.distributeCards(packet);
 
-		} else if (packet.getOperation().equals(OP_FINISH_CHOOSING_CHARACTER)) {//角色选择完毕
+		} else if (packet.is(OP_FINISH_CHOOSING_CHARACTER)) {//角色选择完毕
 			this.client.setCharacter(packet);
 
-		} else if (packet.getOperation().equals(OP_UPDATE_PLAYERS_INFO)) {
+		} else if (packet.is(OP_UPDATE_PLAYERS_INFO)) {//更新玩家信息
 			this.client.updatePlayersInfo(packet);
 
-		} else if(packet.getOperation().equals(OP_PHASE_START)) {
+		} else if (packet.is(OP_PHASE_START)) {//开始阶段
 			client.startPhase(packet.getPlayerId());
 
-		} else if(packet.getOperation().equals(OP_PHASE_JUDGE_BEGIN)) {
+		} else if (packet.is(OP_PHASE_JUDGE_BEGIN)) {//判定阶段
 			client.judgePhase(packet.getPlayerId());
 
-		} else if(packet.getOperation().equals(OP_PHASE_DRAW_BEGIN)) {
+		} else if (packet.is(OP_PHASE_DRAW_BEGIN)) {//摸牌阶段
 			client.drawPhase(packet);
+
+		} else if (packet.is(OP_PHASE_PLAY_BEGIN)) {//出牌阶段
+			client.playPhase(packet.getPlayerId());
 		}
 
 	}

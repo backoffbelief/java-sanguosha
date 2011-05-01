@@ -89,7 +89,7 @@ public class StartGameDialog extends JDialog implements ActionListener {
 		txtServerIp = new JCTextField();
 		txtServerIp.setPreferredSize(new Dimension(-1, 26));
 		txtServerIp.setEditable(true);
-		txtServerIp.setText("127.0.0.1");
+		txtServerIp.setText(LOCAL_ADDRESS);
 
 		EmptyComponent ecIp = new EmptyComponent();
 		ecIp.setBorder(new EmptyBorder(0, 0, 0, 40));

@@ -39,7 +39,7 @@ public class Player {
 		effectCards = new ArrayList<AbstractCard>();
 		handCards = new ArrayList<AbstractCard>();
 		equipmentCards = new ArrayList<EquipmentCard>();
-		this.phase = Phase.NOT_ACTIVE;
+		this.phase = Phase.START;
 	}
 
 

@@ -27,9 +27,17 @@ public class ServerDispatcher {
 					new org.dizem.sanguosha.model.card.character.Character(packet.getCharacterVO()));
 
 		} else if (packet.getOperation().equals(OP_PHASE_JUDGE_END)) {
-			synchronized (server.gameThread) {
-				server.gameThread.notify();
-			}
+			notifyServer();
+
+		} else if (packet.getOperation().equals(OP_PHASE_DRAW_END)) {
+			notifyServer();
+		}
+	}
+
+	public void notifyServer() {
+		synchronized (server.gameThread) {
+			System.out.println("notify");
+			server.gameThread.notify();
 		}
 	}
 }
