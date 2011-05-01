@@ -11,6 +11,6 @@ import org.dizem.sanguosha.model.Constants;
 public class LogUtil {
 
 	public static void init() {
-		PropertyConfigurator.configure(Constants.LOG4J_CONFIG_PATH);
+		PropertyConfigurator.configure(LogUtil.class.getResource(Constants.LOG4J_CONFIG_PATH));
 	}
 }

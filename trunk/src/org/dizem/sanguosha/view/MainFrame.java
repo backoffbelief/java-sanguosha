@@ -1,7 +1,6 @@
 package org.dizem.sanguosha.view;
 
 import craky.componentc.JCFrame;
-import craky.util.UIUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.dizem.common.AudioUtil;
@@ -9,6 +8,7 @@ import org.dizem.sanguosha.controller.GameServer;
 import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.exception.SGSException;
 import org.dizem.sanguosha.view.component.SGSButton;
+import org.dizem.sanguosha.view.component.SGSMessageBox;
 import org.dizem.sanguosha.view.component.SGSTextArea;
 import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.view.dialog.AboutDialog;
@@ -20,7 +20,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Random;
 
@@ -62,7 +61,7 @@ public class MainFrame extends JCFrame implements ActionListener {
 	}
 
 	public void startOrStopBackMusic() {
-		if(playBackMusic) {
+		if (playBackMusic) {
 			backMusicThread.stop();
 			backMusicThread = null;
 			System.gc();
@@ -75,11 +74,23 @@ public class MainFrame extends JCFrame implements ActionListener {
 	}
 
 	private void initFrame() {
-		setIconImage(ImageUtil.getImage("sgs.png"));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setIconImage(ImageUtil.getImage("sgs.png"));
 		setSize(new Dimension(700, 525));
 		setLocationRelativeTo(null);
 		setResizable(false);
+	}
+
+	@Override
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			if (!SGSMessageBox.query(MainFrame.this, "是否退出？", "确认要退出这么好玩的三国杀游戏？")) {
+				return;
+			} else {
+				
+			}
+		}
+		super.processWindowEvent(e);
 	}
 
 	private void initLayout() {
@@ -167,7 +178,6 @@ public class MainFrame extends JCFrame implements ActionListener {
 		gcTimer = new Timer(delay, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.gc();
-				log.info("gc");
 			}
 		});
 
@@ -200,7 +210,6 @@ public class MainFrame extends JCFrame implements ActionListener {
 			scrollPane.setVisible(false);
 
 		} else {
-
 			btnStartServer.setText("关闭服务器");
 			loggerArea.setVisible(true);
 			scrollPane.setVisible(true);

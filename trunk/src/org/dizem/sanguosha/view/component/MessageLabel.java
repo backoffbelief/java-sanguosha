@@ -22,7 +22,8 @@ public class MessageLabel extends JLabel implements Runnable {
 			new Font("微软雅黑", Font.PLAIN, 22),
 			new Font("微软雅黑", Font.PLAIN, 23),
 	};
-
+	public Thread currentThread;
+	public boolean isShowing = false;
 	public MessageLabel() {
 		setSize(500, 80);
 		setHorizontalAlignment(CENTER);
@@ -31,7 +32,16 @@ public class MessageLabel extends JLabel implements Runnable {
 
 	public void showText(String text) {
 		setText(text);
-		new Thread(this).start();
+		if (currentThread == null && isShowing) {
+			currentThread.stop();
+			currentThread = null;
+			System.gc();
+			setText("");
+			isShowing = false;
+		}
+		currentThread = new Thread(this);
+		currentThread.start();
+		isShowing = true;
 	}
 
 
@@ -40,19 +50,13 @@ public class MessageLabel extends JLabel implements Runnable {
 		try {
 			for (int i = 0; i < LABEL_FONT_LIST.length; ++i) {
 				setFont(LABEL_FONT_LIST[i]);
-				Thread.sleep(80);
+				Thread.sleep(100);
 			}
 			Thread.sleep(1500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		isShowing = false;
 		setText("");
-	}
-
-	public static void main(String[] args) {
-		MessageLabel m = new MessageLabel();
-		PanelViewer.display(m);
-		m.showText("您的角色是主攻");
 	}
 }

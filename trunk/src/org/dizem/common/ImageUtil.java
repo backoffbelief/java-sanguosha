@@ -54,7 +54,7 @@ public class ImageUtil {
 	 */
 	public static Image getImage(String name) {
 		if (imageCache.containsKey(name)) {
-			return (Image) imageCache.get(name);
+			return imageCache.get(name);
 
 		} else {
 			Image image = new ImageIcon(Constants.IMAGE_DIR + Constants.FILE_SEP + name).getImage();

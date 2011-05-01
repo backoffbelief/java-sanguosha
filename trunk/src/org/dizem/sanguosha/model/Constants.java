@@ -35,13 +35,15 @@ public interface Constants {
 
 	String FILE_SEP = System.getProperty("file.separator");
 
+	boolean FLAG = true;
+
 	/**
 	 * Directory path
 	 */
 	String USER_DIR = System.getProperty("user.dir");
-	String DATA_DIR = USER_DIR + FILE_SEP + "data";
-	String CONFIG_DIR = USER_DIR + FILE_SEP + "config";
-	String RES_DIR = USER_DIR + FILE_SEP + "res";
+	String DATA_DIR = FLAG ? USER_DIR + FILE_SEP + "data" : "/data";
+	String CONFIG_DIR = FLAG ? USER_DIR + FILE_SEP + "config" : "/config";
+	String RES_DIR = FLAG ? USER_DIR + FILE_SEP + "res" : "/res";
 	String IMAGE_DIR = RES_DIR + FILE_SEP + "image";
 	String AUDIO_DIR = RES_DIR + FILE_SEP + "audio";
 
@@ -96,8 +98,8 @@ public interface Constants {
 	String OP_PHASE_JUDGE_END = "OP_PHASE_JUDGE_END"; //判定阶段结束
 	String OP_PHASE_DRAW_BEGIN = "OP_PHASE_DRAW_BEGIN"; //摸牌阶段开始
 	String OP_PHASE_DRAW_END = "OP_PHASE_DRAW_END"; //摸牌阶段结束
-	String OP_PHASE_PLAY_BEGIN = "OP_PHASE_DRAW_BEGIN"; //出牌阶段开始
-	String OP_PHASE_PLAY_END = "OP_PHASE_DRAW_END"; //出牌阶段结束
+	String OP_PHASE_PLAY_BEGIN = "OP_PHASE_PLAY_BEGIN"; //出牌阶段开始
+	String OP_PHASE_PLAY_END = "OP_PHASE_PLAY_END"; //出牌阶段结束
 	String OP_PHASE_DISCARD_BEGIN = "OP_PHASE_DRAW_BEGIN"; //弃牌阶段开始
 	String OP_PHASE_DISCARD_END = "OP_PHASE_DRAW_END"; //弃牌阶段结束
 
