@@ -25,10 +25,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * 日志框和聊天记录面板
+ *
  * User: dizem
  * Time: 11-4-22 下午12:58
  */
 public class MessagePane extends JPanel {
+
 	private JCTextArea txtLog = new JCTextArea();
 	private JCTextArea txtMessage = new JCTextArea();
 	private JScrollPane scMessage = new JScrollPane(txtMessage);
@@ -62,8 +65,15 @@ public class MessagePane extends JPanel {
 
 	public static final Font MSG_FONT = new Font("微软雅黑", Font.PLAIN, 12);
 
+	/**
+	 * 客户端控制实例
+	 */
 	private GameClient client;
 
+	/**
+	 * 构造函数
+	 * @param client	客户端
+	 */
 	public MessagePane(final GameClient client) {
 		super();
 		this.client = client;
@@ -125,6 +135,10 @@ public class MessagePane extends JPanel {
 		add(inputPanel);
 	}
 
+	/**
+	 * 创建输入栏
+	 * @return
+	 */
 	public JComponent createInputPanel() {
 		cbUsers.setPreferredSize(new Dimension(75, 30));
 		cbUsers.setFocusable(false);
@@ -150,21 +164,36 @@ public class MessagePane extends JPanel {
 	}
 
 
+	/**
+	 * 清空在线用户下拉列表
+	 */
 	public void clearUsers() {
 		cbUsers.removeAllItems();
 		cbUsers.addItem(ComboBoxItem.ANY_ONE_ITEM);
 	}
 
+	/**
+	 * 添加玩家
+	 * @param item
+	 */
 	public void addUser(ComboBoxItem item) {
 		cbUsers.addItem(item);
 	}
 
+	/**
+	 * 添加日志
+	 * @param info 日志消息
+	 */
 	public void appendLog(String info) {
 		txtLog.append(Constants.LOG_TIME_FORMAT.format(new Date()) + info + "\n");
 		txtLog.selectAll();
 		txtLog.setCaretPosition(txtLog.getSelectedText().length());
 	}
 
+	/**
+	 * 添加聊天记录
+	 * @param info 聊天记录
+	 */
 	public void appendMessage(String info) {
 		txtMessage.append(info + "\n");
 		txtMessage.selectAll();

@@ -1,7 +1,6 @@
 package org.dizem.common;
 
 import craky.util.SwingResourceManager;
-import org.apache.log4j.Logger;
 import org.dizem.sanguosha.model.Constants;
 
 import javax.swing.*;
@@ -14,8 +13,6 @@ import java.util.Map;
  * Time: 11-2-27 下午12:32
  */
 public class ImageUtil {
-
-	private static Logger log = Logger.getLogger(ImageUtil.class);
 
 	/**
 	 * cache to store image

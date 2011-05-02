@@ -1,6 +1,8 @@
 package org.dizem.sanguosha.view.component;
 
 /**
+ * 下拉列表项
+ *
  * User: dizem
  * Time: 11-4-24 下午6:27
  */

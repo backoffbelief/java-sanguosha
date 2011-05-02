@@ -9,6 +9,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
+ * 发送UDP数据
+ *
  * User: dizem
  * Time: 11-4-24 下午12:03
  */
@@ -16,6 +18,12 @@ public class UDPSender {
 
 	private static Logger log = Logger.getLogger(UDPSender.class);
 
+	/**
+	 * 发送数据包
+	 * @param packet 数据包
+	 * @param _ip 目标地址
+	 * @param _port 目标端口
+	 */
 	public static void send(SGSPacket packet, String _ip, int _port) {
 		try {
 			DatagramSocket ds = new DatagramSocket();
@@ -28,6 +36,7 @@ public class UDPSender {
 			ds.send(dp);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getMessage());
 		}
 	}

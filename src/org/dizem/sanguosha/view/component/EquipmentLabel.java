@@ -12,16 +12,36 @@ import java.awt.event.ActionEvent;
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
+ * 装备卡label
+ *
  * User: DIZEM
  * Time: 11-4-10 下午2:24
  */
 public class EquipmentLabel extends JLabel {
 
+	/**
+	 * 花色
+	 */
 	private int suit;
+	/**
+	 * 数字
+	 */
 	private String rank;
+	/**
+	 * 名称
+	 */
 	private String name;
+	/**
+	 * 颜色
+	 */
 	private Color color;
+	/**
+	 * 是否可选
+	 */
 	private boolean isSelectable;
+	/**
+	 * 显示字体
+	 */
 	private final Font equipmentTextFont = new Font("宋体", Font.PLAIN, 13);
 
 	public EquipmentLabel(EquipmentCard card) {
@@ -38,6 +58,9 @@ public class EquipmentLabel extends JLabel {
 		initEvent();
 	}
 
+	/**
+	 * 初始化事件
+	 */
 	private void initEvent() {
 
 		UIUtil.actionLabel(this, new AbstractAction() {
@@ -48,6 +71,7 @@ public class EquipmentLabel extends JLabel {
 					if (getName().equals(UNSELECTED_TAG)) {
 						setName(SELECTED_TAG);
 						setBorder(selectedBorder);
+						
 					} else {
 						setName(UNSELECTED_TAG);
 						setBorder(null);

@@ -6,11 +6,15 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * 消息显示区
+ *
  * User: dizem
  * Time: 11-4-25 上午8:20
  */
 public class MessageLabel extends JLabel implements Runnable {
-
+	/**
+	 * 渐变字体集合
+	 */
 	public static final Font[] LABEL_FONT_LIST = {
 			new Font("微软雅黑", Font.PLAIN, 15),
 			new Font("微软雅黑", Font.PLAIN, 16),
@@ -22,14 +26,26 @@ public class MessageLabel extends JLabel implements Runnable {
 			new Font("微软雅黑", Font.PLAIN, 22),
 			new Font("微软雅黑", Font.PLAIN, 23),
 	};
+
+	/**
+	 * 当前显示县城
+	 */
 	public Thread currentThread;
+	/**
+	 * 是否正在显示
+	 */
 	public boolean isShowing = false;
+
 	public MessageLabel() {
 		setSize(500, 80);
 		setHorizontalAlignment(CENTER);
 		setOpaque(false);
 	}
 
+	/**
+	 * 动态显示消息
+	 * @param text	消息
+	 */
 	public void showText(String text) {
 		setText(text);
 		if (currentThread == null && isShowing) {
@@ -46,7 +62,6 @@ public class MessageLabel extends JLabel implements Runnable {
 
 
 	public void run() {
-
 		try {
 			for (int i = 0; i < LABEL_FONT_LIST.length; ++i) {
 				setFont(LABEL_FONT_LIST[i]);

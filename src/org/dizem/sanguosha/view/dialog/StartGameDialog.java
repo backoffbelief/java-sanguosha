@@ -22,6 +22,8 @@ import java.util.Map;
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
+ * 客户端启动对话框
+ *
  * User: DIZEM
  * Time: 11-3-31 上午1:16
  */
@@ -39,6 +41,10 @@ public class StartGameDialog extends JDialog implements ActionListener {
 	private JButton btnStart;
 	private JButton btnCancel;
 
+	/**
+	 * 构造函数
+	 * @param owner 父窗体
+	 */
 	public StartGameDialog(Window owner) {
 		super(owner, "\u542f\u52a8\u6e38\u620f", ModalityType.DOCUMENT_MODAL);
 		getContentPane().setPreferredSize(new Dimension(300, 150));
@@ -55,6 +61,10 @@ public class StartGameDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
+	/**
+	 * 创建主界面
+	 * @return
+	 */
 	private JImagePane createMainPane() {
 		JImagePane mainPane = new JImagePane();
 		mainPane.setBackground(new Color(228, 244, 255));
@@ -128,6 +138,10 @@ public class StartGameDialog extends JDialog implements ActionListener {
 		return mainPane;
 	}
 
+	/**
+	 * 创建底栏
+	 * @return
+	 */
 	private JImagePane createBottomPane() {
 		JImagePane bottomPane = new JImagePane();
 		bottomPane.setPreferredSize(new Dimension(334, 30));
@@ -150,11 +164,22 @@ public class StartGameDialog extends JDialog implements ActionListener {
 	}
 
 
+	/**
+	 * 获取主机名称
+	 * @return
+	 */
 	public String getUserName() {
 		Map<String, String> map = System.getenv();
-		return map.get("USERNAME");
+		if(map != null)
+			return map.get("USERNAME");
+		else
+			return "NO NAME";
 	}
 
+	/**
+	 * 按键事件
+	 * @param e
+	 */
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnCancel) {
@@ -174,9 +199,13 @@ public class StartGameDialog extends JDialog implements ActionListener {
 		}
 	}
 
+	/**
+	 * 连接服务器
+	 */
 	private void connect() {
 		SGSPacket packet = new SGSPacket(OP_TEST_SERVER, 5068);
 		UDPSender.send(packet, txtServerIp.getText(), Integer.parseInt(txtServerPort.getText()));
+
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -186,11 +215,5 @@ public class StartGameDialog extends JDialog implements ActionListener {
 				}
 			}
 		});
-
-
-	}
-
-	public static void main(String[] args) {
-		new StartGameDialog(null);
 	}
 }

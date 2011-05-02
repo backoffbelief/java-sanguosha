@@ -22,10 +22,7 @@ public class SGSMenu extends JCMenu implements PopupMenuListener {
 	private static final Image ROLLOVER_IMAGE = ImageUtil.getImage("system/common_button_rollover_bg.png");
 	private static final Image PRESSED_IMAGE = ImageUtil.getImage("system/common_button_pressed_bg.png");
 
-//	private ActionListener listener;
-
 	public SGSMenu() {
-		//this.listener = listener;
 		setToolTipText("\u4E3B\u83DC\u5355");
 		setPreferredSize(new Dimension(5, 20));
 		setShowWhenRollover(false);

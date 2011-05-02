@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.net.URI;
 
 /**
+ * 关于对话框
+ *
  * User: DIZEM
  * Time: 11-3-26 下午9:24
  */

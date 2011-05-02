@@ -25,6 +25,8 @@ import java.util.*;
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
+ * 服务端
+ *
  * User: DIZEM
  * Time: 11-4-6 下午1:40
  */
@@ -32,17 +34,55 @@ public class GameServer {
 
 	private static Logger log = Logger.getLogger(GameServer.class);
 
+	/**
+	 * 服务器名称
+	 */
 	private String serverName;
+	/**
+	 * 端口
+	 */
 	private int port;
+	/**
+	 * 出牌时间
+	 */
 	private int timeDelay;
+	/**
+	 * 玩家数
+	 */
 	private int playerCount;
+	/**
+	 * 已经在线的玩家数
+	 */
 	private int playerOnline = 0;
+	/**
+	 * 游戏窗体实例
+	 */
 	private MainFrame owner;
+	/**
+	 * 玩家列表
+	 */
 	private Player[] players;
+	/**
+	 * 主公id
+	 */
 	private int lordId;
+	/**
+	 * 当前轮到玩家的id
+	 */
 	private int currentId;
+	/**
+	 * id到玩家的映射
+	 */
 	private Map<Integer, Player> idToPlayerMap = new HashMap<Integer, Player>();
 
+	/**
+	 * 构造函数
+	 * @param owner 父窗体
+	 * @param serverName 服务器名称
+	 * @param port 端口
+	 * @param timeDelay 出牌时间
+	 * @param playerCount 玩家数
+	 */
 	public GameServer(MainFrame owner, String serverName, int port, int timeDelay, int playerCount) {
 		this.serverName = serverName;
 		this.port = port;

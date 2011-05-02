@@ -2,10 +2,8 @@ package org.dizem.sanguosha.view.gameview;
 
 import craky.component.JImagePane;
 import craky.componentc.JCFrame;
-import craky.componentc.JCMessageBox;
 import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
-import org.dizem.common.collection.TwoWayMap;
 import org.dizem.sanguosha.controller.GameClient;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.character.Character;
@@ -15,17 +13,19 @@ import org.dizem.sanguosha.model.vo.PlayerVO;
 import org.dizem.sanguosha.view.component.ComboBoxItem;
 import org.dizem.sanguosha.view.component.MessageLabel;
 import org.dizem.sanguosha.view.component.SGSMenu;
+import org.dizem.sanguosha.view.component.SGSMessageBox;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
+ * 游戏界面
+ *
  * User: DIZEM
  * Time: 11-4-9 下午10:37
  */
@@ -90,17 +90,19 @@ public class GameFrame extends JCFrame {
 		setSize(740, 620);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
 
-				//todo: complete code
-				if(JCMessageBox.createQuestionMessageBox(GameFrame.this, "退出游戏", "中途离开游戏是不道德的，是否继续").open()
-					 == JCMessageBox.YES_OPTION) {
-					GameFrame.this.dispose();
-				}
+	@Override
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			if (!SGSMessageBox.query(this, "是否退出？", "中途退出游戏是不对的，尤其是这么好玩的三国杀游戏")) {
+				return;
+			} else {
+				//todo 发送离线请求
 			}
-		});
+		}
+		super.processWindowEvent(e);
 	}
 
 	private void initLayout() {

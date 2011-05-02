@@ -161,4 +161,6 @@ public interface Constants {
 
 	SimpleDateFormat LOG_TIME_FORMAT = new SimpleDateFormat("hh:mm:ss - ");
 
+
+	String AUDIO_ADD_EQUIPMENT = "system/add-equip.mp3";
 }

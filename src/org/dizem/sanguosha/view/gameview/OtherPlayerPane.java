@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
+ * 对手面板
+ *
  * User: dizem
  * Time: 11-4-19 上午9:10
  */
@@ -40,6 +42,7 @@ public class OtherPlayerPane extends JPanel {
 	private boolean canSelect = true;
 	private boolean isSelected = true;
 
+
 	public OtherPlayerPane() {
 		super();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -59,16 +62,27 @@ public class OtherPlayerPane extends JPanel {
 		});
 	}
 
+	/**
+	 * 设置玩家对象
+	 * @param player
+	 */
 	public void setPlayer(Player player) {
 		this.player = player;
 		setPlayerName(player.getName());
 		repaint();
 	}
 
+	/**
+	 *  设置玩家姓名
+	 * @param playerName
+	 */
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
 	}
 
+	/**
+	 * 更新角色
+	 */
 	public void setCharacter() {
 		imgAvatar = ImageUtil.getImage("/generals/small/" + player.getCharacter().getPNGFilename());
 		imgKingdom = ImageUtil.getImage("/kingdom/icon/" + player.getCharacter().getKingdomImgName());
@@ -127,6 +141,7 @@ public class OtherPlayerPane extends JPanel {
 			}
 		}
 	}
+
 
 	public int getHandCardCount() {
 		return handCardCount;

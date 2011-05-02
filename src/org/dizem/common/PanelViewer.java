@@ -1,6 +1,5 @@
 package org.dizem.common;
 
-import org.dizem.sanguosha.view.gameview.PlayerRolePane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,4 @@ public class PanelViewer extends JFrame {
 	}
 
 
-	public static void display(JComponent panel, String title) {
-		new PanelViewer(panel).setTitle(title);
-	}
 }
