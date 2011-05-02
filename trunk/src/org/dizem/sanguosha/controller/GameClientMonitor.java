@@ -11,6 +11,9 @@ import java.net.SocketException;
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
+ * 客户端监控
+ * 用于接收服务器发来的请求
+ *
  * User: dizem
  * Time: 11-4-23 下午9:57
  */
@@ -18,18 +21,35 @@ public class GameClientMonitor extends Thread {
 
 	private static Logger log = Logger.getLogger(GameClientMonitor.class);
 
+	/**
+	 * 客户端监听端口
+	 */
 	public int clientPort = 3000;
-
-
+	/**
+	 * 客户端控制类
+	 */
 	private GameClient client;
+	/**
+	 * 是否开始监听
+	 */
 	private boolean isReady = false;
+	/**
+	 * 客户端调度
+	 */
 	private ClientDispatcher dispatcher;
 
+	/**
+	 * 构造函数
+	 * @param client 客户端
+	 */
 	public GameClientMonitor(GameClient client) {
 		this.client = client;
 		this.dispatcher = new ClientDispatcher(client);
 	}
 
+	/**
+	 * 线程运行过程
+	 */
 	@Override
 	public void run() {
 		try {
@@ -51,6 +71,10 @@ public class GameClientMonitor extends Thread {
 		}
 	}
 
+	/**
+	 * 递归探测端口是否可用，并创建UDP连接
+	 * @return
+	 */
 	private DatagramSocket createSocket() {
 		try {
 			DatagramSocket ds = new DatagramSocket(clientPort);

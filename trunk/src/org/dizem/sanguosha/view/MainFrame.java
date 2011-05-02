@@ -4,6 +4,8 @@ import craky.componentc.JCFrame;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.dizem.common.AudioUtil;
+import org.dizem.common.annotation.ActionListenerFor;
+import org.dizem.common.annotation.ActionListenerInstaller;
 import org.dizem.sanguosha.controller.GameServer;
 import org.dizem.sanguosha.model.Constants;
 import org.dizem.sanguosha.model.exception.SGSException;
@@ -27,7 +29,7 @@ import java.util.Random;
  * User: DIZEM
  * Time: 11-3-25 下午10:12
  */
-public class MainFrame extends JCFrame implements ActionListener {
+public class MainFrame extends JCFrame {
 
 	private static Logger log = Logger.getLogger(MainFrame.class);
 
@@ -56,8 +58,8 @@ public class MainFrame extends JCFrame implements ActionListener {
 		initLayout();
 		setVisible(true);
 		startGC();
-
 		startOrStopBackMusic();
+		ActionListenerInstaller.processAnnotation(this);
 	}
 
 	public void startOrStopBackMusic() {
@@ -87,7 +89,7 @@ public class MainFrame extends JCFrame implements ActionListener {
 			if (!SGSMessageBox.query(MainFrame.this, "是否退出？", "确认要退出这么好玩的三国杀游戏？")) {
 				return;
 			} else {
-				
+
 			}
 		}
 		super.processWindowEvent(e);
@@ -121,22 +123,18 @@ public class MainFrame extends JCFrame implements ActionListener {
 		int offsetY = 280;
 		btnStartServer = new SGSButton(Constants.STR_START_SERVER);
 		btnStartServer.setBounds(offsetX, offsetY, 100, 40);
-		btnStartServer.addActionListener(this);
 		add(btnStartServer);
 		offsetY += 50;
 		btnStartGame = new SGSButton(Constants.STR_START_GAME);
 		btnStartGame.setBounds(offsetX, offsetY, 100, 40);
-		btnStartGame.addActionListener(this);
 		add(btnStartGame);
 		offsetY += 50;
 		btnSetting = new SGSButton(Constants.STR_SETTING);
 		btnSetting.setBounds(offsetX, offsetY, 100, 40);
-		btnSetting.addActionListener(this);
 		add(btnSetting);
 		offsetY += 50;
 		btnAbout = new SGSButton(Constants.STR_ABOUT);
 		btnAbout.setBounds(offsetX, offsetY, 100, 40);
-		btnAbout.addActionListener(this);
 		add(btnAbout);
 
 		updateBgImage();
@@ -184,24 +182,24 @@ public class MainFrame extends JCFrame implements ActionListener {
 		gcTimer.start();
 	}
 
-
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnAbout) {
-			log.info("Open about dialog");
-			new AboutDialog(this);
-
-		} else if (e.getSource() == btnStartServer) {
-			log.info("Open dialog to start server");
-			new StartServerDialog(this);
-
-		} else if (e.getSource() == btnSetting) {
-			log.info("Open setting dialog");
-
-		} else if (e.getSource() == btnStartGame) {
-			log.info("Open dialog to start game");
-			new StartGameDialog(this);
-		}
+	@ActionListenerFor(source = "btnStartServer")
+	public void btnStartServerClicked() {
+		log.info("Open dialog to start server");
+		new StartServerDialog(this);
 	}
+
+	@ActionListenerFor(source = "btnStartGame")
+	public void btnStartGameClicked() {
+		log.info("Open dialog to start game");
+		new StartGameDialog(this);
+	}
+
+	@ActionListenerFor(source = "btnAbout")
+	public void btnAboutClicked() {
+		log.info("Open about dialog");
+		new AboutDialog(this);
+	}
+
 
 	public void startOrStopServer() {
 		if (showLogger) {

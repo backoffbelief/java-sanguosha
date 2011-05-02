@@ -2,6 +2,7 @@ package org.dizem.sanguosha.view.gameview;
 
 import craky.util.UIUtil;
 import org.apache.log4j.Logger;
+import org.dizem.common.AudioUtil;
 import org.dizem.common.ImageUtil;
 import org.dizem.common.collection.TwoWayMap;
 import org.dizem.sanguosha.model.card.*;
@@ -79,6 +80,7 @@ public class DashboardPane extends JLayeredPane
 		}
 	}
 
+
 	public void setCharacter(org.dizem.sanguosha.model.card.character.Character character) {
 		player.setCharacter(character);
 		this.character = player.getCharacter();
@@ -89,6 +91,11 @@ public class DashboardPane extends JLayeredPane
 		repaint();
 	}
 
+	/**
+	 * 初始化按钮
+	 * 如果角色为选定，则设定确定、取消按钮
+	 * 否则根据角色的技能设定技能按钮
+	 */
 	private void initButtons() {
 		if (!characterChoosed) {
 			btnOK = new SGSGameButton("确定");
@@ -101,6 +108,7 @@ public class DashboardPane extends JLayeredPane
 			btnCancel.setEnabled(true);
 			btnCancel.addActionListener(listener);
 			add(btnCancel);
+
 		} else {
 
 			btnSkills = new JButton[character.getSkills().length];
@@ -117,22 +125,18 @@ public class DashboardPane extends JLayeredPane
 		}
 	}
 
+	/**
+	 * 重绘组建
+	 *
+	 * @param g
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(IMG_DASHBOARD_BACK, cardX, 30, null);
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		drawDashboard(g);
-		drawLife(g);
-		drawName(g);
-	}
 
-	public void updateHandCards() {
-
-
-	}
-
-	private void drawDashboard(Graphics g) {
+		//dashboard
 		g.drawImage(IMG_DASHBOARD_EQUIP, equipX, posY, null);
 		g.drawImage(IMG_DASHBOARD_AVATAR, avatarX, 0, null);
 		if (imgAvatar != null) {
@@ -142,65 +146,7 @@ public class DashboardPane extends JLayeredPane
 			g.drawImage(imgKingdom, avatarX + 21, 62, null);
 		}
 
-	}
-
-	private JLabel createCardLabel(final AbstractCard card) {
-
-		final JLabel label = new HandCardLabel(card, owner);
-
-		handCardLabelMap.put(card, label);
-
-		UIUtil.actionLabel(label, new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
-					return;
-
-				if (label.getName().equals(SELECTED_TAG)) {
-					label.setName(UNSELECTED_TAG);
-					label.setLocation(label.getX(), posY + 38 + 30);
-					DashboardPane.this.repaint(label.getX(), label.getY() - 30, 90, 160);
-					cardSelectedSet.remove(label);
-
-					if (cardSelectedSet.size() == 0) {
-						btnOK.setEnabled(false);
-					}
-
-				} else {
-					label.setName(SELECTED_TAG);
-					label.setLocation(label.getX(), posY + 38 - 30);
-					DashboardPane.this.repaint(label.getX(), label.getY(), 90, 160);
-					cardSelectedSet.add(label);
-
-					if (cardSelectedSet.size() > 0) {
-						btnOK.setEnabled(true);
-					}
-				}
-			}
-		});
-		return label;
-	}
-
-	private JLabel createEquipmentLabel(final EquipmentCard card) {
-		final JLabel label = new EquipmentLabel(card);
-		equipmentLabelMap.put(card.getCardType(), label);
-		label.setLocation(10, 42 + posY + card.getCardType() * 32);
-		return label;
-	}
-
-	private void updateHandCardGap() {
-		int gap;
-		if (480 > handCardLabelList.size() * 90) {
-			gap = 90;
-		} else {
-			gap = 390 / (handCardLabelList.size() - 1);
-		}
-		for (int i = 0; i < handCardLabelList.size(); ++i) {
-			handCardLabelList.get(i).setLocation(cardX + i * gap, posY + 38);
-		}
-	}
-
-	private void drawLife(Graphics g) {
+		//血条
 		if (characterChoosed) {
 			int rate = (int) ((double) character.getLife() / character.getMaxLife() * 5 + 0.01);
 			for (int i = 0; i < character.getLife(); ++i) {
@@ -210,12 +156,114 @@ public class DashboardPane extends JLayeredPane
 				g.drawImage(IMG_HP_SMALL[0], avatarX + 2, 70 + i * 23, null);
 			}
 		}
-	}
-
-	private void drawName(Graphics g) {
+		//名字
 		g.setColor(Color.WHITE);
 		int nameWidth = g.getFontMetrics().stringWidth(playerName);
 		g.drawString(playerName, avatarX + (122 - nameWidth) / 2 + 8, 53);
+	}
+
+
+	private int canSelectCardCount = 1;
+
+	/**
+	 * 用手牌创建label
+	 *
+	 * @param card 手牌
+	 * @return label
+	 */
+	private JLabel createCardLabel(final AbstractCard card) {
+
+		final JLabel label = new HandCardLabel(card, owner);
+
+		handCardLabelMap.put(card, label);
+
+		//注册单击事件
+		UIUtil.actionLabel(label, new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				//如果玩家在NOT_ACTIVE阶段 不作处理
+				if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
+					return;
+
+				//如果当前手牌已经选择，则撤销选中
+				if (label.getName().equals(SELECTED_TAG)) {
+					label.setName(UNSELECTED_TAG);
+					label.setLocation(label.getX(), 38 + 30);
+					DashboardPane.this.repaint(label.getX(), label.getY() - 30, 90, 160);
+					cardSelectedSet.remove(label);
+
+					if (cardSelectedSet.size() == 0) {
+						btnOK.setEnabled(false);
+					}
+
+
+				} else { //否则选中当前手牌
+					label.setName(SELECTED_TAG);
+					if (canSelectCardCount == cardSelectedSet.size()) {
+						unselectDefalutSelectedCard();
+					}
+
+					label.setLocation(label.getX(), posY + 38 - 30);
+					DashboardPane.this.repaint(label.getX(), label.getY(), 90, 160);
+					cardSelectedSet.add(label);
+
+					if (cardSelectedSet.size() > 0) {
+						btnOK.setEnabled(true);
+					}
+				}
+			}
+
+
+		});
+		return label;
+	}
+
+	/**
+	 * 撤销选中第一张已经选中的手牌
+	 */
+	private void unselectDefalutSelectedCard() {
+		Iterator itCardLabel = cardSelectedSet.iterator();
+
+		if (itCardLabel.hasNext()) {
+			JLabel label = (JLabel) itCardLabel.next();
+			label.setLocation(label.getX(), 38 + 30);
+			cardSelectedSet.remove(label);
+		}
+	}
+
+	/**
+	 * 用装备牌创建label
+	 *
+	 * @param card 装备牌
+	 * @return label
+	 */
+	private JLabel createEquipmentLabel(final EquipmentCard card) {
+		final JLabel label = new EquipmentLabel(card);
+		equipmentLabelMap.put(card.getCardType(), label);
+		label.setLocation(10, 42 + posY + card.getCardType() * 32);
+		return label;
+	}
+
+	/**
+	 * 调整手牌放置间距
+	 */
+	private void updateHandCardGap() {
+		int gap;
+		//如果手牌总宽度小于面板 则不需要重叠
+		if (480 > handCardLabelList.size() * 90) {
+			gap = 90;
+
+		} else { //计算重叠间距
+			gap = 390 / (handCardLabelList.size() - 1);
+		}
+		for (int i = 0; i < handCardLabelList.size(); ++i) {
+			handCardLabelList.get(i).setLocation(cardX + i * gap, posY + 38);
+		}
+	}
+
+
+	public void addHandCard(AbstractCard card) {
+		addHandCardLabel(createCardLabel(card));
+		repaint();
 	}
 
 	public void addHandCardLabel(JLabel handCardLabel) {
@@ -240,6 +288,11 @@ public class DashboardPane extends JLayeredPane
 		equipmentLabelMap.removeByValue(equipmentCardLabel);
 	}
 
+	/**
+	 * 处理按钮事件
+	 *
+	 * @param e
+	 */
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnOK) {
@@ -250,6 +303,7 @@ public class DashboardPane extends JLayeredPane
 				AbstractCard card = handCardLabelMap.getKey(label);
 
 				if (card instanceof EquipmentCard) {
+					AudioUtil.play(AUDIO_ADD_EQUIPMENT);
 					EquipmentCard equipmentCard = (EquipmentCard) card;
 
 					if (!player.canAddEquipmentCard(equipmentCard)) {
@@ -263,20 +317,28 @@ public class DashboardPane extends JLayeredPane
 				removeHandCardLabel(label);
 				itCardLabel.remove();
 			}
+
 		} else if (e.getSource() == btnCancel) {
 			addHandCardLabel(createCardLabel(Deck.getInstance().popCard()));
 		}
 	}
 
-
+	/**
+	 * 设置当前玩家的角色势力
+	 *
+	 * @param role 角色势力
+	 */
 	public void setRole(final Role role) {
 		player.setRole(role);
 		final JLabel roleLabel = new JLabel(IMG_ROLE[player.getRoleID()]);
 		roleLabel.setSize(IMG_ROLE[player.getRoleID()].getIconWidth(), IMG_ROLE[player.getRoleID()].getIconHeight());
 		final int x = avatarX - 3, y = 140;
 		roleLabel.setLocation(x, y);
+
+		//将势力label天添加至面板最上层
 		add(roleLabel, new Integer(labelDisplayLevel++));
 
+		//将势力label平移至相应坐标
 		new Thread(new Runnable() {
 			public void run() {
 				while (roleLabel.getY() > 38) {
@@ -291,8 +353,5 @@ public class DashboardPane extends JLayeredPane
 		}).start();
 	}
 
-	public void addHandCard(AbstractCard card) {
-		addHandCardLabel(createCardLabel(card));
-		repaint();
-	}
+
 }

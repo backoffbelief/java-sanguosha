@@ -3,6 +3,7 @@ package org.dizem.sanguosha.view.component;
 import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.player.Phase;
+import org.dizem.sanguosha.view.gameview.DashboardPane;
 import org.dizem.sanguosha.view.gameview.GameFrame;
 
 import javax.swing.*;
@@ -14,12 +15,11 @@ import java.awt.event.MouseMotionListener;
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
- * User: DIZEM
+ * User: dizem.org
  * Time: 11-4-10 下午2:19
  */
 public class HandCardLabel extends JLabel
 		implements MouseMotionListener, MouseListener {
-
 
 	private static final Font font = new Font("Consolas", Font.PLAIN, 12);
 
@@ -27,11 +27,13 @@ public class HandCardLabel extends JLabel
 	private String rank;
 	private Color color;
 	private GameFrame owner;
-
+	private DashboardPane dashboard;
+	private String message;
 
 	public HandCardLabel(AbstractCard card, GameFrame owner) {
 		super(ImageUtil.getIcon("/card/" + card.getFilename()));
 		this.owner = owner;
+		this.dashboard = owner.dashboard;
 		suit = card.getSuit() - 1;
 		rank = card.getRank();
 		color = card.isRed() ? Color.RED : Color.BLACK;
@@ -40,6 +42,10 @@ public class HandCardLabel extends JLabel
 		setToolTipText(card.getHtmlDescription());
 		addMouseMotionListener(this);
 		addMouseListener(this);
+	}
+
+	public HandCardLabel(AbstractCard card) {
+		this(card, null);
 	}
 
 	@Override
@@ -63,14 +69,9 @@ public class HandCardLabel extends JLabel
 	}
 
 	public void mouseMoved(MouseEvent e) {
-		if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
+		if (owner == null || owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
 			return;
 		JLabel label = (JLabel) e.getSource();
-		/*
-			f(0) = f(90) = 0, f(45) = 30
-			f(x) = a(x - 90) * x
-			f(x) = a * -45 * 45 = 30 => a = -2/135
-		  */
 		double scale = -2. / 135.;
 		double delta = scale * (e.getX() - 90) * e.getX();
 		if (label.getName().equals(UNSELECTED_TAG)) {
@@ -80,12 +81,6 @@ public class HandCardLabel extends JLabel
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
-			return;
-		JLabel label = (JLabel) e.getSource();
-		if (label.getName().equals(UNSELECTED_TAG)) {
-			label.setLocation(label.getX(), 30 + 38);
-		}
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -98,11 +93,15 @@ public class HandCardLabel extends JLabel
 	}
 
 	public void mouseExited(MouseEvent e) {
-		if (owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
+		if (owner == null || owner.getCurrentPlayer().getPhase().equals(Phase.NOT_ACTIVE))
 			return;
 		JLabel label = (JLabel) e.getSource();
 		if (label.getName().equals(UNSELECTED_TAG)) {
 			label.setLocation(label.getX(), 30 + 38);
 		}
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

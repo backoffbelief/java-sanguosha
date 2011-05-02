@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
+ * 菜单按钮
+ *
  * User: DIZEM
  * Time: 11-3-30 下午7:13
  */

@@ -31,23 +31,50 @@ public class GameClient {
 
 	private static Logger log = Logger.getLogger(GameClient.class);
 
-	//服务器地址
+	/**
+	 * 服务器地址
+	 */
 	private String serverAddress;
-	//服务器端口
+	/**
+	 * 服务器端口
+	 */
 	private int serverPort;
-	//玩家姓名
+	/**
+	 * 玩家姓名
+	 */
 	private String name;
-	//消息接收监控
+	/**
+	 * 消息接收监控
+	 */
 	private GameClientMonitor clientMonitor;
-	//游戏界面
+	/**
+	 * 游戏界面
+	 */
 	private GameFrame gameFrame;
-	//玩家数
+	/**
+	 * 玩家数
+	 */
 	private int playerCount;
-	//主公位置
+	/**
+	 * 主公id
+	 */
 	private int lordId;
+	/**
+	 * 当前玩家id
+	 */
 	private int playerId;
+	/**
+	 * 玩家列表
+	 */
 	public Player[] players;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param serverPort	服务器端口
+	 * @param serverAddress 服务器地址
+	 * @param name		  玩家姓名
+	 */
 	public GameClient(int serverPort, String serverAddress, String name) {
 		this.serverPort = serverPort;
 		this.serverAddress = serverAddress;
@@ -57,7 +84,11 @@ public class GameClient {
 		connect();
 	}
 
+	/**
+	 * 连接服务器
+	 */
 	public void connect() {
+		//等待创建监控连接
 		while (!clientMonitor.isReady()) {
 			try {
 				Thread.sleep(100);
@@ -68,18 +99,35 @@ public class GameClient {
 		send(new SGSPacket(OP_CONNECT, name, clientMonitor.getClientPort()));
 	}
 
+	/**
+	 * 显示游戏窗体
+	 *
+	 * @param packet
+	 */
 	public void showGameFrame(SGSPacket packet) {
 		playerCount = packet.getPlayerCount();
 		gameFrame = new GameFrame(this, name);
 		gameFrame.setCurrentPlayerID(packet.getPlayerId());
 	}
 
+	/**
+	 * 添加玩家
+	 *
+	 * @param packet
+	 */
 	public void updatePlayers(SGSPacket packet) {
 
 		AudioUtil.play("system/add-player.mp3");
 		gameFrame.updatePlayers(packet.getPlayers());
 	}
 
+	/**
+	 * 发送消息给指定玩家
+	 * id = -1表示发送给所有人
+	 *
+	 * @param message 消息
+	 * @param toId	目标玩家id
+	 */
 	public void sendMessage(String message, int toId) {
 		SGSPacket packet = new SGSPacket(OP_SEND_CHAT_MESSAGE);
 		packet.setMessage(message);
@@ -88,6 +136,11 @@ public class GameClient {
 		send(packet);
 	}
 
+	/**
+	 * 发送数据包给服务器
+	 *
+	 * @param packet
+	 */
 	public void send(SGSPacket packet) {
 		UDPSender.send(packet, serverAddress, serverPort);
 	}
@@ -130,9 +183,16 @@ public class GameClient {
 		gameFrame.setRole(role, lordId);
 	}
 
+	/**
+	 * 选择主公武将橘色
+	 *
+	 * @param dp
+	 */
 	public void distributeLordCharacter(SGSPacket dp) {
 		lordId = dp.getLordId();
+
 		if (lordId == gameFrame.getCurrentPlayerID()) {
+
 			org.dizem.sanguosha.model.card.character.Character[] characters
 					= new org.dizem.sanguosha.model.card.character.Character[5];
 			for (int i = 0; i < 5; ++i) {
@@ -146,12 +206,19 @@ public class GameClient {
 		}
 	}
 
+	/**
+	 * 主公选择武将结束
+	 */
 	public void chooseLordCharacterFinish() {
 		SGSPacket packet = new SGSPacket(OP_FINISH_CHOOSING_LORD_CHARACTER);
 		packet.setCharacterVO(new CharacterVO(gameFrame.getPlayers()[gameFrame.getCurrentPlayerID()].getCharacter()));
 		send(packet);
 	}
 
+	/**
+	 * 分配其他玩家武将角色
+	 * @param dp
+	 */
 	public void distributeCharacter(SGSPacket dp) {
 		gameFrame.showMessage("主公选择了武将:" + dp.getCharacterVO().getName());
 		org.dizem.sanguosha.model.card.character.Character ch
@@ -167,6 +234,9 @@ public class GameClient {
 		new ChooseCharacterDialog(gameFrame, characters);
 	}
 
+	/**
+	 * 分配其他玩家武将角色结束
+	 */
 	public void chooseCharacterFinish() {
 		SGSPacket packet = new SGSPacket(OP_FINISH_CHOOSING_CHARACTER);
 		packet.setPlayerId(playerId);

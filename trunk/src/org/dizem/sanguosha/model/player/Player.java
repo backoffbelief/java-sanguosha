@@ -81,7 +81,6 @@ public class Player {
 	 * @return 能否装备
 	 */
 	public boolean canAddEquipmentCard(EquipmentCard card) {
-		System.out.println(card.getCardType());
 		for (EquipmentCard equipmentCard : equipmentCards) {
 			if (equipmentCard.getCardType() == card.getCardType()) {
 				return false;

@@ -44,7 +44,7 @@ public class ProjectInfo {
 
 	public static void main(String[] args) {
 		walk(new File("src"));
-		System.out.println(cntFile);
-		System.out.println(cntLine);
+		System.out.println("文件总数:" + cntFile);
+		System.out.println("非空行数:" + cntLine);
 	}
 }

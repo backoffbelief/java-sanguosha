@@ -21,6 +21,8 @@ import java.util.Map;
 import static org.dizem.sanguosha.model.Constants.*;
 
 /**
+ * 服务器启动对话框
+ *
  * User: DIZEM
  * Time: 11-3-30 下午11:07
  */
@@ -45,6 +47,10 @@ public class StartServerDialog extends JDialog implements ActionListener {
 	private JLabel lblGameType;
 	private JComboBox cbGameType;
 
+	/**
+	 * 构造函数
+	 * @param owner	父窗体
+	 */
 	public StartServerDialog(Window owner) {
 		super(owner, "启动服务器", ModalityType.DOCUMENT_MODAL);
 		getContentPane().setPreferredSize(new Dimension(300, 200));
@@ -64,12 +70,10 @@ public class StartServerDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-
-	public static void main(String[] args) {
-		new StartServerDialog(null);
-	}
-
-
+	/**
+	 * 创建主界面
+	 * @return
+	 */
 	private JImagePane createMainPane() {
 		JImagePane mainPane = new JImagePane();
 		mainPane.setBackground(new Color(228, 244, 255));
@@ -186,6 +190,10 @@ public class StartServerDialog extends JDialog implements ActionListener {
 		return mainPane;
 	}
 
+	/**
+	 * 创建底栏
+	 * @return
+	 */
 	private JImagePane createBottomPane() {
 		JImagePane bottomPane = new JImagePane();
 		bottomPane.setPreferredSize(new Dimension(334, 30));
@@ -207,7 +215,12 @@ public class StartServerDialog extends JDialog implements ActionListener {
 		return bottomPane;
 	}
 
+	/**
+	 * 处理事件
+	 * @param e
+	 */
 	public void actionPerformed(ActionEvent e) {
+
 		if (e.getSource() == checkNoTimeDelay) {
 			txtTimeDelay.setEnabled(!txtTimeDelay.isEnabled());
 
@@ -244,6 +257,10 @@ public class StartServerDialog extends JDialog implements ActionListener {
 		}
 	}
 
+	/**
+	 * 获取主机名称
+	 * @return
+	 */
 	public String getUserName() {
 		Map<String, String> map = System.getenv();
 		return map.get("USERNAME");
