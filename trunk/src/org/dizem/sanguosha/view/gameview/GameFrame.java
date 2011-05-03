@@ -3,7 +3,6 @@ package org.dizem.sanguosha.view.gameview;
 import craky.component.JImagePane;
 import craky.componentc.JCFrame;
 import craky.layout.LineLayout;
-import org.apache.log4j.Logger;
 import org.dizem.sanguosha.controller.GameClient;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.character.Character;
@@ -31,21 +30,52 @@ import static org.dizem.sanguosha.model.Constants.*;
  */
 public class GameFrame extends JCFrame {
 
-	private static Logger log = Logger.getLogger(GameFrame.class);
-
+	/**
+	 * 客户端控制类
+	 */
 	private GameClient client;
+	/**
+	 * 当前玩家ID
+	 */
 	private int currentPlayerID;
+	/**
+	 * 玩家数目
+	 */
 	private int playerCount = 5;
+	/**
+	 * 对手面板列表
+	 */
 	public java.util.List<OtherPlayerPane> otherPlayerPaneList = new ArrayList<OtherPlayerPane>();
+	/**
+	 * 出牌面板
+	 */
 	public DashboardPane dashboard;
+	/**
+	 * 消息面板
+	 */
 	private MessagePane msgPane;
+	/**
+	 * 消息提示
+	 */
 	private MessageLabel msgLabel = new MessageLabel();
+	/**
+	 * 弃牌显示
+	 */
+	private DiscardedPane discardedPane = new DiscardedPane();
+
+	/**
+	 * 角色列表
+	 */
 	int[] roleList;
 
+	/**
+	 * 角色显示面板
+	 */
 	private JPanel rolePane = new JPanel() {
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
+			//todo: complete it
 //			if (players != null) {
 //				for (int i = 0; i < players.length; ++i) {
 //					//	g.drawImage(IMG_ROLE[roleList[i]], i * 30, roleList[i] == 3 ? 23 : 20, null);
@@ -54,6 +84,11 @@ public class GameFrame extends JCFrame {
 		}
 	};
 
+	/**
+	 * 构造函数
+	 * @param client 客户端控制类
+	 * @param playerName 当前玩家姓名
+	 */
 	public GameFrame(GameClient client, String playerName) {
 		if (client != null) {
 			this.client = client;
@@ -68,6 +103,10 @@ public class GameFrame extends JCFrame {
 		setVisible(true);
 	}
 
+	/**
+	 * 初始化游戏界面
+	 * @param playerName 玩家姓名
+	 */
 	private void initGamePane(String playerName) {
 		int cnt = OTHER_PANE_POSITION_OFFSET[playerCount - 1];
 
@@ -86,6 +125,9 @@ public class GameFrame extends JCFrame {
 		dashboard = new DashboardPane(playerName, this);
 	}
 
+	/**
+	 * 初始化窗体
+	 */
 	private void initFrame() {
 		setSize(740, 620);
 		setResizable(false);
@@ -93,6 +135,10 @@ public class GameFrame extends JCFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
+	/**
+	 * 窗体关闭事件
+	 * @param e
+	 */
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
@@ -105,6 +151,9 @@ public class GameFrame extends JCFrame {
 		super.processWindowEvent(e);
 	}
 
+	/**
+	 * 初始化布局
+	 */
 	private void initLayout() {
 		setLayout(new BorderLayout());
 		dashboard.setLocation(0, 0);
@@ -112,7 +161,11 @@ public class GameFrame extends JCFrame {
 		add(dashboard, BorderLayout.SOUTH);
 	}
 
-
+	/**
+	 * 设置玩家
+	 * @param id
+	 * @param character
+	 */
 	public void setCharacter(int id, Character character) {
 		client.players[id].setCharacter(character);
 		otherPlayerPaneList.get(getIndex(id)).setCharacter();
@@ -128,6 +181,9 @@ public class GameFrame extends JCFrame {
 		rolePane.setBounds(530, -10, 150, 50);
 		rolePane.setOpaque(false);
 		msgLabel.setLocation(100, 330);
+		discardedPane.setLocation(180, 250);
+		pane.add(discardedPane);
+
 		pane.add(msgPane);
 		pane.add(rolePane);
 		pane.add(msgLabel);
@@ -237,5 +293,9 @@ public class GameFrame extends JCFrame {
 
 	public void setOtherPlayerInfo(int playerId, int handCardCount) {
 		otherPlayerPaneList.get(getIndex(playerId)).setHandCardCount(handCardCount);
+	}
+
+	public void addDiscardedCard(AbstractCard card, String message) {
+		discardedPane.addCard(card, message);
 	}
 }

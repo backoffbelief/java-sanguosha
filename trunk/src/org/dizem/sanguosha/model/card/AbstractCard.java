@@ -114,8 +114,16 @@ public abstract class AbstractCard implements ICard {
 				", color=" + color +
 				", rank='" + rank + '\'' +
 				", name='" + name + '\'' +
-				//", description='" + description + '\'' +
 				", filename='" + filename + '\'' +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AbstractCard) {
+			return super.equals(obj);
+		} else {
+			return false;
+		}
 	}
 }

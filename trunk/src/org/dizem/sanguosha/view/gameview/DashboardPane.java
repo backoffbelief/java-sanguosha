@@ -4,6 +4,7 @@ import craky.util.UIUtil;
 import org.apache.log4j.Logger;
 import org.dizem.common.AudioUtil;
 import org.dizem.common.ImageUtil;
+import org.dizem.common.annotation.ActionListenerFor;
 import org.dizem.common.collection.TwoWayMap;
 import org.dizem.sanguosha.model.card.*;
 import org.dizem.sanguosha.model.card.Skill;
@@ -14,6 +15,7 @@ import org.dizem.sanguosha.model.player.Role;
 import org.dizem.sanguosha.view.component.HandCardLabel;
 import org.dizem.sanguosha.view.component.EquipmentLabel;
 import org.dizem.sanguosha.view.component.SGSGameButton;
+import org.dizem.sanguosha.view.dialog.StartGameDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +45,6 @@ public class DashboardPane extends JLayeredPane
 	private JButton btnCancel;
 
 	private org.dizem.sanguosha.model.card.character.Character character;
-	private Player player;
 	private Image imgAvatar;
 	private Image imgKingdom;
 	private String playerName;
@@ -61,7 +62,6 @@ public class DashboardPane extends JLayeredPane
 	public DashboardPane(String playerName, GameFrame owner) {
 		super();
 		this.owner = owner;
-		this.player = new Player(playerName);
 		this.playerName = playerName;
 		setSize(480 + IMG_DASHBOARD_AVATAR.getWidth(null)
 				+ IMG_DASHBOARD_EQUIP.getWidth(null), IMG_DASHBOARD_AVATAR.getHeight(null) + 30);
@@ -70,20 +70,9 @@ public class DashboardPane extends JLayeredPane
 		initButtons();
 	}
 
-	public DashboardPane(Player player, GameFrame owner) {
-		this(player.getName(), owner);
-
-		this.player = player;
-
-		for (AbstractCard card : player.getHandCards()) {
-			addHandCardLabel(createCardLabel(card));
-		}
-	}
-
 
 	public void setCharacter(org.dizem.sanguosha.model.card.character.Character character) {
-		player.setCharacter(character);
-		this.character = player.getCharacter();
+		this.character = character;
 		imgAvatar = ImageUtil.getImage("/generals/big/" + character.getPNGFilename());
 		imgKingdom = ImageUtil.getImage("/kingdom/icon/" + character.getKingdomImgName());
 		characterChoosed = true;
@@ -165,6 +154,9 @@ public class DashboardPane extends JLayeredPane
 
 	private int canSelectCardCount = 1;
 
+	private boolean canUseCard(AbstractCard card) {
+		return true;
+	}
 	/**
 	 * 用手牌创建label
 	 *
@@ -196,7 +188,9 @@ public class DashboardPane extends JLayeredPane
 					}
 
 
-				} else { //否则选中当前手牌
+				} else if(canUseCard(handCardLabelMap.getKey(label))) {
+
+
 					label.setName(SELECTED_TAG);
 					if (canSelectCardCount == cardSelectedSet.size()) {
 						unselectDefalutSelectedCard();
@@ -260,7 +254,6 @@ public class DashboardPane extends JLayeredPane
 		}
 	}
 
-
 	public void addHandCard(AbstractCard card) {
 		addHandCardLabel(createCardLabel(card));
 		repaint();
@@ -288,6 +281,7 @@ public class DashboardPane extends JLayeredPane
 		equipmentLabelMap.removeByValue(equipmentCardLabel);
 	}
 
+
 	/**
 	 * 处理按钮事件
 	 *
@@ -296,32 +290,20 @@ public class DashboardPane extends JLayeredPane
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnOK) {
-			Iterator itCardLabel = cardSelectedSet.iterator();
 
-			while (itCardLabel.hasNext()) {
-				JLabel label = (JLabel) itCardLabel.next();
-				AbstractCard card = handCardLabelMap.getKey(label);
+			if (owner.getCurrentPlayer().getPhase() == Phase.PLAY) {
+				useHandCard();
 
-				if (card instanceof EquipmentCard) {
-					AudioUtil.play(AUDIO_ADD_EQUIPMENT);
-					EquipmentCard equipmentCard = (EquipmentCard) card;
+			} else if (owner.getCurrentPlayer().getPhase() == Phase.DISCARD) {
 
-					if (!player.canAddEquipmentCard(equipmentCard)) {
-						JLabel cardLabelToRemove = equipmentLabelMap.getValue(((EquipmentCard) card).getCardType());
-						removeEquipmentCardLabel(cardLabelToRemove);
-						player.removeEquipmentCard(equipmentCard.getCardType());
-					}
-					player.addEquipmentCard(equipmentCard);
-					addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
-				}
-				removeHandCardLabel(label);
-				itCardLabel.remove();
 			}
+
 
 		} else if (e.getSource() == btnCancel) {
 			addHandCardLabel(createCardLabel(Deck.getInstance().popCard()));
 		}
 	}
+
 
 	/**
 	 * 设置当前玩家的角色势力
@@ -329,9 +311,10 @@ public class DashboardPane extends JLayeredPane
 	 * @param role 角色势力
 	 */
 	public void setRole(final Role role) {
-		player.setRole(role);
-		final JLabel roleLabel = new JLabel(IMG_ROLE[player.getRoleID()]);
-		roleLabel.setSize(IMG_ROLE[player.getRoleID()].getIconWidth(), IMG_ROLE[player.getRoleID()].getIconHeight());
+		owner.getCurrentPlayer().setRole(role);
+		final JLabel roleLabel = new JLabel(IMG_ROLE[owner.getCurrentPlayer().getRoleID()]);
+		roleLabel.setSize(IMG_ROLE[owner.getCurrentPlayer().getRoleID()].getIconWidth(),
+				IMG_ROLE[owner.getCurrentPlayer().getRoleID()].getIconHeight());
 		final int x = avatarX - 3, y = 140;
 		roleLabel.setLocation(x, y);
 
@@ -353,5 +336,37 @@ public class DashboardPane extends JLayeredPane
 		}).start();
 	}
 
+	public void useHandCard() {
+		Iterator itCardLabel = cardSelectedSet.iterator();
 
+		while (itCardLabel.hasNext()) {
+			JLabel label = (JLabel) itCardLabel.next();
+			AbstractCard card = handCardLabelMap.getKey(label);
+
+			owner.addDiscardedCard(card, "");
+
+			if (card instanceof EquipmentCard) {
+				AudioUtil.play(AUDIO_ADD_EQUIPMENT);
+				EquipmentCard equipmentCard = (EquipmentCard) card;
+
+				if (!owner.getCurrentPlayer().canAddEquipmentCard(equipmentCard)) {
+					JLabel cardLabelToRemove = equipmentLabelMap.getValue(((EquipmentCard) card).getCardType());
+					removeEquipmentCardLabel(cardLabelToRemove);
+					owner.getCurrentPlayer().removeEquipmentCard(equipmentCard.getCardType());
+				}
+				owner.getCurrentPlayer().addEquipmentCard(equipmentCard);
+				addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
+
+				
+			} else if (card instanceof BasicCard) {
+
+			}
+			removeHandCardLabel(label);
+			itCardLabel.remove();
+		}
+	}
+
+	public void useBasicCard() {
+
+	}
 }

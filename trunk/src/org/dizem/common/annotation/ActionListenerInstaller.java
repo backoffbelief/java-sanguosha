@@ -35,16 +35,17 @@ public class ActionListenerInstaller {
 
 	/**
 	 * Adds an action listener that calls a given method
+	 *
 	 * @param source the event source to which an action listener is added
-	 * @param param the implicit parameter of the method that the listener calls
-	 * @param m the method that the listener calls
+	 * @param param  the implicit parameter of the method that the listener calls
+	 * @param m	  the method that the listener calls
 	 * @throws NoSuchMethodException
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
 	private static void addListener(Object source, final Object param, final Method m)
 			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		
+
 		InvocationHandler handler = new InvocationHandler() {
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				return m.invoke(param);

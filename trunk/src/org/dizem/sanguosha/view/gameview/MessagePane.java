@@ -185,7 +185,7 @@ public class MessagePane extends JPanel {
 	 * @param info 日志消息
 	 */
 	public void appendLog(String info) {
-		txtLog.append(Constants.LOG_TIME_FORMAT.format(new Date()) + info + "\n");
+		txtLog.append(info + "\n");
 		txtLog.selectAll();
 		txtLog.setCaretPosition(txtLog.getSelectedText().length());
 	}

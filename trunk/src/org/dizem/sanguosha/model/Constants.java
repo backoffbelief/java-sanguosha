@@ -124,6 +124,7 @@ public interface Constants {
 	Image IMG_DASHBOARD_EQUIP = ImageUtil.getImage("system/dashboard-equip.png");
 	Image IMG_DASHBOARD_BACK = ImageUtil.getImage("system/dashboard-hand.png");
 	Image IMG_GAME_FRAME_BACK = ImageUtil.getImage("system/gamebackground.jpg");
+	Image IMG_CARD_COVER = ImageUtil.getImage("system/card_cover.png");
 	Image IMG_FRAME = ImageUtil.getImage("system/frame/bad.png");
 	Image[] IMG_HP_SMALL = {
 			ImageUtil.getImage("system/magatamas/small-0.png"),
