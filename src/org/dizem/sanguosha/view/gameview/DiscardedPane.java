@@ -20,60 +20,66 @@ public class DiscardedPane extends JLayeredPane {
 	/**
 	 * 显示牌数上限
 	 */
-	public static final int MAX_CARD_COUNT = 3;
+	public static final int MAX_CARD_COUNT = 10;
 	/**
 	 * 显示弃牌集合
 	 */
-	public List<HandCardLabel> labelSet = new ArrayList<HandCardLabel>();
+	public List<HandCardLabel> labelList = new ArrayList<HandCardLabel>();
 
 	/**
 	 * 控件添加深度
 	 */
 	int depth = 1;
 
+
 	/**
 	 * 添加一张弃牌
+	 *
 	 * @param card
 	 * @param message
 	 */
-	public void addCard(AbstractCard card, String message) {
+	public synchronized void addCard(AbstractCard card, String message) {
 		Deck.getInstance().addToBack(card);//加入弃牌堆
 
-		if(labelSet.size() == MAX_CARD_COUNT) {
-			for(HandCardLabel label : labelSet) {
+		if (labelList.size() == MAX_CARD_COUNT) {
+			for (HandCardLabel label : labelList) {
 				remove(label);
+				label.setPosition(0, 0);
+				new Thread(label).start();
 			}
-			labelSet.clear();
+			labelList.clear();
 		}
+		repaint();
 
 		HandCardLabel label = new HandCardLabel(card);
 		label.setMessage(message);
+		labelList.add(label);
 		add(label, new Integer(depth++));
-		updateCardLocation(90);
+		updateCardLocation();
 	}
 
 	/**
 	 * 调整弃牌位置
-	 * @param width	总宽度
 	 */
-	private void updateCardLocation(int width) {
-		
-	}
+	private void updateCardLocation() {
+		int gap;
+		if (300 > labelList.size() * 90) {
+			gap = 90;
 
-	/**
-	 * 清空显示
-	 */
-	public void clearCards() {
-
+		} else { //计算重叠间距
+			gap = (int) (210. / (labelList.size() - 1));
+		}
+		int i = 0;
+		for (HandCardLabel label : labelList) {
+			label.setPosition(gap * i++, 0);
+			new Thread(label).start();
+		}
 	}
 
 	public DiscardedPane() {
-		setSize(300, 200);
-	}
-
-
-	public static void main(String[] args) {
-		PanelViewer.display(new DiscardedPane());
+		setSize(300, 135);
+		setLayout(null);
+		setOpaque(false);
 	}
 
 }

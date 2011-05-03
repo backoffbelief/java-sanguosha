@@ -88,12 +88,15 @@ public class MainFrame extends JCFrame {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			if (!SGSMessageBox.query(MainFrame.this, "是否退出？", "确认要退出这么好玩的三国杀游戏？")) {
 				return;
+
 			} else {
 
 			}
 		}
 		super.processWindowEvent(e);
 	}
+
+
 
 	private void initLayout() {
 		setLayout(null);
@@ -117,6 +120,7 @@ public class MainFrame extends JCFrame {
 
 
 		add(scrollPane);
+
 
 
 		int offsetX = 50;
@@ -145,6 +149,8 @@ public class MainFrame extends JCFrame {
 			}
 		});
 	}
+
+
 
 	private void updateBgImage() {
 

@@ -335,9 +335,10 @@ public class GameClient {
 
 	public void playPhase(int id) {
 		gameFrame.showMessage(getPlayerName(id) + "进入出牌阶段");
-		if (id != playerId) {
 			players[id].setPhase(Phase.PLAY);
+		if (id != playerId) {
 			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id)).repaint();
+
 		}
 	}
 }
