@@ -32,22 +32,21 @@ import java.util.Random;
 public class MainFrame extends JCFrame {
 
 	private static Logger log = Logger.getLogger(MainFrame.class);
-
 	private JButton btnStartGame;
 	private JButton btnStartServer;
 	private JButton btnSetting;
 	private JButton btnAbout;
 	private JTextArea loggerArea;
-	private JLabel bgLabel;
 	private Timer gcTimer;
 	JScrollPane scrollPane;
+
+	private GameServer server;
 
 	private static Random rand = new Random();
 	private static int bgImageId = 1;
 	private boolean showLogger = false;
 	private Thread backMusicThread;
 	private boolean playBackMusic = false;
-	private GameServer server;
 
 	public static final Font LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 15);
 
@@ -90,7 +89,7 @@ public class MainFrame extends JCFrame {
 				return;
 
 			} else {
-
+				server.stop();
 			}
 		}
 		super.processWindowEvent(e);
@@ -151,7 +150,9 @@ public class MainFrame extends JCFrame {
 	}
 
 
-
+	/**
+	 * 更换背景图片
+	 */
 	private void updateBgImage() {
 
 		int oldBgImageId = bgImageId;

@@ -76,6 +76,9 @@ public class DiscardedPane extends JLayeredPane {
 		}
 	}
 
+	/**
+	 * 构造函数
+	 */
 	public DiscardedPane() {
 		setSize(300, 135);
 		setLayout(null);

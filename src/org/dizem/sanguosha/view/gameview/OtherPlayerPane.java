@@ -22,27 +22,63 @@ import static org.dizem.sanguosha.model.Constants.*;
  */
 public class OtherPlayerPane extends JPanel {
 
+	/**
+	 * 默认宽度
+	 */
 	public static final int DEFAULT_WIDTH = 132;
+	/**
+	 * 默认高度
+	 */
 	public static final int DEFAULT_HEIGHT = 187;
-
-	private static Logger log = Logger.getLogger(OtherPlayerPane.class);
-
+	/**
+	 * 背景图片
+	 */
 	private static final Image IMG_BACK = ImageUtil.getImage("system/photo-back.png");
+	/**
+	 * 牌数背景色
+	 */
 	public static final Color COLOR_CARD_COUNT_BACK = new Color(244, 229, 181);
 
-
+	/**
+	 * 武将图片
+	 */
 	private Image imgAvatar;
+	/**
+	 * 国家图片
+	 */
 	private Image imgKingdom;
+	/**
+	 * 武将边框
+	 */
 	private Image imgKingdomFrame;
-
+	/**
+	 * 玩家对象
+	 */
 	public Player player;
+	/**
+	 * 玩家姓名
+	 */
 	private String playerName;
+	/**
+	 * 手牌数
+	 */
 	private int handCardCount;
+	/**
+	 * 武将角色是否已经确定
+	 */
 	private boolean characterChoosed = false;
+	/**
+	 * 当前对手是否可选
+	 */
 	private boolean canSelect = true;
+	/**
+	 * 当前对手是否已被选
+	 */
 	private boolean isSelected = true;
 
-
+	/**
+	 * 构造函数
+	 */
 	public OtherPlayerPane() {
 		super();
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -129,6 +165,10 @@ public class OtherPlayerPane extends JPanel {
 
 	}
 
+	/**
+	 * 画生命值
+	 * @param g
+	 */
 	private void drawLife(Graphics g) {
 		org.dizem.sanguosha.model.card.character.Character character = player.getCharacter();
 		if (characterChoosed) {
