@@ -332,7 +332,6 @@ public class GameClient {
 		}
 	}
 
-
 	public void playPhase(int id) {
 		gameFrame.showMessage(getPlayerName(id) + "进入出牌阶段");
 			players[id].setPhase(Phase.PLAY);
@@ -340,5 +339,14 @@ public class GameClient {
 			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id)).repaint();
 
 		}
+	}
+
+	/**
+	 * 发送离线请求
+	 */
+	public void offline() {
+		SGSPacket packet = new SGSPacket(OP_OFFLINE);
+		packet.setPlayerId(playerId);
+		send(packet);
 	}
 }

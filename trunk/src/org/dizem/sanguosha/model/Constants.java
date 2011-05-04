@@ -102,10 +102,12 @@ public interface Constants {
 	String OP_PHASE_PLAY_END = "OP_PHASE_PLAY_END"; //出牌阶段结束
 	String OP_PHASE_DISCARD_BEGIN = "OP_PHASE_DRAW_BEGIN"; //弃牌阶段开始
 	String OP_PHASE_DISCARD_END = "OP_PHASE_DRAW_END"; //弃牌阶段结束
+	String OP_OFFLINE = "OP_OFFLINE";
+
 
 	String PATTERN_IP = "((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)";
 	String PATTERN_PORT = "\\d{1,5}";
-	
+
 	ImageIcon[] IMG_ROLE = {
 			ImageUtil.getIcon("system/roles/small-lord.png"),
 			ImageUtil.getIcon("system/roles/small-loyalist.png"),
@@ -135,12 +137,6 @@ public interface Constants {
 			ImageUtil.getImage("system/magatamas/small-5.png")
 	};
 
-	Image[] IMG_ROLE_DEAD = {
-			ImageUtil.getImage("system/rolessmall--lord.png"),
-			ImageUtil.getImage("system/rolessmall--loyalist.png"),
-			ImageUtil.getImage("system/rolessmall--rebel.png"),
-			ImageUtil.getImage("system/rolessmall--renegade.png"),
-	};
 
 	Image[] IMG_PHASE = {
 			ImageUtil.getImage("system/phase/start.png"),
@@ -164,4 +160,30 @@ public interface Constants {
 
 
 	String AUDIO_ADD_EQUIPMENT = "system/add-equip.mp3";
+
+	Image[] IMG_SHA = {
+			ImageUtil.getImage("system/animation/sha_00002"),
+			ImageUtil.getImage("system/animation/sha_00003"),
+			ImageUtil.getImage("system/animation/sha_00004"),
+			ImageUtil.getImage("system/animation/sha_00005"),
+			ImageUtil.getImage("system/animation/sha_00006"),
+			ImageUtil.getImage("system/animation/sha_00007"),
+			ImageUtil.getImage("system/animation/sha_00008"),
+			ImageUtil.getImage("system/animation/sha_00009"),
+			ImageUtil.getImage("system/animation/sha_00010"),
+			ImageUtil.getImage("system/animation/sha_00011"),
+			ImageUtil.getImage("system/animation/sha_00012"),
+			ImageUtil.getImage("system/animation/sha_00013"),
+			ImageUtil.getImage("system/animation/sha_00014"),
+			ImageUtil.getImage("system/animation/sha_00015"),
+			ImageUtil.getImage("system/animation/sha_00016"),
+			ImageUtil.getImage("system/animation/sha_00017"),
+			ImageUtil.getImage("system/animation/sha_00018"),
+			ImageUtil.getImage("system/animation/sha_00019"),
+			ImageUtil.getImage("system/animation/sha_00020"),
+			ImageUtil.getImage("system/animation/sha_00021"),
+			ImageUtil.getImage("system/animation/sha_00022"),
+			ImageUtil.getImage("system/animation/sha_00023"),
+			ImageUtil.getImage("system/animation/sha_00024"),
+	};
 }

@@ -85,7 +85,7 @@ public class MessagePane extends JPanel {
 		txtLog.setEditable(false);
 		txtLog.setFocusable(false);
 		txtLog.setLineWrap(true);
-		txtLog.setAlpha(0.3f);
+		txtLog.setAlpha(0.f);
 		txtLog.setForeground(Color.BLACK);
 		txtLog.setFont(MSG_FONT);
 
@@ -100,7 +100,8 @@ public class MessagePane extends JPanel {
 				new TitledBorder(new LineBorder(new Color(37, 35, 22), 3), "出牌记录", 0, 0, LABEL_FONT));
 
 		txtMessage.setEditable(false);
-		txtMessage.setAlpha(0.3f);
+		txtMessage.setAlpha(0.f);
+		txtMessage.setBorder(new EmptyBorder(0, 0, 0, 0));
 		txtMessage.setFocusable(false);
 		txtMessage.setLineWrap(true);
 		txtMessage.setFont(MSG_FONT);

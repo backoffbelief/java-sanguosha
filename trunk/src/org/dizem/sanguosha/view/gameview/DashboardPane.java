@@ -336,6 +336,7 @@ public class DashboardPane extends JLayeredPane
 		}).start();
 	}
 
+
 	public void useHandCard() {
 		Iterator itCardLabel = cardSelectedSet.iterator();
 
@@ -364,9 +365,13 @@ public class DashboardPane extends JLayeredPane
 			removeHandCardLabel(label);
 			itCardLabel.remove();
 		}
+
+		repaint();
 	}
 
-	public void useBasicCard() {
+	public void useBasicCard(AbstractCard card) {
+		if(card.getName().equals("杀")) {
 
+		}
 	}
 }

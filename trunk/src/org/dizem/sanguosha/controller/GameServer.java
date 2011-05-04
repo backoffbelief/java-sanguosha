@@ -433,4 +433,8 @@ public class GameServer {
 	public void showMessage(String log) {
 		owner.appendLog(log);
 	}
+
+	public void stop() {
+
+	}
 }

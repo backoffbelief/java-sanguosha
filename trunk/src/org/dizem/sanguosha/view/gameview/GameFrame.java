@@ -145,7 +145,7 @@ public class GameFrame extends JCFrame {
 			if (!SGSMessageBox.query(this, "是否退出？", "中途退出游戏是不对的，尤其是这么好玩的三国杀游戏")) {
 				return;
 			} else {
-				//todo 发送离线请求
+				client.offline();
 			}
 		}
 		super.processWindowEvent(e);
@@ -171,6 +171,10 @@ public class GameFrame extends JCFrame {
 		otherPlayerPaneList.get(getIndex(id)).setCharacter();
 	}
 
+	/**
+	 * 构造游戏主界面
+	 * @return 游戏主界面
+	 */
 	private JPanel createMainPane() {
 		JPanel pane = new JPanel();
 		pane.setLayout(null);
@@ -191,15 +195,26 @@ public class GameFrame extends JCFrame {
 		return pane;
 	}
 
+	/**
+	 * 取得当前玩家的id
+	 * @return 当前玩家的id
+	 */
 	public int getCurrentPlayerID() {
 		return currentPlayerID;
 	}
 
+	/**
+	 * 设置当前玩家的id
+	 * @param currentPlayerID 当前玩家的id
+	 */
 	public void setCurrentPlayerID(int currentPlayerID) {
 		client.setPlayerId(currentPlayerID);
 		this.currentPlayerID = currentPlayerID;
 	}
 
+	/**
+	 * 初始化菜单
+	 */
 	private void initMenu() {
 		JMenuBar bar = new JMenuBar();
 		bar.setOpaque(false);
@@ -215,6 +230,10 @@ public class GameFrame extends JCFrame {
 		titleContent.add(bar, LineLayout.END);
 	}
 
+	/**
+	 * 更新玩家信息
+	 * @param players 所有玩家
+	 */
 	public void updatePlayers(PlayerVO[] players) {
 		client.players = new Player[players.length];
 		msgPane.clearUsers();
@@ -228,6 +247,11 @@ public class GameFrame extends JCFrame {
 		}
 	}
 
+	/**
+	 * 计算玩家在客户端显示的位置下标
+	 * @param id 玩家id
+	 * @return 当前玩家角度的位置
+	 */
 	public int getIndex(int id) {
 		if (id > currentPlayerID) {
 			return id - currentPlayerID - 1;
@@ -238,15 +262,29 @@ public class GameFrame extends JCFrame {
 		}
 	}
 
+
+	/**
+	 * 添加游戏日志
+	 * @param message 日志消息
+	 */
 	public void appendLog(String message) {
 		msgPane.appendLog(message);
 	}
 
 
+	/**
+	 * 添加聊天消息
+	 * @param message 消息
+	 */
 	public void appendChatMessage(String message) {
 		msgPane.appendMessage(message);
 	}
 
+	/**
+	 * 设置玩家角色
+	 * @param role 角色
+	 * @param lordId 主公id
+	 */
 	public void setRole(Role role, int lordId) {
 		dashboard.setRole(role);
 
@@ -259,6 +297,11 @@ public class GameFrame extends JCFrame {
 		showMessage("您分配了角色: " + role);
 	}
 
+
+	/**
+	 * 显示消息
+	 * @param text 消息内容
+	 */
 	public void showMessage(String text) {
 		if(text == null || text.isEmpty())
 			return;
@@ -266,6 +309,11 @@ public class GameFrame extends JCFrame {
 		msgLabel.showText(text);
 	}
 
+	/**
+	 * 设置玩家武将角色
+	 * @param character 武将角色
+	 * @param isLord 是否是主公
+	 */
 	public void setCharacter(Character character, boolean isLord) {
 		showMessage("您选择了武将：" + character.getName());
 		dashboard.setCharacter(character);
@@ -276,14 +324,26 @@ public class GameFrame extends JCFrame {
 			client.chooseCharacterFinish();
 	}
 
+	/**
+	 * 取得玩家列表
+	 * @return 玩家列表
+	 */
 	public Player[] getPlayers() {
 		return client.players;
 	}
 
+	/**
+	 * 取得当前玩家
+	 * @return 当前玩家对象
+	 */
 	public Player getCurrentPlayer() {
 		return client.players[currentPlayerID];
 	}
 
+	/**
+	 * 摸牌
+	 * @param cards 牌列表
+	 */
 	public void distributeCards(AbstractCard[] cards) {
 		for (AbstractCard card : cards) {
 			client.players[currentPlayerID].addHandCard(card);
@@ -291,10 +351,20 @@ public class GameFrame extends JCFrame {
 		}
 	}
 
+	/**
+	 * 更新对手玩家手牌数
+	 * @param playerId 玩家id
+	 * @param handCardCount 手牌数
+	 */
 	public void setOtherPlayerInfo(int playerId, int handCardCount) {
 		otherPlayerPaneList.get(getIndex(playerId)).setHandCardCount(handCardCount);
 	}
 
+	/**
+	 * 添加弃牌
+	 * @param card	弃牌
+	 * @param message 附加信息
+	 */
 	public void addDiscardedCard(AbstractCard card, String message) {
 		discardedPane.addCard(card, message);
 	}
