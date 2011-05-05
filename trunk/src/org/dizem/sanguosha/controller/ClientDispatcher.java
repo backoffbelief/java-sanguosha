@@ -1,10 +1,9 @@
 package org.dizem.sanguosha.controller;
 
-import org.dizem.common.AudioUtil;
 import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.vo.SGSPacket;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * User: dizem
@@ -62,6 +61,15 @@ public class ClientDispatcher {
 
 		} else if (packet.is(OP_PHASE_PLAY_BEGIN)) {//出牌阶段
 			client.playPhase(packet.getPlayerId());
+
+		} else if (packet.is(OP_OFFER_CARD_TO)) {
+			client.beOfferredCardTo(packet);
+
+		} else if (packet.is(OP_FEEDBACK)) {
+			client.getFeedback(packet);
+
+		} else if (packet.is(OP_DECREASE_LIFE)) {
+			client.decreaseLife(packet);
 		}
 
 	}

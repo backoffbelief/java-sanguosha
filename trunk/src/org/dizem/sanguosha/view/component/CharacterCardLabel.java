@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import static org.dizem.sanguosha.model.Constants.UNSELECTED_TAG;
+import static org.dizem.sanguosha.model.constants.Constants.UNSELECTED_TAG;
 
 /**
  * User: dizem

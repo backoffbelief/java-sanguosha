@@ -2,9 +2,7 @@ package org.dizem.common;
 
 
 import javazoom.jl.player.Player;
-import org.dizem.sanguosha.model.Constants;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
+import org.dizem.sanguosha.model.constants.Constants;
 
 import java.io.*;
 import java.util.HashMap;

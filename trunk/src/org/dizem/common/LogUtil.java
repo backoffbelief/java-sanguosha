@@ -1,8 +1,7 @@
 package org.dizem.common;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.spi.LoggerFactory;
-import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.constants.Constants;
 
 /**
  * User: DIZEM

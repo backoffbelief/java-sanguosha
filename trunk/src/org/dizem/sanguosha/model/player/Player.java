@@ -1,11 +1,8 @@
 package org.dizem.sanguosha.model.player;
 
-import org.dizem.sanguosha.model.IDGenerator;
 import org.dizem.sanguosha.model.card.AbstractCard;
-import org.dizem.sanguosha.model.card.CharacterDeck;
-import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
-import org.dizem.sanguosha.model.card.equipment.*;
+import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.exception.SGSException;
 import org.dizem.sanguosha.model.vo.PlayerVO;
 

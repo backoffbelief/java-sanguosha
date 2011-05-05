@@ -1,4 +1,4 @@
-package org.dizem.sanguosha.model;
+package org.dizem.sanguosha.model.constants;
 
 import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.model.player.Role;
@@ -8,6 +8,8 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 
 /**
+ * 全局常量
+ * <p/>
  * User: DIZEM
  * Time: 11-3-2 下午4:40
  */
@@ -102,8 +104,13 @@ public interface Constants {
 	String OP_PHASE_PLAY_END = "OP_PHASE_PLAY_END"; //出牌阶段结束
 	String OP_PHASE_DISCARD_BEGIN = "OP_PHASE_DRAW_BEGIN"; //弃牌阶段开始
 	String OP_PHASE_DISCARD_END = "OP_PHASE_DRAW_END"; //弃牌阶段结束
-	String OP_OFFLINE = "OP_OFFLINE";
 
+	String OP_OFFER_CARD_TO = "OP_OFFER_CARD_TO";
+	String OP_FEEDBACK = "OP_FEEDBACK";
+	String OP_DECREASE_LIFE = "OP_DECREASE_LIFE";
+
+	String OP_OFFLINE = "OP_OFFLINE"; //客户端离线
+	String OP_SERVER_STOP = "OP_SERVER_STOP";//服务器关闭
 
 	String PATTERN_IP = "((25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1?\\d?\\d)";
 	String PATTERN_PORT = "\\d{1,5}";
@@ -128,6 +135,9 @@ public interface Constants {
 	Image IMG_GAME_FRAME_BACK = ImageUtil.getImage("system/gamebackground.jpg");
 	Image IMG_CARD_COVER = ImageUtil.getImage("system/card_cover.png");
 	Image IMG_FRAME = ImageUtil.getImage("system/frame/bad.png");
+	Image IMG_MARK_OTHER_PLAYER = ImageUtil.getImage("system/markCurrent.png");
+
+
 	Image[] IMG_HP_SMALL = {
 			ImageUtil.getImage("system/magatamas/small-0.png"),
 			ImageUtil.getImage("system/magatamas/small-1.png"),
@@ -161,29 +171,13 @@ public interface Constants {
 
 	String AUDIO_ADD_EQUIPMENT = "system/add-equip.mp3";
 
-	Image[] IMG_SHA = {
-			ImageUtil.getImage("system/animation/sha_00002"),
-			ImageUtil.getImage("system/animation/sha_00003"),
-			ImageUtil.getImage("system/animation/sha_00004"),
-			ImageUtil.getImage("system/animation/sha_00005"),
-			ImageUtil.getImage("system/animation/sha_00006"),
-			ImageUtil.getImage("system/animation/sha_00007"),
-			ImageUtil.getImage("system/animation/sha_00008"),
-			ImageUtil.getImage("system/animation/sha_00009"),
-			ImageUtil.getImage("system/animation/sha_00010"),
-			ImageUtil.getImage("system/animation/sha_00011"),
-			ImageUtil.getImage("system/animation/sha_00012"),
-			ImageUtil.getImage("system/animation/sha_00013"),
-			ImageUtil.getImage("system/animation/sha_00014"),
-			ImageUtil.getImage("system/animation/sha_00015"),
-			ImageUtil.getImage("system/animation/sha_00016"),
-			ImageUtil.getImage("system/animation/sha_00017"),
-			ImageUtil.getImage("system/animation/sha_00018"),
-			ImageUtil.getImage("system/animation/sha_00019"),
-			ImageUtil.getImage("system/animation/sha_00020"),
-			ImageUtil.getImage("system/animation/sha_00021"),
-			ImageUtil.getImage("system/animation/sha_00022"),
-			ImageUtil.getImage("system/animation/sha_00023"),
-			ImageUtil.getImage("system/animation/sha_00024"),
-	};
+	ImageIcon[] IMG_SHA = AnimationConstants.IMG_SHA;
+	ImageIcon[] IMG_SHAN = AnimationConstants.IMG_SHAN;
+	ImageIcon[] IMG_DAO_GUANG = AnimationConstants.IMG_DAO_GUANG;
+
+	String AUDIO_HIT = "system/hit.mp3";
+	String AUDIO_SHA_MALE = "card/male/slash.mp3";
+	String AUDIO_SHA_FEMALE = "card/female/slash.mp3";
+	String AUDIO_SHAN_MALE = "card/male/jink.mp3";
+	String AUDIO_SHAN_FEMALE = "card/female/jink.mp3";
 }

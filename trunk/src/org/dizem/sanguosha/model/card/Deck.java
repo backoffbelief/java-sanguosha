@@ -1,7 +1,7 @@
 package org.dizem.sanguosha.model.card;
 
 import org.apache.log4j.Logger;
-import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.constants.Constants;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.card.skill.SkillCard;
 import org.w3c.dom.Document;

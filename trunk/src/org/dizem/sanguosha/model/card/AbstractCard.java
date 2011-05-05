@@ -121,7 +121,9 @@ public abstract class AbstractCard implements ICard {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof AbstractCard) {
-			return super.equals(obj);
+			AbstractCard card = (AbstractCard) obj;
+			return card.getSuit() == suit && card.getRank().equals(rank) && card.getName().equals(name);
+
 		} else {
 			return false;
 		}

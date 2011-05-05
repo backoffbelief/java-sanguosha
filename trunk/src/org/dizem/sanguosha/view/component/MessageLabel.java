@@ -1,17 +1,17 @@
 package org.dizem.sanguosha.view.component;
 
-import org.dizem.common.PanelViewer;
-
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * 消息显示区
- *
+ * <p/>
  * User: dizem
  * Time: 11-4-25 上午8:20
  */
 public class MessageLabel extends JLabel implements Runnable {
+
+
 	/**
 	 * 渐变字体集合
 	 */
@@ -36,6 +36,8 @@ public class MessageLabel extends JLabel implements Runnable {
 	 */
 	public boolean isShowing = false;
 
+	private boolean keep = false;
+
 	public MessageLabel() {
 		setSize(500, 80);
 		setHorizontalAlignment(CENTER);
@@ -44,22 +46,27 @@ public class MessageLabel extends JLabel implements Runnable {
 
 	/**
 	 * 动态显示消息
-	 * @param text	消息
+	 *
+	 * @param text 消息
 	 */
 	public void showText(String text) {
+		showText(text, false);
+	}
+
+	public void showText(String text, boolean keep) {
+		this.keep = keep;
 		setText(text);
 		if (currentThread == null && isShowing) {
 			currentThread.stop();
 			currentThread = null;
 			System.gc();
-			setText("");
+			clear();
 			isShowing = false;
 		}
 		currentThread = new Thread(this);
 		currentThread.start();
 		isShowing = true;
 	}
-
 
 	public void run() {
 		try {
@@ -72,6 +79,11 @@ public class MessageLabel extends JLabel implements Runnable {
 			e.printStackTrace();
 		}
 		isShowing = false;
+		if (!keep) clear();
+	}
+
+	public void clear() {
 		setText("");
 	}
+
 }

@@ -1,7 +1,7 @@
 package org.dizem.common;
 
 
-import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.constants.Constants;
 
 import java.io.*;
 import java.util.Iterator;

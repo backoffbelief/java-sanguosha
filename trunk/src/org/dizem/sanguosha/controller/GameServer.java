@@ -1,12 +1,10 @@
 package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
-import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.IDGenerator;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.CharacterDeck;
 import org.dizem.sanguosha.model.card.Deck;
-import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
@@ -16,17 +14,15 @@ import org.dizem.sanguosha.model.vo.CharacterVO;
 import org.dizem.sanguosha.model.vo.SGSPacket;
 import org.dizem.sanguosha.view.MainFrame;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 服务端
- *
+ * <p/>
  * User: DIZEM
  * Time: 11-4-6 下午1:40
  */
@@ -77,10 +73,11 @@ public class GameServer {
 
 	/**
 	 * 构造函数
-	 * @param owner 父窗体
-	 * @param serverName 服务器名称
-	 * @param port 端口
-	 * @param timeDelay 出牌时间
+	 *
+	 * @param owner	   父窗体
+	 * @param serverName  服务器名称
+	 * @param port		端口
+	 * @param timeDelay   出牌时间
 	 * @param playerCount 玩家数
 	 */
 	public GameServer(MainFrame owner, String serverName, int port, int timeDelay, int playerCount) {
@@ -363,10 +360,11 @@ public class GameServer {
 		packet.setPlayerId(currentId);
 		packet.setPhase(Phase.JUDGE);
 		send(packet, players);
-
-
 	}
 
+	/**
+	 * 摸牌阶段
+	 */
 	public void drawPhase() {
 		showMessage(players[currentId].getCharacterName() + "进入摸牌阶段");
 		log.info(players[currentId].getCharacterName() + "进入摸牌阶段");
@@ -385,7 +383,9 @@ public class GameServer {
 		send(packet, players);
 	}
 
-
+	/**
+	 * 出牌阶段
+	 */
 	public void playPhase() {
 		showMessage(players[currentId].getCharacterName() + "进入出牌阶段");
 		log.info(players[currentId].getCharacterName() + "进入出牌阶段");
@@ -395,6 +395,9 @@ public class GameServer {
 		send(packet, players);
 	}
 
+	/**
+	 * 游戏线程
+	 */
 	public Thread gameThread = new Thread(new Runnable() {
 		public void run() {
 			while (true) {
@@ -425,16 +428,55 @@ public class GameServer {
 		}
 	});
 
+	/**
+	 * 游戏开始
+	 */
 	public void gameStart() {
 		currentId = lordId;
 		gameThread.start();
 	}
 
+	/**
+	 * 显示日志
+	 *
+	 * @param log
+	 */
 	public void showMessage(String log) {
 		owner.appendLog(log);
 	}
 
+	/**
+	 * 关闭服务器
+	 */
 	public void stop() {
+		SGSPacket packet = new SGSPacket(OP_SERVER_STOP);
+		send(packet, players);
+	}
 
+	/**
+	 * 出牌
+	 *
+	 * @param packet
+	 */
+	public void offerCard(SGSPacket packet) {
+		AbstractCard card = AbstractCard.createCard(packet.getCardVO());
+		players[packet.getPlayerId()].removeHandCard(card);
+		Deck.getInstance().addToBack(card);
+		send(packet, players);
+	}
+
+
+	public void feedback(SGSPacket packet) {
+		if (packet.getCardVO() != null) {
+			AbstractCard card = AbstractCard.createCard(packet.getCardVO());
+			Deck.getInstance().addToBack(card);
+		}
+		send(packet, players);
+	}
+
+
+	public void decreaseLife(SGSPacket packet) {
+		players[packet.getPlayerId()].getCharacter().decreaseLife();
+		send(packet, players);
 	}
 }

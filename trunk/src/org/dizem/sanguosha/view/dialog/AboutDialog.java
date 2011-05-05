@@ -5,7 +5,7 @@ import craky.componentc.*;
 import craky.layout.LineLayout;
 import craky.util.UIUtil;
 import org.dizem.common.ImageUtil;
-import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.constants.Constants;
 import org.dizem.sanguosha.view.component.EmptyComponent;
 
 import javax.swing.*;
