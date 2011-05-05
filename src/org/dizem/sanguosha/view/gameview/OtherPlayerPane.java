@@ -1,8 +1,8 @@
 package org.dizem.sanguosha.view.gameview;
 
-import org.apache.log4j.Logger;
+import org.dizem.common.AudioUtil;
 import org.dizem.common.ImageUtil;
-import org.dizem.sanguosha.model.card.character.*;
+import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 
@@ -12,11 +12,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 对手面板
- *
+ * <p/>
  * User: dizem
  * Time: 11-4-19 上午9:10
  */
@@ -70,17 +70,24 @@ public class OtherPlayerPane extends JPanel {
 	/**
 	 * 当前对手是否可选
 	 */
-	private boolean canSelect = true;
+	private boolean canSelect = false;
 	/**
 	 * 当前对手是否已被选
 	 */
-	private boolean isSelected = true;
+	private boolean isSelected = false;
+	/**
+	 * 游戏窗体
+	 */
+	private GameFrame owner;
 
 	/**
 	 * 构造函数
+	 *
+	 * @param owner
 	 */
-	public OtherPlayerPane() {
+	public OtherPlayerPane(final GameFrame owner) {
 		super();
+		this.owner = owner;
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -89,10 +96,10 @@ public class OtherPlayerPane extends JPanel {
 					return;
 				if (isSelected) {
 					setBorder(null);
-					isSelected = false;
+					owner.dashboard.setOfferable(isSelected = false);
 				} else {
 					setBorder(new LineBorder(Color.RED, 5));
-					isSelected = true;
+					owner.dashboard.setOfferable(isSelected = true);
 				}
 			}
 		});
@@ -100,6 +107,7 @@ public class OtherPlayerPane extends JPanel {
 
 	/**
 	 * 设置玩家对象
+	 *
 	 * @param player
 	 */
 	public void setPlayer(Player player) {
@@ -109,7 +117,8 @@ public class OtherPlayerPane extends JPanel {
 	}
 
 	/**
-	 *  设置玩家姓名
+	 * 设置玩家姓名
+	 *
 	 * @param playerName
 	 */
 	public void setPlayerName(String playerName) {
@@ -167,6 +176,7 @@ public class OtherPlayerPane extends JPanel {
 
 	/**
 	 * 画生命值
+	 *
 	 * @param g
 	 */
 	private void drawLife(Graphics g) {
@@ -189,6 +199,84 @@ public class OtherPlayerPane extends JPanel {
 
 	public void setHandCardCount(int handCardCount) {
 		this.handCardCount = handCardCount;
+		repaint();
+	}
+
+	public void showEffect(AbstractCard card) {
+		final JLabel effectLabel = new JLabel();
+		effectLabel.setSize(256, 256);
+		effectLabel.setOpaque(false);
+		effectLabel.setLocation(0, 100);
+		add(effectLabel, new Integer(100));
+
+		ImageIcon[] imgList = new ImageIcon[0];
+		if (card.getName().equals("杀")) {
+			AudioUtil.play(player.getCharacter().isMale() ? AUDIO_SHA_MALE : AUDIO_SHA_FEMALE);
+			imgList = IMG_SHA;
+
+
+		} else if (card.getName().equals("闪")) {
+			AudioUtil.play(player.getCharacter().isMale() ? AUDIO_SHAN_MALE : AUDIO_SHAN_FEMALE);
+			imgList = IMG_SHAN;
+		}
+
+		final ImageIcon[] finalImgList = imgList;
+		new Thread(new Runnable() {
+			public void run() {
+				for (ImageIcon img : finalImgList) {
+					effectLabel.setIcon(img);
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				remove(effectLabel);
+				repaint();
+			}
+		}).start();
+	}
+
+	public void setCanSelect(boolean flag) {
+		canSelect = flag;
+	}
+
+	public void setSelected(boolean selected) {
+		isSelected = selected;
+		repaint();
+	}
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void decreaseLife() {
+		final JLabel labelLight = new JLabel();
+		labelLight.setSize(172, 170);
+		labelLight.setOpaque(false);
+		labelLight.setLocation(0, 0);
+		add(labelLight, new Integer(1000000));
+
+		new Thread(new Runnable() {
+			public void run() {
+				for (ImageIcon img : IMG_DAO_GUANG) {
+					labelLight.setIcon(img);
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				remove(labelLight);
+				repaint();
+			}
+		}).start();
+		AudioUtil.play(AUDIO_HIT);
 		repaint();
 	}
 }

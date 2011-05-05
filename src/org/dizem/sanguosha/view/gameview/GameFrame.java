@@ -20,11 +20,11 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 游戏界面
- *
+ * <p/>
  * User: DIZEM
  * Time: 11-4-9 下午10:37
  */
@@ -86,7 +86,8 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 构造函数
-	 * @param client 客户端控制类
+	 *
+	 * @param client	 客户端控制类
 	 * @param playerName 当前玩家姓名
 	 */
 	public GameFrame(GameClient client, String playerName) {
@@ -105,6 +106,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 初始化游戏界面
+	 *
 	 * @param playerName 玩家姓名
 	 */
 	private void initGamePane(String playerName) {
@@ -116,7 +118,7 @@ public class GameFrame extends JCFrame {
 			//	players.add(player);
 
 			if (i != currentPlayerID) {
-				OtherPlayerPane pane = new OtherPlayerPane();
+				OtherPlayerPane pane = new OtherPlayerPane(this);
 				pane.setLocation(OTHER_PANE_POSITION[cnt][0], OTHER_PANE_POSITION[cnt++][1]);
 				otherPlayerPaneList.add(pane);
 			}
@@ -137,6 +139,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 窗体关闭事件
+	 *
 	 * @param e
 	 */
 	@Override
@@ -163,6 +166,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 设置玩家
+	 *
 	 * @param id
 	 * @param character
 	 */
@@ -173,6 +177,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 构造游戏主界面
+	 *
 	 * @return 游戏主界面
 	 */
 	private JPanel createMainPane() {
@@ -197,6 +202,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 取得当前玩家的id
+	 *
 	 * @return 当前玩家的id
 	 */
 	public int getCurrentPlayerID() {
@@ -205,6 +211,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 设置当前玩家的id
+	 *
 	 * @param currentPlayerID 当前玩家的id
 	 */
 	public void setCurrentPlayerID(int currentPlayerID) {
@@ -232,6 +239,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 更新玩家信息
+	 *
 	 * @param players 所有玩家
 	 */
 	public void updatePlayers(PlayerVO[] players) {
@@ -249,6 +257,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 计算玩家在客户端显示的位置下标
+	 *
 	 * @param id 玩家id
 	 * @return 当前玩家角度的位置
 	 */
@@ -265,6 +274,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 添加游戏日志
+	 *
 	 * @param message 日志消息
 	 */
 	public void appendLog(String message) {
@@ -274,6 +284,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 添加聊天消息
+	 *
 	 * @param message 消息
 	 */
 	public void appendChatMessage(String message) {
@@ -282,13 +293,14 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 设置玩家角色
-	 * @param role 角色
+	 *
+	 * @param role   角色
 	 * @param lordId 主公id
 	 */
 	public void setRole(Role role, int lordId) {
 		dashboard.setRole(role);
 
-		if(lordId == currentPlayerID)
+		if (lordId == currentPlayerID)
 			return;
 		if (client.players != null) {
 			client.players[getIndex(lordId)].setRole(Role.ZG);
@@ -300,10 +312,11 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 显示消息
+	 *
 	 * @param text 消息内容
 	 */
 	public void showMessage(String text) {
-		if(text == null || text.isEmpty())
+		if (text == null || text.isEmpty())
 			return;
 		appendLog(text);
 		msgLabel.showText(text);
@@ -311,8 +324,9 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 设置玩家武将角色
+	 *
 	 * @param character 武将角色
-	 * @param isLord 是否是主公
+	 * @param isLord	是否是主公
 	 */
 	public void setCharacter(Character character, boolean isLord) {
 		showMessage("您选择了武将：" + character.getName());
@@ -326,6 +340,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 取得玩家列表
+	 *
 	 * @return 玩家列表
 	 */
 	public Player[] getPlayers() {
@@ -334,6 +349,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 取得当前玩家
+	 *
 	 * @return 当前玩家对象
 	 */
 	public Player getCurrentPlayer() {
@@ -342,6 +358,7 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 摸牌
+	 *
 	 * @param cards 牌列表
 	 */
 	public void distributeCards(AbstractCard[] cards) {
@@ -353,7 +370,8 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 更新对手玩家手牌数
-	 * @param playerId 玩家id
+	 *
+	 * @param playerId	  玩家id
 	 * @param handCardCount 手牌数
 	 */
 	public void setOtherPlayerInfo(int playerId, int handCardCount) {
@@ -362,10 +380,52 @@ public class GameFrame extends JCFrame {
 
 	/**
 	 * 添加弃牌
+	 *
 	 * @param card	弃牌
 	 * @param message 附加信息
 	 */
 	public void addDiscardedCard(AbstractCard card, String message) {
 		discardedPane.addCard(card, message);
+	}
+
+	public void offerCardTo(AbstractCard card, int toId) {
+		client.sendOfferCardToInfo(card, toId);
+	}
+
+	public void showMessageKeep(String message) {
+		msgLabel.showText(message, true);
+	}
+
+
+	private AbstractCard feedbackCard;
+	private int feedbackToId;
+
+	public void setFeedbackCard(AbstractCard card) {
+		this.feedbackCard = card;
+	}
+
+	public AbstractCard getFeedbackCard() {
+		return feedbackCard;
+	}
+
+	public GameClient getClient() {
+		return client;
+	}
+
+	public void setFeedBackToId(int playerId) {
+		this.feedbackToId = playerId;
+	}
+
+	public int getFeedbackToId() {
+		return feedbackToId;
+	}
+
+	public void decreaseLife(int id) {
+		if (id == currentPlayerID) {
+			dashboard.decreaseLife();
+
+		} else {
+			otherPlayerPaneList.get(getIndex(id)).decreaseLife();
+		}
 	}
 }

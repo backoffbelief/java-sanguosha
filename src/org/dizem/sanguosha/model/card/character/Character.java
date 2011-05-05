@@ -112,12 +112,8 @@ public class Character {
 	public void decreaseLife() {
 		if (life > 0) {
 			life--;
-			log.info("Decrease life");
 
-		} else {
-			log.error("Can not decrease life");
 		}
-
 	}
 
 	public String getKingdomImgName() {
@@ -140,5 +136,9 @@ public class Character {
 				", skills=" + skills +
 				", killed=" + killed +
 				'}';
+	}
+
+	public boolean isMale() {
+		return gender.equals("男");
 	}
 }

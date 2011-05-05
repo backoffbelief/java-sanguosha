@@ -38,5 +38,9 @@ public enum Phase {
 	/**
 	 * 离线
 	 */
-	NOT_ACTIVE
+	NOT_ACTIVE,
+
+	WAIT_OTHER,
+
+	FEEDBACK,
 }

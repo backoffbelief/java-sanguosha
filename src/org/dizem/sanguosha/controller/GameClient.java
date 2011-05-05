@@ -2,9 +2,7 @@ package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
 import org.dizem.common.AudioUtil;
-import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
-import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
@@ -16,12 +14,7 @@ import org.dizem.sanguosha.view.dialog.ChooseCharacterDialog;
 import org.dizem.sanguosha.view.gameview.GameFrame;
 import org.dizem.sanguosha.view.gameview.OtherPlayerPane;
 
-import javax.xml.bind.SchemaOutputResolver;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * User: DIZEM
@@ -217,6 +210,7 @@ public class GameClient {
 
 	/**
 	 * 分配其他玩家武将角色
+	 *
 	 * @param dp
 	 */
 	public void distributeCharacter(SGSPacket dp) {
@@ -334,7 +328,7 @@ public class GameClient {
 
 	public void playPhase(int id) {
 		gameFrame.showMessage(getPlayerName(id) + "进入出牌阶段");
-			players[id].setPhase(Phase.PLAY);
+		players[id].setPhase(Phase.PLAY);
 		if (id != playerId) {
 			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id)).repaint();
 
@@ -348,5 +342,77 @@ public class GameClient {
 		SGSPacket packet = new SGSPacket(OP_OFFLINE);
 		packet.setPlayerId(playerId);
 		send(packet);
+	}
+
+
+	/**
+	 * 向对手出牌
+	 *
+	 * @param card 出牌
+	 * @param toId 对手id
+	 */
+	public void sendOfferCardToInfo(AbstractCard card, int toId) {
+		SGSPacket packet = new SGSPacket(OP_OFFER_CARD_TO);
+		packet.setCardVO(new CardVO(card));
+		packet.setPlayerId(playerId);
+		packet.setToPlayerId(toId);
+		send(packet);
+	}
+
+	public void beOfferredCardTo(SGSPacket packet) {
+		AbstractCard card = AbstractCard.createCard(packet.getCardVO());
+		String message = getPlayerName(packet.getPlayerId()) + "向" +
+				getPlayerName(packet.getToPlayerId()) + "出牌《" + card.getName() + "》";
+		gameFrame.showMessage(message);
+
+
+		if (packet.getToPlayerId() == playerId) {
+			gameFrame.setFeedbackCard(card);
+			gameFrame.setFeedBackToId(packet.getPlayerId());
+			gameFrame.getCurrentPlayer().setPhase(Phase.FEEDBACK);
+			gameFrame.showMessageKeep(message);
+			gameFrame.dashboard.setCancelable(true);
+			gameFrame.dashboard.repaint();
+		}
+
+		for (OtherPlayerPane pane : gameFrame.otherPlayerPaneList) {
+			if (pane.getPlayer().getPlayerId() == packet.getToPlayerId()) {
+				pane.setSelected(true);
+
+			} else if (pane.getPlayer().getPlayerId() == packet.getPlayerId()) {
+				pane.showEffect(card);
+			}
+		}
+	}
+
+	public void sendFeedbackInfo(AbstractCard cardToFeedback) {
+		SGSPacket packet = new SGSPacket(OP_FEEDBACK);
+		if (cardToFeedback != null) {
+			CardVO cardVO = new CardVO(cardToFeedback);
+			packet.setCardVO(cardVO);
+		}
+		packet.setPlayerId(playerId);
+		packet.setToPlayerId(gameFrame.getFeedbackToId());
+		send(packet);
+	}
+
+	public void getFeedback(SGSPacket packet) {
+
+		if (packet.getCardVO() != null) {
+			AbstractCard card = AbstractCard.createCard(packet.getCardVO());
+		}
+	}
+
+
+	public void sendDecreaseLifeInfo() {
+		SGSPacket packet = new SGSPacket(OP_DECREASE_LIFE);
+		packet.setPlayerId(playerId);
+		send(packet);
+	}
+
+
+	public void decreaseLife(SGSPacket packet) {
+		players[packet.getPlayerId()].getCharacter().decreaseLife();
+		gameFrame.decreaseLife(packet.getPlayerId());
 	}
 }

@@ -1,7 +1,7 @@
 package org.dizem.sanguosha.model.card;
 
 import org.apache.log4j.Logger;
-import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.constants.Constants;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

@@ -2,14 +2,13 @@ package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
 import org.dizem.common.JSONUtil;
-import org.dizem.sanguosha.model.card.character.*;
 import org.dizem.sanguosha.model.vo.SGSPacket;
 import org.dizem.sanguosha.view.MainFrame;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 服务端监控
@@ -59,7 +58,7 @@ public class GameServerMonitor extends Thread {
 			DatagramSocket ds = new DatagramSocket(port);
 
 			while (true) {
-				log.info("Listening at port:" + port);
+				//log.info("Listening at port:" + port);
 
 				//接收数据包
 				byte[] data = new byte[DATA_PACKET_SIZE];

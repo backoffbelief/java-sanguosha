@@ -1,28 +1,29 @@
 package org.dizem.sanguosha.view.gameview;
 
 import craky.util.UIUtil;
-import org.apache.log4j.Logger;
 import org.dizem.common.AudioUtil;
 import org.dizem.common.ImageUtil;
-import org.dizem.common.annotation.ActionListenerFor;
 import org.dizem.common.collection.TwoWayMap;
-import org.dizem.sanguosha.model.card.*;
+import org.dizem.sanguosha.model.card.AbstractCard;
+import org.dizem.sanguosha.model.card.BasicCard;
 import org.dizem.sanguosha.model.card.Skill;
 import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.player.Phase;
-import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
-import org.dizem.sanguosha.view.component.HandCardLabel;
 import org.dizem.sanguosha.view.component.EquipmentLabel;
+import org.dizem.sanguosha.view.component.HandCardLabel;
 import org.dizem.sanguosha.view.component.SGSGameButton;
-import org.dizem.sanguosha.view.dialog.StartGameDialog;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * User: DIZEM
@@ -30,8 +31,6 @@ import static org.dizem.sanguosha.model.Constants.*;
  */
 public class DashboardPane extends JLayeredPane
 		implements ActionListener {
-
-	private static Logger log = Logger.getLogger(DashboardPane.class);
 
 	private static final int posY = 30;
 	private static final int equipX = 0;
@@ -154,9 +153,21 @@ public class DashboardPane extends JLayeredPane
 
 	private int canSelectCardCount = 1;
 
+	private static final String[] CANNOT_USE_LIST = {
+			"无懈可击", "闪"
+	};
+
 	private boolean canUseCard(AbstractCard card) {
+		for (String name : CANNOT_USE_LIST) {
+			if (card.getName().equals(name))
+				return false;
+		}
+		if (card.equals("桃")) {
+			return character.getLife() < character.getMaxLife();
+		}
 		return true;
 	}
+
 	/**
 	 * 用手牌创建label
 	 *
@@ -188,21 +199,17 @@ public class DashboardPane extends JLayeredPane
 					}
 
 
-				} else if(canUseCard(handCardLabelMap.getKey(label))) {
+				} else if (canUseCard(handCardLabelMap.getKey(label))) {
 
 
 					label.setName(SELECTED_TAG);
 					if (canSelectCardCount == cardSelectedSet.size()) {
 						unselectDefalutSelectedCard();
 					}
-
+					selectBasicCard(handCardLabelMap.getKey(label));
 					label.setLocation(label.getX(), posY + 38 - 30);
 					DashboardPane.this.repaint(label.getX(), label.getY(), 90, 160);
 					cardSelectedSet.add(label);
-
-					if (cardSelectedSet.size() > 0) {
-						btnOK.setEnabled(true);
-					}
 				}
 			}
 
@@ -300,7 +307,21 @@ public class DashboardPane extends JLayeredPane
 
 
 		} else if (e.getSource() == btnCancel) {
-			addHandCardLabel(createCardLabel(Deck.getInstance().popCard()));
+//			addHandCardLabel(createCardLabel(Deck.getInstance().popCard()));
+			if (owner.getCurrentPlayer().getPhase() == Phase.FEEDBACK) {
+				feedback(null);
+			}
+			btnCancel.setEnabled(false);
+		}
+	}
+
+	private void feedback(AbstractCard cardToFeedback) {
+
+		if (owner.getFeedbackCard().getName().equals("杀")) {
+			owner.getClient().sendFeedbackInfo(cardToFeedback);
+			if (cardToFeedback == null) {
+				owner.getClient().sendDecreaseLifeInfo();
+			}
 		}
 	}
 
@@ -336,7 +357,50 @@ public class DashboardPane extends JLayeredPane
 		}).start();
 	}
 
+	/**
+	 * 显示出牌动画效果
+	 *
+	 * @param card 出牌
+	 */
+	public void showEffect(AbstractCard card) {
+		final JLabel effectLabel = new JLabel();
+		effectLabel.setSize(256, 256);
+		effectLabel.setOpaque(false);
+		effectLabel.setLocation(400, -50);
+		add(effectLabel, new Integer(labelDisplayLevel++));
 
+		ImageIcon[] imgList = new ImageIcon[0];
+		if (card.getName().equals("杀")) {
+			AudioUtil.play(character.isMale() ? AUDIO_SHA_MALE : AUDIO_SHA_FEMALE);
+			imgList = IMG_SHA;
+
+
+		} else if (card.getName().equals("闪")) {
+			AudioUtil.play(character.isMale() ? AUDIO_SHAN_MALE : AUDIO_SHAN_FEMALE);
+			imgList = IMG_SHAN;
+		}
+
+		final ImageIcon[] finalImgList = imgList;
+		new Thread(new Runnable() {
+			public void run() {
+				for (ImageIcon img : finalImgList) {
+					effectLabel.setIcon(img);
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				remove(effectLabel);
+				repaint();
+			}
+		}).start();
+	}
+
+	/**
+	 * 使用选中的手牌
+	 */
 	public void useHandCard() {
 		Iterator itCardLabel = cardSelectedSet.iterator();
 
@@ -344,7 +408,7 @@ public class DashboardPane extends JLayeredPane
 			JLabel label = (JLabel) itCardLabel.next();
 			AbstractCard card = handCardLabelMap.getKey(label);
 
-			owner.addDiscardedCard(card, "");
+			owner.addDiscardedCard(card, playerName + "出牌");
 
 			if (card instanceof EquipmentCard) {
 				AudioUtil.play(AUDIO_ADD_EQUIPMENT);
@@ -358,9 +422,9 @@ public class DashboardPane extends JLayeredPane
 				owner.getCurrentPlayer().addEquipmentCard(equipmentCard);
 				addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
 
-				
-			} else if (card instanceof BasicCard) {
 
+			} else if (card instanceof BasicCard) {
+				useBasicCard(card);
 			}
 			removeHandCardLabel(label);
 			itCardLabel.remove();
@@ -370,8 +434,72 @@ public class DashboardPane extends JLayeredPane
 	}
 
 	public void useBasicCard(AbstractCard card) {
-		if(card.getName().equals("杀")) {
-
+		if (card.getName().equals("杀")) {
+			showEffect(card);
+			for (OtherPlayerPane pane : owner.otherPlayerPaneList) {
+				if (pane.isSelected()) {
+					owner.offerCardTo(card, pane.getPlayer().getPlayerId());
+					return;
+				}
+			}
 		}
+
+//		for (OtherPlayerPane pane : owner.otherPlayerPaneList) {
+//			if (pane.isSelected())
+//				pane.setSelected(false);
+//		}
+	}
+
+	public void selectBasicCard(AbstractCard card) {
+
+		if (card.getName().equals("杀") || card.getName().equals("决斗")) {
+			for (OtherPlayerPane pane : owner.otherPlayerPaneList) {
+				if (Math.abs(pane.getPlayer().getPlayerId() - owner.getCurrentPlayerID()) <= 1) { //todo fixme
+					pane.setCanSelect(true);
+				} else {
+					pane.setCanSelect(false);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 是否可以出牌
+	 *
+	 * @param flag
+	 */
+	public void setOfferable(boolean flag) {
+		btnOK.setEnabled(flag);
+	}
+
+
+	public void setCancelable(boolean flag) {
+		btnCancel.setEnabled(flag);
+	}
+
+	public void decreaseLife() {
+		character.decreaseLife();
+		final JLabel labelLight = new JLabel();
+		labelLight.setSize(172, 170);
+		labelLight.setOpaque(false);
+		labelLight.setLocation(avatarX - 20, 20);
+		add(labelLight, new Integer(labelDisplayLevel++));
+
+		new Thread(new Runnable() {
+			public void run() {
+				for (ImageIcon img : IMG_DAO_GUANG) {
+					labelLight.setIcon(img);
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				remove(labelLight);
+				repaint();
+			}
+		}).start();
+		AudioUtil.play(AUDIO_HIT);
+		repaint();
 	}
 }

@@ -1,11 +1,8 @@
 package org.dizem.sanguosha.model.vo;
 
-import org.dizem.common.JSONUtil;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
-
-import java.util.List;
 
 /**
  * User: DIZEM
@@ -19,6 +16,7 @@ public class SGSPacket {
 	private String playerName;
 	private int playerCount;
 	private int playerId;
+	private int toPlayerId;
 	private int lordId;
 	private PlayerVO[] players;
 	private Role role;
@@ -27,6 +25,7 @@ public class SGSPacket {
 	private CharacterVO[] characterVOs;
 	private CharacterVO characterVO;
 	private CardVO[] cardVOs;
+	private CardVO cardVO;
 	private int handCardCount;
 	private Phase phase;
 
@@ -180,4 +179,19 @@ public class SGSPacket {
 		this.phase = phase;
 	}
 
+	public CardVO getCardVO() {
+		return cardVO;
+	}
+
+	public void setCardVO(CardVO cardVO) {
+		this.cardVO = cardVO;
+	}
+
+	public int getToPlayerId() {
+		return toPlayerId;
+	}
+
+	public void setToPlayerId(int toPlayerId) {
+		this.toPlayerId = toPlayerId;
+	}
 }

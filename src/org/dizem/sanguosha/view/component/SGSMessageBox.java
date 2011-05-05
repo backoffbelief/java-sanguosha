@@ -7,7 +7,7 @@ import java.awt.*;
 
 /**
  * User: dizem@126.com
- * Time: 11-5-1 下午3:20
+ * Time: 11-5-4 下午10:34
  */
 public class SGSMessageBox {
 

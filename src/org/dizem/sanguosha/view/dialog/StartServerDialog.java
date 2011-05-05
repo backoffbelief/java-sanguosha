@@ -18,11 +18,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 服务器启动对话框
- *
+ * <p/>
  * User: DIZEM
  * Time: 11-3-30 下午11:07
  */
@@ -49,7 +49,8 @@ public class StartServerDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 构造函数
-	 * @param owner	父窗体
+	 *
+	 * @param owner 父窗体
 	 */
 	public StartServerDialog(Window owner) {
 		super(owner, "启动服务器", ModalityType.DOCUMENT_MODAL);
@@ -72,6 +73,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 创建主界面
+	 *
 	 * @return
 	 */
 	private JImagePane createMainPane() {
@@ -192,6 +194,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 创建底栏
+	 *
 	 * @return
 	 */
 	private JImagePane createBottomPane() {
@@ -217,6 +220,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 处理事件
+	 *
 	 * @param e
 	 */
 	public void actionPerformed(ActionEvent e) {
@@ -259,6 +263,7 @@ public class StartServerDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 获取主机名称
+	 *
 	 * @return
 	 */
 	public String getUserName() {

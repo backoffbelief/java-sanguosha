@@ -3,30 +3,22 @@ package org.dizem.sanguosha.view.gameview;
 import craky.componentc.JCButton;
 import craky.componentc.JCComboBox;
 import craky.componentc.JCTextArea;
-import craky.componentc.JCTextField;
 import craky.layout.LineLayout;
-import org.dizem.common.PanelViewer;
 import org.dizem.sanguosha.controller.GameClient;
-import org.dizem.sanguosha.model.Constants;
-import org.dizem.sanguosha.model.player.Player;
-import org.dizem.sanguosha.model.vo.PlayerVO;
 import org.dizem.sanguosha.view.component.ComboBoxItem;
 import org.dizem.sanguosha.view.component.EmptyComponent;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * 日志框和聊天记录面板
- *
+ * <p/>
  * User: dizem
  * Time: 11-4-22 下午12:58
  */
@@ -72,7 +64,8 @@ public class MessagePane extends JPanel {
 
 	/**
 	 * 构造函数
-	 * @param client	客户端
+	 *
+	 * @param client 客户端
 	 */
 	public MessagePane(final GameClient client) {
 		super();
@@ -138,6 +131,7 @@ public class MessagePane extends JPanel {
 
 	/**
 	 * 创建输入栏
+	 *
 	 * @return
 	 */
 	public JComponent createInputPanel() {
@@ -175,6 +169,7 @@ public class MessagePane extends JPanel {
 
 	/**
 	 * 添加玩家
+	 *
 	 * @param item
 	 */
 	public void addUser(ComboBoxItem item) {
@@ -183,6 +178,7 @@ public class MessagePane extends JPanel {
 
 	/**
 	 * 添加日志
+	 *
 	 * @param info 日志消息
 	 */
 	public void appendLog(String info) {
@@ -193,6 +189,7 @@ public class MessagePane extends JPanel {
 
 	/**
 	 * 添加聊天记录
+	 *
 	 * @param info 聊天记录
 	 */
 	public void appendMessage(String info) {

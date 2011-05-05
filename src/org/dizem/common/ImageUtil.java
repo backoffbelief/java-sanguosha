@@ -1,7 +1,7 @@
 package org.dizem.common;
 
 import craky.util.SwingResourceManager;
-import org.dizem.sanguosha.model.Constants;
+import org.dizem.sanguosha.model.constants.Constants;
 
 import javax.swing.*;
 import java.awt.*;

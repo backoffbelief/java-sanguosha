@@ -28,7 +28,7 @@ public class UDPSender {
 		try {
 			DatagramSocket ds = new DatagramSocket();
 			String message = JSONUtil.convertToString(packet);
-			log.info("Send:" + message);
+			//log.info("Send:" + message);
 			byte[] data = message.getBytes("UTF-8");
 			DatagramPacket dp = new DatagramPacket(
 					data, data.length, InetAddress.getByName(_ip), _port

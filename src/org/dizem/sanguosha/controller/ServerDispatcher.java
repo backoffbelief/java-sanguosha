@@ -2,7 +2,7 @@ package org.dizem.sanguosha.controller;
 
 import org.dizem.sanguosha.model.vo.SGSPacket;
 
-import static org.dizem.sanguosha.model.Constants.*;
+import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 调度服务器收到的请求
@@ -44,6 +44,15 @@ public class ServerDispatcher {
 
 		} else if (packet.is(OP_PHASE_DRAW_END)) {//当前玩家摸牌阶段结束
 			notifyServer();
+
+		} else if(packet.is(OP_OFFER_CARD_TO)) {
+			server.offerCard(packet);
+
+		} else if(packet.is(OP_FEEDBACK)) {
+			server.feedback(packet);
+
+		} else if(packet.is(OP_DECREASE_LIFE)) {
+			server.decreaseLife(packet);
 		}
 	}
 
