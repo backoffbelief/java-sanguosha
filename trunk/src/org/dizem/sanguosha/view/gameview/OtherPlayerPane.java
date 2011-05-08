@@ -2,9 +2,12 @@ package org.dizem.sanguosha.view.gameview;
 
 import org.dizem.common.AudioUtil;
 import org.dizem.common.ImageUtil;
+import org.dizem.common.collection.TwoWayMap;
 import org.dizem.sanguosha.model.card.AbstractCard;
+import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
+import org.dizem.sanguosha.view.component.EquipmentLabel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -20,7 +23,7 @@ import static org.dizem.sanguosha.model.constants.Constants.*;
  * User: dizem
  * Time: 11-4-19 上午9:10
  */
-public class OtherPlayerPane extends JPanel {
+public class OtherPlayerPane extends JLayeredPane {
 
 	/**
 	 * 默认宽度
@@ -79,6 +82,10 @@ public class OtherPlayerPane extends JPanel {
 	 * 游戏窗体
 	 */
 	private GameFrame owner;
+
+	private TwoWayMap<Integer, JLabel> equipmentLabelMap = new TwoWayMap<Integer, JLabel>();
+
+	private int labelDisplayLevel = 100;
 
 	/**
 	 * 构造函数
@@ -202,40 +209,13 @@ public class OtherPlayerPane extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * 显示动画效果
+	 *
+	 * @param card
+	 */
 	public void showEffect(AbstractCard card) {
-		final JLabel effectLabel = new JLabel();
-		effectLabel.setSize(256, 256);
-		effectLabel.setOpaque(false);
-		effectLabel.setLocation(0, 100);
-		add(effectLabel, new Integer(100));
-
-		ImageIcon[] imgList = new ImageIcon[0];
-		if (card.getName().equals("杀")) {
-			AudioUtil.play(player.getCharacter().isMale() ? AUDIO_SHA_MALE : AUDIO_SHA_FEMALE);
-			imgList = IMG_SHA;
-
-
-		} else if (card.getName().equals("闪")) {
-			AudioUtil.play(player.getCharacter().isMale() ? AUDIO_SHAN_MALE : AUDIO_SHAN_FEMALE);
-			imgList = IMG_SHAN;
-		}
-
-		final ImageIcon[] finalImgList = imgList;
-		new Thread(new Runnable() {
-			public void run() {
-				for (ImageIcon img : finalImgList) {
-					effectLabel.setIcon(img);
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-
-				remove(effectLabel);
-				repaint();
-			}
-		}).start();
+		owner.showEffect(card, this);
 	}
 
 	public void setCanSelect(boolean flag) {
@@ -244,6 +224,7 @@ public class OtherPlayerPane extends JPanel {
 
 	public void setSelected(boolean selected) {
 		isSelected = selected;
+		setBorder(null);
 		repaint();
 	}
 
@@ -255,7 +236,11 @@ public class OtherPlayerPane extends JPanel {
 		return player;
 	}
 
+	/**
+	 * 减血
+	 */
 	public void decreaseLife() {
+
 		final JLabel labelLight = new JLabel();
 		labelLight.setSize(172, 170);
 		labelLight.setOpaque(false);
@@ -267,7 +252,7 @@ public class OtherPlayerPane extends JPanel {
 				for (ImageIcon img : IMG_DAO_GUANG) {
 					labelLight.setIcon(img);
 					try {
-						Thread.sleep(50);
+						Thread.sleep(20);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -277,6 +262,41 @@ public class OtherPlayerPane extends JPanel {
 			}
 		}).start();
 		AudioUtil.play(AUDIO_HIT);
+		repaint();
+	}
+
+	/**
+	 * 用装备牌创建label
+	 *
+	 * @param card 装备牌
+	 * @return label
+	 */
+	private JLabel createEquipmentLabel(final EquipmentCard card) {
+		final JLabel label = new EquipmentLabel(card);
+		equipmentLabelMap.put(card.getCardType(), label);
+		label.setLocation(10, 118 + card.getCardType() * 16);
+		return label;
+	}
+
+	private void addEquipmentCardLabel(JLabel equipmentCardLabel) {
+		add(equipmentCardLabel, new Integer(labelDisplayLevel++));
+	}
+
+	private void removeEquipmentCardLabel(JLabel equipmentCardLabel) {
+		remove(equipmentCardLabel);
+		equipmentLabelMap.removeByValue(equipmentCardLabel);
+	}
+
+
+
+	public void addEquipmentCard(EquipmentCard equipmentCard) {
+		if (!player.canAddEquipmentCard(equipmentCard)) {
+			JLabel cardLabelToRemove = equipmentLabelMap.getValue((equipmentCard).getCardType());
+			removeEquipmentCardLabel(cardLabelToRemove);
+			player.removeEquipmentCard(equipmentCard.getCardType());
+		}
+		player.addEquipmentCard(equipmentCard);
+		addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
 		repaint();
 	}
 }

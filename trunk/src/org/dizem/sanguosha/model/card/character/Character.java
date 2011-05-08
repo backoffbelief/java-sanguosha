@@ -141,4 +141,8 @@ public class Character {
 	public boolean isMale() {
 		return gender.equals("男");
 	}
+
+	public void increaseLife() {
+		life++;
+	}
 }

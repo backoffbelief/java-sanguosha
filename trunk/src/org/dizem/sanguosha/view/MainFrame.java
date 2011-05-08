@@ -32,7 +32,7 @@ import java.util.Random;
 public class MainFrame extends JCFrame {
 
 	private static Logger log = Logger.getLogger(MainFrame.class);
-	private JButton btnStartGame;
+	public JButton btnStartGame;
 	private JButton btnStartServer;
 	private JButton btnSetting;
 	private JButton btnAbout;
@@ -49,10 +49,11 @@ public class MainFrame extends JCFrame {
 	private boolean playBackMusic = false;
 
 	public static final Font LABEL_FONT = new Font("微软雅黑", Font.PLAIN, 15);
+	public static MainFrame instance;
 
 	public MainFrame() {
-
 		super(Constants.APP_TITLE);
+		instance = this;
 		initFrame();
 		initLayout();
 		setVisible(true);
@@ -62,6 +63,7 @@ public class MainFrame extends JCFrame {
 	}
 
 	public void startOrStopBackMusic() {
+		System.out.println(playBackMusic);
 		if (playBackMusic) {
 			backMusicThread.stop();
 			backMusicThread = null;
@@ -89,12 +91,13 @@ public class MainFrame extends JCFrame {
 				return;
 
 			} else {
-				server.stop();
+				if (server != null)
+					server.stop();
+				System.exit(-1);
 			}
 		}
 		super.processWindowEvent(e);
 	}
-
 
 
 	private void initLayout() {
@@ -119,7 +122,6 @@ public class MainFrame extends JCFrame {
 
 
 		add(scrollPane);
-
 
 
 		int offsetX = 50;
@@ -197,6 +199,7 @@ public class MainFrame extends JCFrame {
 
 	@ActionListenerFor(source = "btnStartGame")
 	public void btnStartGameClicked() {
+		btnStartGame.setEnabled(false);
 		log.info("Open dialog to start game");
 		new StartGameDialog(this);
 	}

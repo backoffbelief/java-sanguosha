@@ -4,11 +4,15 @@ import craky.componentc.JCMenu;
 import craky.componentc.JCMenuItem;
 import craky.util.UIUtil;
 import org.dizem.common.ImageUtil;
+import org.dizem.sanguosha.view.dialog.AboutDialog;
+import org.dizem.sanguosha.view.gameview.GameFrame;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -21,8 +25,10 @@ public class SGSMenu extends JCMenu implements PopupMenuListener {
 	private static final Icon ICON = ImageUtil.getIcon("system/menu_button_icon.png");
 	private static final Image ROLLOVER_IMAGE = ImageUtil.getImage("system/common_button_rollover_bg.png");
 	private static final Image PRESSED_IMAGE = ImageUtil.getImage("system/common_button_pressed_bg.png");
+	private GameFrame owner;
 
-	public SGSMenu() {
+	public SGSMenu(GameFrame owner) {
+		this.owner = owner;
 		setToolTipText("\u4E3B\u83DC\u5355");
 		setPreferredSize(new Dimension(5, 20));
 		setShowWhenRollover(false);
@@ -55,14 +61,17 @@ public class SGSMenu extends JCMenu implements PopupMenuListener {
 	}
 
 	private void init() {
-		JMenu menuEdit = new JCMenu("\u7f16\u8f91(E)");
 
 		JMenuItem itemHelp = new JCMenuItem("\u67e5\u770b\u5e2e\u52a9(V)");
 		itemHelp.setMnemonic('V');
 		this.add(itemHelp);
 		JMenuItem itemAbout = new JCMenuItem("\u5173\u4e8e(A)");
 		itemAbout.setMnemonic('A');
-		//	itemAbout.addActionListener(listener);
+		itemAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new AboutDialog(owner);
+			}
+		});
 		this.add(itemAbout);
 	}
 

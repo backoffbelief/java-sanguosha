@@ -17,8 +17,8 @@ public class ClientDispatcher {
 		this.client = client;
 	}
 
-	public void dispatch(SGSPacket packet) {
 
+	public void dispatch(SGSPacket packet) {
 
 		if (packet.is(OP_INIT_CLIENT)) {//客户端接入
 			this.client.showGameFrame(packet);
@@ -62,14 +62,26 @@ public class ClientDispatcher {
 		} else if (packet.is(OP_PHASE_PLAY_BEGIN)) {//出牌阶段
 			client.playPhase(packet.getPlayerId());
 
-		} else if (packet.is(OP_OFFER_CARD_TO)) {
+		} else if (packet.is(OP_OFFER_CARD_TO)) {//向某人出牌
 			client.beOfferredCardTo(packet);
 
 		} else if (packet.is(OP_FEEDBACK)) {
-			client.getFeedback(packet);
+			client.feedback(packet);
 
-		} else if (packet.is(OP_DECREASE_LIFE)) {
+		} else if (packet.is(OP_DECREASE_LIFE)) {//减血
 			client.decreaseLife(packet);
+
+		} else if (packet.is(OP_PHASE_DISCARD_BEGIN)) {//弃牌阶段开始
+			client.discard(packet);
+
+		} else if (packet.is(OP_DISCARD)) {//弃牌
+			client.discardEnd(packet);
+
+		} else if (packet.is(OP_EAT_PEACH)) {
+			client.eatPeach(packet);
+
+		} else if (packet.is(OP_ADD_EQUIPMENT)) {
+			client.addEquipmentCard(packet);
 		}
 
 	}

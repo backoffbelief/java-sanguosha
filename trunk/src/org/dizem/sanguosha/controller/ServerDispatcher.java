@@ -6,7 +6,7 @@ import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 调度服务器收到的请求
- * 
+ * <p/>
  * User: dizem
  * Time: 11-4-28 下午3:45
  */
@@ -18,6 +18,7 @@ public class ServerDispatcher {
 
 	/**
 	 * 构造函数
+	 *
 	 * @param server 服务器
 	 */
 	public ServerDispatcher(GameServer server) {
@@ -26,6 +27,7 @@ public class ServerDispatcher {
 
 	/**
 	 * 处理请求
+	 *
 	 * @param packet 请求数据包
 	 */
 	public void dispatch(SGSPacket packet) {
@@ -45,16 +47,33 @@ public class ServerDispatcher {
 		} else if (packet.is(OP_PHASE_DRAW_END)) {//当前玩家摸牌阶段结束
 			notifyServer();
 
-		} else if(packet.is(OP_OFFER_CARD_TO)) {
+		} else if (packet.is(OP_OFFER_CARD_TO)) {
 			server.offerCard(packet);
 
-		} else if(packet.is(OP_FEEDBACK)) {
+		} else if (packet.is(OP_FEEDBACK)) {
 			server.feedback(packet);
 
-		} else if(packet.is(OP_DECREASE_LIFE)) {
+		} else if (packet.is(OP_DECREASE_LIFE)) {
 			server.decreaseLife(packet);
+
+		} else if (packet.is(OP_PHASE_PLAY_END)) {
+			notifyServer();
+
+		} else if (packet.is(OP_DISCARD)) {
+			server.discard(packet);
+			notifyServer();
+
+		} else if (packet.is(OP_PHASE_DISCARD_END)) {
+			notifyServer();
+
+		} else if (packet.is(OP_EAT_PEACH)) {
+			server.eatPeach(packet);
+
+		} else if (packet.is(OP_ADD_EQUIPMENT)) {
+			server.addEquipmentCard(packet);
 		}
 	}
+
 
 	/**
 	 * 通知服务端游戏线程继续执行

@@ -1,6 +1,8 @@
 package org.dizem.sanguosha.controller;
 
 import org.apache.log4j.Logger;
+import org.dizem.common.JSONUtil;
+import org.dizem.sanguosha.model.vo.SGSPacket;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -11,7 +13,7 @@ import static org.dizem.sanguosha.model.constants.Constants.*;
 /**
  * 客户端监控
  * 用于接收服务器发来的请求
- *
+ * <p/>
  * User: dizem
  * Time: 11-4-23 下午9:57
  */
@@ -38,6 +40,7 @@ public class GameClientMonitor extends Thread {
 
 	/**
 	 * 构造函数
+	 *
 	 * @param client 客户端
 	 */
 	public GameClientMonitor(GameClient client) {
@@ -59,7 +62,8 @@ public class GameClientMonitor extends Thread {
 				DatagramPacket packet = new DatagramPacket(data, data.length);
 				ds.receive(packet);
 				String jsonString = new String(packet.getData(), 0, packet.getLength(), "UTF-8");
-				log.info("Received:" + jsonString);
+				SGSPacket dp = (SGSPacket) JSONUtil.convertToVO(jsonString, SGSPacket.class);
+				log.info("receive:" + dp.getOperation());
 				dispatcher.dispatch(jsonString);
 			}
 
@@ -71,6 +75,7 @@ public class GameClientMonitor extends Thread {
 
 	/**
 	 * 递归探测端口是否可用，并创建UDP连接
+	 *
 	 * @return
 	 */
 	private DatagramSocket createSocket() {

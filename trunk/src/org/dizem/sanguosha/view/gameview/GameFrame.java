@@ -3,12 +3,15 @@ package org.dizem.sanguosha.view.gameview;
 import craky.component.JImagePane;
 import craky.componentc.JCFrame;
 import craky.layout.LineLayout;
+import org.apache.log4j.Logger;
+import org.dizem.common.AudioUtil;
 import org.dizem.sanguosha.controller.GameClient;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.character.Character;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
 import org.dizem.sanguosha.model.vo.PlayerVO;
+import org.dizem.sanguosha.view.MainFrame;
 import org.dizem.sanguosha.view.component.ComboBoxItem;
 import org.dizem.sanguosha.view.component.MessageLabel;
 import org.dizem.sanguosha.view.component.SGSMenu;
@@ -29,6 +32,8 @@ import static org.dizem.sanguosha.model.constants.Constants.*;
  * Time: 11-4-9 下午10:37
  */
 public class GameFrame extends JCFrame {
+
+	private final static Logger log = Logger.getLogger(GameFrame.class);
 
 	/**
 	 * 客户端控制类
@@ -63,6 +68,7 @@ public class GameFrame extends JCFrame {
 	 */
 	private DiscardedPane discardedPane = new DiscardedPane();
 
+	private JLayeredPane mainPanel;
 	/**
 	 * 角色列表
 	 */
@@ -84,13 +90,14 @@ public class GameFrame extends JCFrame {
 		}
 	};
 
+
 	/**
 	 * 构造函数
 	 *
 	 * @param client	 客户端控制类
 	 * @param playerName 当前玩家姓名
 	 */
-	public GameFrame(GameClient client, String playerName) {
+	public GameFrame(MainFrame main, GameClient client, String playerName) {
 		if (client != null) {
 			this.client = client;
 			this.playerCount = client.getPlayerCount();
@@ -101,6 +108,8 @@ public class GameFrame extends JCFrame {
 		initLayout();
 		initMenu();
 		setBackgroundImage(IMG_GAME_FRAME_BACK);
+
+		setLocationRelativeTo(main);
 		setVisible(true);
 	}
 
@@ -133,7 +142,6 @@ public class GameFrame extends JCFrame {
 	private void initFrame() {
 		setSize(740, 620);
 		setResizable(false);
-		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
@@ -180,24 +188,26 @@ public class GameFrame extends JCFrame {
 	 *
 	 * @return 游戏主界面
 	 */
-	private JPanel createMainPane() {
-		JPanel pane = new JPanel();
-		pane.setLayout(null);
+	private JLayeredPane createMainPane() {
+		mainPanel = new JLayeredPane();
+		mainPanel.setLayout(null);
 		for (OtherPlayerPane p : otherPlayerPaneList) {
-			pane.add(p);
+			mainPanel.add(p);
 		}
 		msgPane.setLocation(500, 45);
 		rolePane.setBounds(530, -10, 150, 50);
 		rolePane.setOpaque(false);
-		msgLabel.setLocation(100, 330);
+		msgLabel.setLocation(100, 190);
 		discardedPane.setLocation(180, 250);
-		pane.add(discardedPane);
-
-		pane.add(msgPane);
-		pane.add(rolePane);
-		pane.add(msgLabel);
-		pane.setOpaque(false);
-		return pane;
+		JLabel iconLabel = new JLabel(IMG_ICON_LABEL);
+		iconLabel.setLocation(0, 0);
+		mainPanel.add(iconLabel);
+		mainPanel.add(msgPane);
+		mainPanel.add(rolePane);
+		mainPanel.add(msgLabel);
+		mainPanel.add(discardedPane);
+		mainPanel.setOpaque(false);
+		return mainPanel;
 	}
 
 	/**
@@ -230,7 +240,7 @@ public class GameFrame extends JCFrame {
 		bar.setLayout(new GridLayout(1, 2));
 		bar.setPreferredSize(new Dimension(20, 20));
 		bar.setFocusable(false);
-		bar.add(new SGSMenu());
+		bar.add(new SGSMenu(this));
 		JImagePane titleContent = getTitleContentPane();
 		titleContent.setLayout(new LineLayout(0, 0, 0, 2, 0,
 				LineLayout.TRAILING, LineLayout.LEADING, LineLayout.HORIZONTAL));
@@ -264,8 +274,10 @@ public class GameFrame extends JCFrame {
 	public int getIndex(int id) {
 		if (id > currentPlayerID) {
 			return id - currentPlayerID - 1;
+
 		} else if (id < currentPlayerID) {
 			return (id + currentPlayerID) % (playerCount - 1);
+
 		} else {
 			return 0;
 		}
@@ -299,11 +311,11 @@ public class GameFrame extends JCFrame {
 	 */
 	public void setRole(Role role, int lordId) {
 		dashboard.setRole(role);
-
 		if (lordId == currentPlayerID)
 			return;
+
 		if (client.players != null) {
-			client.players[getIndex(lordId)].setRole(Role.ZG);
+			client.players[lordId].setRole(Role.ZG);
 			otherPlayerPaneList.get(getIndex(lordId)).repaint();
 		}
 		showMessage("您分配了角色: " + role);
@@ -363,7 +375,6 @@ public class GameFrame extends JCFrame {
 	 */
 	public void distributeCards(AbstractCard[] cards) {
 		for (AbstractCard card : cards) {
-			client.players[currentPlayerID].addHandCard(card);
 			dashboard.addHandCard(card);
 		}
 	}
@@ -388,12 +399,18 @@ public class GameFrame extends JCFrame {
 		discardedPane.addCard(card, message);
 	}
 
+	/**
+	 * 想指定对手出牌
+	 *
+	 * @param card 出牌
+	 * @param toId 指定对手id
+	 */
 	public void offerCardTo(AbstractCard card, int toId) {
 		client.sendOfferCardToInfo(card, toId);
 	}
 
 	public void showMessageKeep(String message) {
-		msgLabel.showText(message, true);
+		showMessage(message);//todo
 	}
 
 
@@ -425,7 +442,61 @@ public class GameFrame extends JCFrame {
 			dashboard.decreaseLife();
 
 		} else {
+			client.players[id].getCharacter().decreaseLife();
 			otherPlayerPaneList.get(getIndex(id)).decreaseLife();
 		}
+	}
+
+	public void discard() {
+		int n = getCurrentPlayer().cardToBeDiscard();
+		dashboard.discard(n);
+	}
+
+	/**
+	 * 显示动画效果
+	 *
+	 * @param card
+	 */
+	public void showEffect(AbstractCard card, OtherPlayerPane pane) {
+		final JLabel effectLabel = new JLabel();
+		effectLabel.setSize(256, 256);
+		effectLabel.setOpaque(false);
+		effectLabel.setLocation(pane.getX() - 80, pane.getY() + 30);
+		mainPanel.add(effectLabel, 10000);
+
+		ImageIcon[] imgList = new ImageIcon[0];
+		Player player = pane.getPlayer();
+		if (card.getName().equals("杀")) {
+			AudioUtil.play(player.getCharacter().isMale() ? AUDIO_SHA_MALE : AUDIO_SHA_FEMALE);
+			imgList = IMG_SHA;
+
+
+		} else if (card.getName().equals("闪")) {
+			AudioUtil.play(player.getCharacter().isMale() ? AUDIO_SHAN_MALE : AUDIO_SHAN_FEMALE);
+			imgList = IMG_SHAN;
+
+		} else if (card.getName().equals("桃")) {
+			AudioUtil.play(AUDIO_PEACH);
+			imgList = IMG_PEACH;
+		} else {
+			return;
+		}
+
+		final ImageIcon[] finalImgList = imgList;
+		new Thread(new Runnable() {
+			public void run() {
+				for (ImageIcon img : finalImgList) {
+					effectLabel.setIcon(img);
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				mainPanel.remove(effectLabel);
+				repaint();
+			}
+		}).start();
 	}
 }

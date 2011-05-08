@@ -36,9 +36,9 @@ public class AboutDialog extends JCDialog implements ActionListener {
 		setVisible(true);
 	}
 
-
 	private void initUI() {
 		content = (JComponent) getContentPane();
+		content.setOpaque(false);
 		JImagePane bannerPane = new JImagePane();
 		content.setPreferredSize(new Dimension(338, 284));
 		content.setLayout(new BorderLayout());
@@ -47,6 +47,7 @@ public class AboutDialog extends JCDialog implements ActionListener {
 		bannerPane.setMode(JImagePane.TILED);
 		Image image = ImageUtil.getImage("system/banner.png");
 		bannerPane.setImage(image);
+		bannerPane.setOpaque(false);
 
 		content.add(bannerPane, BorderLayout.NORTH);
 		content.add(createMainPane(), BorderLayout.CENTER);
