@@ -19,7 +19,6 @@ public class Player {
 	private int port;
 	private int playerId;
 	private String name;
-	private int score;
 	private Role role;
 	private Phase phase;
 
@@ -69,8 +68,6 @@ public class Player {
 	}
 
 
-
-
 	/**
 	 * 是否有空位装备当前装备牌
 	 *
@@ -80,6 +77,7 @@ public class Player {
 	public boolean canAddEquipmentCard(EquipmentCard card) {
 		for (EquipmentCard equipmentCard : equipmentCards) {
 			if (equipmentCard.getCardType() == card.getCardType()) {
+				System.out.println(getCharacter().getName() + "+++" + card.getName());
 				return false;
 			}
 		}
@@ -92,6 +90,7 @@ public class Player {
 			throw new SGSException("Player has already had this type of equipmentCard");
 
 		} else {
+			System.out.println(getCharacter().getName() + "装备了" + card.getName());
 			equipmentCards.add(card);
 		}
 	}
@@ -149,6 +148,11 @@ public class Player {
 		return character.getLife();
 	}
 
+	public int cardToBeDiscard() {
+		System.out.println("cardToBeDiscard: " + handCards.size() + " " + character.getLife());
+		return handCards.size() - character.getLife();
+	}
+
 	public void removeEffectCard(AbstractCard card) {
 		effectCards.remove(card);
 	}
@@ -177,13 +181,23 @@ public class Player {
 	}
 
 	public void setPhase(Phase phase) {
+		System.out.println(getCharacter().getName() + "改变阶段：" + phase);
 		this.phase = phase;
+	}
+
+	public EquipmentCard getEquipmentCard(int type) {
+		for (EquipmentCard card : equipmentCards) {
+			if (card.getCardType() == type) {
+				return card;
+			}
+		}
+		return null;
 	}
 
 	public void removeEquipmentCard(int type) {
 		for (EquipmentCard card : equipmentCards) {
 			if (card.getCardType() == type) {
-				equipmentCards.remove(type);
+				equipmentCards.remove(card);
 				break;
 			}
 		}
@@ -211,5 +225,10 @@ public class Player {
 
 	public void setPlayerId(int playerId) {
 		this.playerId = playerId;
+	}
+
+	public boolean needToDiscard() {
+		System.out.println("life = " + character.getLife() + "  " + handCards.size());
+		return character.getLife() < handCards.size();
 	}
 }

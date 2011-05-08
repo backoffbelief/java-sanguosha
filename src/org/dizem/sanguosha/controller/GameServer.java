@@ -160,6 +160,7 @@ public class GameServer {
 		Collections.shuffle(roleList);
 		lordId = roleList.indexOf(Role.ZG);
 		owner.appendLog("分配角色:");
+
 		for (int i = 0; i < playerCount; ++i) {
 			players[i].setRole(roleList.get(i));
 			owner.appendLog(players[i].getName() + "的角色是" + roleList.get(i));
@@ -206,7 +207,6 @@ public class GameServer {
 			if (i != lordId) {
 				Character[] characters = CharacterDeck.getInstance().popCharacters(3);
 				for (int j = 0; j < 3; ++j) {
-					System.out.println(characters[j].getName());
 					characterVOs[j] = new CharacterVO(characters[j]);
 				}
 				packet.setCharacterVOs(characterVOs);
@@ -294,7 +294,7 @@ public class GameServer {
 				cards[j] = new CardVO(card);
 			}
 			packet.setCardVOs(cards);
-			send(packet, players[(i + currentId) % playerCount]);
+			send(packet, players[playerId]);
 
 			infoPacket.setPlayerId(playerId);
 			infoPacket.setHandCardCount(players[playerId].getHandCards().size());
@@ -405,10 +405,10 @@ public class GameServer {
 					startPhase();
 					Thread.sleep(500);
 
-					judgePhase();
-					synchronized (gameThread) {
-						gameThread.wait();
-					}
+//					judgePhase();
+//					synchronized (gameThread) {
+//						gameThread.wait();
+//					}
 
 					drawPhase();
 					synchronized (gameThread) {
@@ -420,6 +420,12 @@ public class GameServer {
 						gameThread.wait();
 					}
 
+					discardPhase();
+					synchronized (gameThread) {
+						gameThread.wait();
+					}
+
+					currentId = (currentId + 1) % playerCount;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 					log.error(e.getMessage());
@@ -477,6 +483,33 @@ public class GameServer {
 
 	public void decreaseLife(SGSPacket packet) {
 		players[packet.getPlayerId()].getCharacter().decreaseLife();
+		send(packet, players);
+	}
+
+	private void discardPhase() {
+		SGSPacket packet = new SGSPacket(OP_PHASE_DISCARD_BEGIN);
+		packet.setPlayerId(currentId);
+		send(packet, players);
+	}
+
+
+	public void discard(SGSPacket packet) {
+		for (CardVO cardVO : packet.getCardVOs()) {
+			AbstractCard card = AbstractCard.createCard(cardVO);
+			players[currentId].removeHandCard(card);
+		}
+		send(packet, players);
+	}
+
+	/**
+	 * 吃桃
+	 */
+	public void eatPeach(SGSPacket packet) {
+		send(packet, players);
+	}
+
+
+	public void addEquipmentCard(SGSPacket packet) {
 		send(packet, players);
 	}
 }

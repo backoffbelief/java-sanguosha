@@ -12,6 +12,7 @@ public class AnimationConstants {
 	public static ImageIcon[] IMG_SHA;
 	public static ImageIcon[] IMG_SHAN;
 	public static ImageIcon[] IMG_DAO_GUANG;
+	public static ImageIcon[] IMG_PEACH;
 
 	static {
 		IMG_SHA = new ImageIcon[23];
@@ -33,6 +34,11 @@ public class AnimationConstants {
 			String path = "system/animation/DaoGuang_00";
 			if (i < 10) path += "0";
 			IMG_DAO_GUANG[i - 1] = ImageUtil.getIcon(path + i + ".png");
+		}
+
+		IMG_PEACH = new ImageIcon[20];
+		for (int i = 0; i < IMG_PEACH.length; ++i) {
+			IMG_PEACH[i] = ImageUtil.getIcon("system/animation/peach.png");
 		}
 	}
 

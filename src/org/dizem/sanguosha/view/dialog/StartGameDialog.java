@@ -4,11 +4,12 @@ import craky.component.JImagePane;
 import craky.componentc.*;
 import craky.layout.LineLayout;
 import org.apache.log4j.Logger;
+import org.dizem.common.ImageUtil;
 import org.dizem.sanguosha.controller.GameClient;
 import org.dizem.sanguosha.controller.UDPSender;
 import org.dizem.sanguosha.model.vo.SGSPacket;
+import org.dizem.sanguosha.view.MainFrame;
 import org.dizem.sanguosha.view.component.EmptyComponent;
-import org.dizem.common.ImageUtil;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,7 +22,7 @@ import static org.dizem.sanguosha.model.constants.Constants.*;
 
 /**
  * 客户端启动对话框
- *
+ * <p/>
  * User: DIZEM
  * Time: 11-3-31 上午1:16
  */
@@ -38,13 +39,16 @@ public class StartGameDialog extends JDialog implements ActionListener {
 	private JButton btnSearchPort;
 	private JButton btnStart;
 	private JButton btnCancel;
+	private MainFrame owner;
 
 	/**
 	 * 构造函数
+	 *
 	 * @param owner 父窗体
 	 */
-	public StartGameDialog(Window owner) {
+	public StartGameDialog(MainFrame owner) {
 		super(owner, "\u542f\u52a8\u6e38\u620f", ModalityType.DOCUMENT_MODAL);
+		this.owner = owner;
 		getContentPane().setPreferredSize(new Dimension(300, 150));
 
 		setIconImage(ImageUtil.getImage("sgs.png"));
@@ -61,6 +65,7 @@ public class StartGameDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 创建主界面
+	 *
 	 * @return
 	 */
 	private JImagePane createMainPane() {
@@ -138,6 +143,7 @@ public class StartGameDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 创建底栏
+	 *
 	 * @return
 	 */
 	private JImagePane createBottomPane() {
@@ -164,11 +170,12 @@ public class StartGameDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 获取主机名称
+	 *
 	 * @return
 	 */
 	public String getUserName() {
 		Map<String, String> map = System.getenv();
-		if(map != null)
+		if (map != null)
 			return map.get("USERNAME");
 		else
 			return "NO NAME";
@@ -176,11 +183,13 @@ public class StartGameDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 按键事件
+	 *
 	 * @param e
 	 */
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnCancel) {
+			owner.btnStartGame.setEnabled(true);
 			dispose();
 
 		} else if (e.getSource() == btnStart) {
@@ -192,6 +201,7 @@ public class StartGameDialog extends JDialog implements ActionListener {
 
 			} else {
 				new GameClient(Integer.parseInt(txtServerPort.getText()), txtServerIp.getText(), txtName.getText());
+				owner.startOrStopBackMusic();
 				dispose();
 			}
 		}

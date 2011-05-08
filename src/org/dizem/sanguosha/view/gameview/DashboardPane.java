@@ -136,11 +136,13 @@ public class DashboardPane extends JLayeredPane
 
 		//血条
 		if (characterChoosed) {
-			int rate = (int) ((double) character.getLife() / character.getMaxLife() * 5 + 0.01);
-			for (int i = 0; i < character.getLife(); ++i) {
+			int rate = (int) ((double) owner.getCurrentPlayer().getCharacter().getLife()
+					/ owner.getCurrentPlayer().getCharacter().getMaxLife() * 5 + 0.01);
+			for (int i = 0; i < owner.getCurrentPlayer().getCharacter().getLife(); ++i) {
 				g.drawImage(IMG_HP_SMALL[rate], avatarX + 2, 70 + i * 23, null);
 			}
-			for (int i = character.getLife(); i < character.getMaxLife(); ++i) {
+			for (int i = owner.getCurrentPlayer().getCharacter().getLife();
+				 i < owner.getCurrentPlayer().getCharacter().getMaxLife(); ++i) {
 				g.drawImage(IMG_HP_SMALL[0], avatarX + 2, 70 + i * 23, null);
 			}
 		}
@@ -158,12 +160,31 @@ public class DashboardPane extends JLayeredPane
 	};
 
 	private boolean canUseCard(AbstractCard card) {
+		System.out.println(owner.getCurrentPlayer().getPhase() + " " + card);
+		if (owner.getCurrentPlayer().getPhase() == Phase.DISCARD) {
+			return true;
+		}
+		if (owner.getCurrentPlayer().getPhase() == Phase.FEEDBACK) {
+			btnOK.setEnabled(true);
+			return card.getName().equals("闪"); //TODO
+		}
+
 		for (String name : CANNOT_USE_LIST) {
 			if (card.getName().equals(name))
 				return false;
 		}
-		if (card.equals("桃")) {
-			return character.getLife() < character.getMaxLife();
+		if (card.getName().equals("桃")) {
+			boolean flag = owner.getCurrentPlayer().getCharacter().getLife()
+					< owner.getCurrentPlayer().getCharacter().getMaxLife();
+			btnOK.setEnabled(flag);
+			return flag;
+		}
+		if (card.getName().equals("杀")) {
+			return !hasOffedSha;
+		}
+		if (card instanceof EquipmentCard) {
+			btnOK.setEnabled(true);
+			return true;
 		}
 		return true;
 	}
@@ -200,8 +221,6 @@ public class DashboardPane extends JLayeredPane
 
 
 				} else if (canUseCard(handCardLabelMap.getKey(label))) {
-
-
 					label.setName(SELECTED_TAG);
 					if (canSelectCardCount == cardSelectedSet.size()) {
 						unselectDefalutSelectedCard();
@@ -210,10 +229,13 @@ public class DashboardPane extends JLayeredPane
 					label.setLocation(label.getX(), posY + 38 - 30);
 					DashboardPane.this.repaint(label.getX(), label.getY(), 90, 160);
 					cardSelectedSet.add(label);
+
+					if (owner.getCurrentPlayer().getPhase() == Phase.DISCARD) {
+						System.out.println(canSelectCardCount);
+						btnOK.setEnabled(cardSelectedSet.size() == canSelectCardCount);
+					}
 				}
 			}
-
-
 		});
 		return label;
 	}
@@ -298,30 +320,73 @@ public class DashboardPane extends JLayeredPane
 
 		if (e.getSource() == btnOK) {
 
-			if (owner.getCurrentPlayer().getPhase() == Phase.PLAY) {
-				useHandCard();
-
-			} else if (owner.getCurrentPlayer().getPhase() == Phase.DISCARD) {
-
+			switch (owner.getCurrentPlayer().getPhase()) {
+				case PLAY:
+					useHandCard();
+					break;
+				case DISCARD:
+					discardHandCard();
+					canSelectCardCount = 1;
+					break;
+				case FINISH:
+					break;
+				case NOT_ACTIVE:
+					break;
+				case WAIT_OTHER:
+					break;
+				case FEEDBACK:
+					Iterator itCardLabel = cardSelectedSet.iterator();
+					while (itCardLabel.hasNext()) {
+						JLabel label = (JLabel) itCardLabel.next();
+						AbstractCard card = handCardLabelMap.getKey(label);
+						removeHandCardLabel(label);
+						itCardLabel.remove();
+						feedback(card);
+						break;
+					}
+					repaint();
+					break;
 			}
-
+			btnOK.setEnabled(false);
 
 		} else if (e.getSource() == btnCancel) {
-//			addHandCardLabel(createCardLabel(Deck.getInstance().popCard()));
-			if (owner.getCurrentPlayer().getPhase() == Phase.FEEDBACK) {
-				feedback(null);
+			switch (owner.getCurrentPlayer().getPhase()) {
+				case START:
+					break;
+				case JUDGE:
+					break;
+				case DRAW:
+					break;
+				case PLAY:
+					owner.getClient().sendEndPlayInfo();
+					break;
+				case DISCARD:
+					break;
+				case FINISH:
+					break;
+				case NOT_ACTIVE:
+					break;
+				case WAIT_OTHER:
+					break;
+				case FEEDBACK:
+					feedback(null);
+					break;
 			}
-			btnCancel.setEnabled(false);
 		}
 	}
+
 
 	private void feedback(AbstractCard cardToFeedback) {
 
 		if (owner.getFeedbackCard().getName().equals("杀")) {
+
 			owner.getClient().sendFeedbackInfo(cardToFeedback);
-			if (cardToFeedback == null) {
+
+			if (cardToFeedback == null)
 				owner.getClient().sendDecreaseLifeInfo();
-			}
+
+			owner.getCurrentPlayer().setPhase(Phase.NOT_ACTIVE);
+			repaint();
 		}
 	}
 
@@ -371,14 +436,21 @@ public class DashboardPane extends JLayeredPane
 
 		ImageIcon[] imgList = new ImageIcon[0];
 		if (card.getName().equals("杀")) {
-			AudioUtil.play(character.isMale() ? AUDIO_SHA_MALE : AUDIO_SHA_FEMALE);
+			AudioUtil.play(owner.getCurrentPlayer().getCharacter().isMale() ? AUDIO_SHA_MALE : AUDIO_SHA_FEMALE);
 			imgList = IMG_SHA;
 
 
 		} else if (card.getName().equals("闪")) {
-			AudioUtil.play(character.isMale() ? AUDIO_SHAN_MALE : AUDIO_SHAN_FEMALE);
+			AudioUtil.play(owner.getCurrentPlayer().getCharacter().isMale() ? AUDIO_SHAN_MALE : AUDIO_SHAN_FEMALE);
 			imgList = IMG_SHAN;
+
+		} else if (card.getName().equals("桃")) {
+			AudioUtil.play(AUDIO_PEACH);
+			imgList = IMG_PEACH;
+		} else {
+			return;
 		}
+
 
 		final ImageIcon[] finalImgList = imgList;
 		new Thread(new Runnable() {
@@ -398,6 +470,18 @@ public class DashboardPane extends JLayeredPane
 		}).start();
 	}
 
+	public void addEquipmentCard(EquipmentCard equipmentCard) {
+
+		if (!owner.getCurrentPlayer().canAddEquipmentCard(equipmentCard)) {
+			JLabel cardLabelToRemove = equipmentLabelMap.getValue((equipmentCard).getCardType());
+			removeEquipmentCardLabel(cardLabelToRemove);
+			owner.getCurrentPlayer().removeEquipmentCard(equipmentCard.getCardType());
+		}
+		owner.getCurrentPlayer().addEquipmentCard(equipmentCard);
+		addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
+		repaint();
+	}
+
 	/**
 	 * 使用选中的手牌
 	 */
@@ -408,19 +492,9 @@ public class DashboardPane extends JLayeredPane
 			JLabel label = (JLabel) itCardLabel.next();
 			AbstractCard card = handCardLabelMap.getKey(label);
 
-			owner.addDiscardedCard(card, playerName + "出牌");
-
 			if (card instanceof EquipmentCard) {
 				AudioUtil.play(AUDIO_ADD_EQUIPMENT);
-				EquipmentCard equipmentCard = (EquipmentCard) card;
-
-				if (!owner.getCurrentPlayer().canAddEquipmentCard(equipmentCard)) {
-					JLabel cardLabelToRemove = equipmentLabelMap.getValue(((EquipmentCard) card).getCardType());
-					removeEquipmentCardLabel(cardLabelToRemove);
-					owner.getCurrentPlayer().removeEquipmentCard(equipmentCard.getCardType());
-				}
-				owner.getCurrentPlayer().addEquipmentCard(equipmentCard);
-				addEquipmentCardLabel(createEquipmentLabel(equipmentCard));
+				owner.getClient().sendAddEquipmentInfo((EquipmentCard) card, owner.getCurrentPlayer().getEquipmentCard(((EquipmentCard) card).getCardType()));
 
 
 			} else if (card instanceof BasicCard) {
@@ -433,15 +507,38 @@ public class DashboardPane extends JLayeredPane
 		repaint();
 	}
 
+	/**
+	 * 弃手牌
+	 */
+	private void discardHandCard() {
+		Iterator itCardLabel = cardSelectedSet.iterator();
+		java.util.List<AbstractCard> cardList = new ArrayList<AbstractCard>();
+		while (itCardLabel.hasNext()) {
+			JLabel label = (JLabel) itCardLabel.next();
+			cardList.add(handCardLabelMap.getKey(label));
+			removeHandCardLabel(label);
+			itCardLabel.remove();
+		}
+
+		owner.getClient().discardCards(cardList);
+		repaint();
+	}
+
+	private boolean hasOffedSha = false;
+
 	public void useBasicCard(AbstractCard card) {
 		if (card.getName().equals("杀")) {
+			hasOffedSha = true;
 			showEffect(card);
 			for (OtherPlayerPane pane : owner.otherPlayerPaneList) {
 				if (pane.isSelected()) {
+					pane.setSelected(false);
 					owner.offerCardTo(card, pane.getPlayer().getPlayerId());
 					return;
 				}
 			}
+		} else if (card.getName().equals("桃")) {
+			owner.getClient().useHandCard(card);
 		}
 
 //		for (OtherPlayerPane pane : owner.otherPlayerPaneList) {
@@ -472,13 +569,20 @@ public class DashboardPane extends JLayeredPane
 		btnOK.setEnabled(flag);
 	}
 
+	public void setHasOffedSha(boolean hasOffedSha) {
+		this.hasOffedSha = hasOffedSha;
+	}
 
 	public void setCancelable(boolean flag) {
 		btnCancel.setEnabled(flag);
 	}
 
+	/**
+	 * 减血动画
+	 */
 	public void decreaseLife() {
-		character.decreaseLife();
+		owner.getCurrentPlayer().getCharacter().decreaseLife();
+		repaint();
 		final JLabel labelLight = new JLabel();
 		labelLight.setSize(172, 170);
 		labelLight.setOpaque(false);
@@ -490,7 +594,7 @@ public class DashboardPane extends JLayeredPane
 				for (ImageIcon img : IMG_DAO_GUANG) {
 					labelLight.setIcon(img);
 					try {
-						Thread.sleep(50);
+						Thread.sleep(20);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -501,5 +605,9 @@ public class DashboardPane extends JLayeredPane
 		}).start();
 		AudioUtil.play(AUDIO_HIT);
 		repaint();
+	}
+
+	public void discard(int n) {
+		canSelectCardCount = n;
 	}
 }

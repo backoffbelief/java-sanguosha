@@ -13,7 +13,7 @@ import static org.dizem.sanguosha.model.constants.Constants.*;
 /**
  * 服务端监控
  * 用于监控客户端发送的请求
- *
+ * <p/>
  * User: dizem
  * Time: 11-4-23 下午9:57
  */
@@ -39,6 +39,7 @@ public class GameServerMonitor extends Thread {
 
 	/**
 	 * 构造函数
+	 *
 	 * @param server 服务端实例
 	 */
 	public GameServerMonitor(GameServer server) {
@@ -67,11 +68,11 @@ public class GameServerMonitor extends Thread {
 
 				//生成JSON字符串
 				String jsonString = new String(packet.getData(), 0, packet.getLength(), "UTF-8");
-				log.info("receive:" + jsonString);
+
 
 				//将字符串转换成类实例
 				SGSPacket dp = (SGSPacket) JSONUtil.convertToVO(jsonString, SGSPacket.class);
-
+				log.info("receive:" + dp.getOperation());
 				//处理请求
 				if (dp.is(OP_CONNECT)) {
 					owner.appendLog("玩家:" + dp.getPlayerName() + "加入服务器");

@@ -1,6 +1,5 @@
 package org.dizem.sanguosha.view.gameview;
 
-import org.dizem.common.PanelViewer;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.Deck;
 import org.dizem.sanguosha.view.component.HandCardLabel;
@@ -11,7 +10,7 @@ import java.util.List;
 
 /**
  * 弃牌显示
- *
+ * <p/>
  * User: dizem@126.com
  * Time: 11-5-1 下午4:04
  */

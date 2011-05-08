@@ -26,6 +26,7 @@ public class SGSPacket {
 	private CharacterVO characterVO;
 	private CardVO[] cardVOs;
 	private CardVO cardVO;
+	private CardVO anotherCardVO;
 	private int handCardCount;
 	private Phase phase;
 
@@ -193,5 +194,13 @@ public class SGSPacket {
 
 	public void setToPlayerId(int toPlayerId) {
 		this.toPlayerId = toPlayerId;
+	}
+
+	public CardVO getAnotherCardVO() {
+		return anotherCardVO;
+	}
+
+	public void setAnotherCardVO(CardVO anotherCardVO) {
+		this.anotherCardVO = anotherCardVO;
 	}
 }

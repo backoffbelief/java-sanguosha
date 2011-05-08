@@ -4,15 +4,20 @@ import org.apache.log4j.Logger;
 import org.dizem.common.AudioUtil;
 import org.dizem.sanguosha.model.card.AbstractCard;
 import org.dizem.sanguosha.model.card.character.Character;
+import org.dizem.sanguosha.model.card.equipment.EquipmentCard;
 import org.dizem.sanguosha.model.player.Phase;
 import org.dizem.sanguosha.model.player.Player;
 import org.dizem.sanguosha.model.player.Role;
 import org.dizem.sanguosha.model.vo.CardVO;
 import org.dizem.sanguosha.model.vo.CharacterVO;
 import org.dizem.sanguosha.model.vo.SGSPacket;
+import org.dizem.sanguosha.view.MainFrame;
 import org.dizem.sanguosha.view.dialog.ChooseCharacterDialog;
 import org.dizem.sanguosha.view.gameview.GameFrame;
 import org.dizem.sanguosha.view.gameview.OtherPlayerPane;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.dizem.sanguosha.model.constants.Constants.*;
 
@@ -99,7 +104,7 @@ public class GameClient {
 	 */
 	public void showGameFrame(SGSPacket packet) {
 		playerCount = packet.getPlayerCount();
-		gameFrame = new GameFrame(this, name);
+		gameFrame = new GameFrame(MainFrame.instance, this, name);
 		gameFrame.setCurrentPlayerID(packet.getPlayerId());
 	}
 
@@ -182,6 +187,7 @@ public class GameClient {
 	 * @param dp
 	 */
 	public void distributeLordCharacter(SGSPacket dp) {
+		AudioUtil.play(AUDIO_GAME_BACK);
 		lordId = dp.getLordId();
 
 		if (lordId == gameFrame.getCurrentPlayerID()) {
@@ -240,8 +246,10 @@ public class GameClient {
 
 	public void distributeCards(SGSPacket dp) {
 		AbstractCard[] cards = new AbstractCard[dp.getCardVOs().length];
+
 		for (int i = 0; i < dp.getCardVOs().length; ++i) {
 			cards[i] = AbstractCard.createCard(dp.getCardVOs()[i]);
+			players[playerId].addHandCard(cards[i]);
 		}
 		gameFrame.distributeCards(cards);
 	}
@@ -304,6 +312,8 @@ public class GameClient {
 		players[id].setPhase(Phase.DRAW);
 		gameFrame.showMessage(getPlayerName(id) + "进入摸牌阶段");
 		gameFrame.showMessage(getPlayerName(id) + "从牌堆里摸了" + packet.getCardVOs().length + "张牌");
+
+		System.out.println("drawPhase++++" + id + " " + playerId);
 		if (id != playerId) {
 			OtherPlayerPane pane = gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id));
 			pane.setHandCardCount(packet.getHandCardCount());
@@ -312,11 +322,13 @@ public class GameClient {
 		} else {
 			for (CardVO vo : packet.getCardVOs()) {
 				AbstractCard card = AbstractCard.createCard(vo);
+				players[playerId].addHandCard(card);
 				gameFrame.dashboard.addHandCard(card);
 			}
 			send(new SGSPacket(OP_PHASE_DRAW_END));
 		}
 	}
+
 
 	public String getPlayerName(int id) {
 		if (id != playerId) {
@@ -329,9 +341,13 @@ public class GameClient {
 	public void playPhase(int id) {
 		gameFrame.showMessage(getPlayerName(id) + "进入出牌阶段");
 		players[id].setPhase(Phase.PLAY);
+
 		if (id != playerId) {
 			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(id)).repaint();
 
+		} else {
+			gameFrame.dashboard.setHasOffedSha(false);
+			gameFrame.dashboard.setCancelable(true);
 		}
 	}
 
@@ -356,6 +372,9 @@ public class GameClient {
 		packet.setCardVO(new CardVO(card));
 		packet.setPlayerId(playerId);
 		packet.setToPlayerId(toId);
+		players[playerId].removeHandCard(card);
+		players[playerId].setPhase(Phase.WAIT_OTHER);
+		gameFrame.dashboard.repaint();
 		send(packet);
 	}
 
@@ -375,7 +394,11 @@ public class GameClient {
 			gameFrame.dashboard.repaint();
 		}
 
+		gameFrame.addDiscardedCard(card, getPlayerName(packet.getPlayerId()) + "出牌");
+		players[packet.getPlayerId()].removeHandCard(card);
+
 		for (OtherPlayerPane pane : gameFrame.otherPlayerPaneList) {
+
 			if (pane.getPlayer().getPlayerId() == packet.getToPlayerId()) {
 				pane.setSelected(true);
 
@@ -396,13 +419,31 @@ public class GameClient {
 		send(packet);
 	}
 
-	public void getFeedback(SGSPacket packet) {
-
+	public void feedback(SGSPacket packet) {
 		if (packet.getCardVO() != null) {
 			AbstractCard card = AbstractCard.createCard(packet.getCardVO());
+
+			if (card.getName().equals("闪")) {
+				gameFrame.addDiscardedCard(card, players[packet.getPlayerId()].getName() + "出《闪》");
+				players[packet.getPlayerId()].removeHandCard(card);
+
+				if (packet.getPlayerId() == playerId) {
+					gameFrame.dashboard.showEffect(card);
+
+				} else {
+					gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(packet.getPlayerId())).showEffect(card);
+				}
+			}
+		}
+		if (packet.getPlayerId() == playerId) {
+			players[playerId].setPhase(Phase.NOT_ACTIVE);
+			gameFrame.dashboard.repaint();
+
+		} else if (packet.getToPlayerId() == playerId) {
+			players[playerId].setPhase(Phase.PLAY);
+			gameFrame.dashboard.repaint();
 		}
 	}
-
 
 	public void sendDecreaseLifeInfo() {
 		SGSPacket packet = new SGSPacket(OP_DECREASE_LIFE);
@@ -412,7 +453,126 @@ public class GameClient {
 
 
 	public void decreaseLife(SGSPacket packet) {
-		players[packet.getPlayerId()].getCharacter().decreaseLife();
+//		players[packet.getPlayerId()].getCharacter().decreaseLife();
 		gameFrame.decreaseLife(packet.getPlayerId());
+	}
+
+	public void sendAddEquipmentInfo(EquipmentCard equipmentCard, EquipmentCard cardToRemove) {
+		SGSPacket packet = new SGSPacket(OP_ADD_EQUIPMENT);
+		packet.setPlayerId(playerId);
+		packet.setCardVO(new CardVO(equipmentCard));
+		if (cardToRemove != null)
+			packet.setAnotherCardVO(new CardVO(cardToRemove));
+		send(packet);
+	}
+
+	/**
+	 * 出牌结束
+	 */
+	public void sendEndPlayInfo() {
+		SGSPacket packet = new SGSPacket(OP_PHASE_PLAY_END);
+		packet.setPlayerId(playerId);
+		send(packet);
+	}
+
+	public void discard(SGSPacket packet) {
+
+		String message = getPlayerName(packet.getPlayerId()) + "进入弃牌阶段";
+		gameFrame.showMessage(message);
+		players[packet.getPlayerId()].setPhase(Phase.DISCARD);
+		if (packet.getPlayerId() == playerId) {
+
+			if (!players[playerId].needToDiscard()) {
+				endDiscard();
+			} else {
+				gameFrame.discard();
+			}
+		}
+	}
+
+	/**
+	 * 弃牌结束
+	 */
+	public void endDiscard() {
+		discardCards(new ArrayList<AbstractCard>());
+	}
+
+	/**
+	 * 弃一组牌
+	 *
+	 * @param cardList
+	 */
+	public void discardCards(List<AbstractCard> cardList) {
+		CardVO[] cardVOs = new CardVO[cardList.size()];
+		int index = 0;
+		for (AbstractCard card : cardList) {
+			cardVOs[index++] = new CardVO(card);
+		}
+		SGSPacket packet = new SGSPacket(OP_DISCARD);
+		packet.setCardVOs(cardVOs);
+		packet.setPlayerId(playerId);
+		send(packet);
+	}
+
+
+	/**
+	 * 弃牌结束
+	 *
+	 * @param packet
+	 */
+	public void discardEnd(SGSPacket packet) {
+		for (CardVO cardVO : packet.getCardVOs()) {
+			AbstractCard card = AbstractCard.createCard(cardVO);
+			gameFrame.addDiscardedCard(card, getPlayerName(packet.getPlayerId()) + "弃牌");
+		}
+		players[packet.getPlayerId()].setPhase(Phase.NOT_ACTIVE);
+
+		if (packet.getPlayerId() == playerId) {
+			gameFrame.dashboard.repaint();
+		} else {
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(packet.getPlayerId())).repaint();
+		}
+	}
+
+	public void useHandCard(AbstractCard card) {
+		if (card.getName().equals("桃")) {
+			SGSPacket packet = new SGSPacket(OP_EAT_PEACH);
+			packet.setPlayerId(playerId);
+			packet.setCardVO(new CardVO(card));
+			send(packet);
+		}
+	}
+
+	public void eatPeach(SGSPacket packet) {
+		players[packet.getPlayerId()].getCharacter().increaseLife();
+		AbstractCard card = AbstractCard.createCard(packet.getCardVO());
+		players[packet.getPlayerId()].removeHandCard(card);
+
+		if (packet.getPlayerId() == playerId) {
+			gameFrame.dashboard.repaint();
+			gameFrame.dashboard.showEffect(card);
+
+		} else {
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(packet.getPlayerId())).repaint();
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(packet.getPlayerId())).showEffect(card);
+		}
+	}
+
+	public void addEquipmentCard(SGSPacket packet) {
+		EquipmentCard card = (EquipmentCard) AbstractCard.createCard(packet.getCardVO());
+		gameFrame.showMessage(getPlayerName(packet.getPlayerId()) + "装备了" + card.getName());
+		players[packet.getPlayerId()].removeHandCard(card);
+
+		if (packet.getAnotherCardVO() != null) {
+			gameFrame.addDiscardedCard(AbstractCard.createCard(packet.getAnotherCardVO()),
+					getPlayerName(packet.getPlayerId()) + "卸掉装备牌");
+		}
+
+		if (packet.getPlayerId() == playerId) {
+			gameFrame.dashboard.addEquipmentCard(card);
+
+		} else {
+			gameFrame.otherPlayerPaneList.get(gameFrame.getIndex(packet.getPlayerId())).addEquipmentCard(card);
+		}
 	}
 }
